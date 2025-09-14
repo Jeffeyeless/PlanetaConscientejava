@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${reto.id} != null ? 'Editar Reto' : 'Nuevo Reto'">Formulario Reto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div layout:fragment="content" class="container py-4">
+    <h1 class="titulo-principal text-center mb-4" th:text="${reto.id} != null ? 'Editar Reto Ambiental' : 'Nuevo Reto Ambiental'">Formulario Reto</h1>
+
+    <form th:action="${reto.id} != null ? 
+                    @{/eventos/retos/editar/{id}(id=${reto.id})} : 
+                    @{/eventos/retos/guardar}" 
+          method="post" class="form-retos needs-validation" novalidate>
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+        <div class="mb-4">
+            <label for="descripcion" class="form-label">Descripción del Reto:</label>
+            <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="3" required></textarea>
+            <div class="invalid-feedback">Por favor ingresa una descripción para el reto</div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="mes" class="form-label">Mes:</label>
+                <select id="mes" th:field="*{mes}" class="form-select" required>
+                    <option value="">Seleccionar mes...</option>
+                    <option th:each="mes : ${T(com.tuapp.enums.MesEnum).values()}" 
+                            th:value="${mes}" 
+                            th:text="${mes.displayName}"
+                            th:selected="${mes == reto.mes}"></option>
+                </select>
+                <div class="invalid-feedback">Por favor selecciona un mes</div>
+            </div>
+            <div class="col-md-6">
+                <label for="dificultad" class="form-label">Dificultad:</label>
+                <select id="dificultad" th:field="*{dificultad}" class="form-select" required>
+                    <option value="">Seleccionar dificultad...</option>
+                    <option value="FACIL" th:selected="${reto.dificultad == 'FACIL'}">Fácil</option>
+                    <option value="MODERADO" th:selected="${reto.dificultad == 'MODERADO'}">Moderado</option>
+                    <option value="DIFICIL" th:selected="${reto.dificultad == 'DIFICIL'}">Difícil</option>
+                </select>
+                <div class="invalid-feedback">Por favor selecciona una dificultad</div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a th:href="@{/eventos/retos/mensuales}" class="btn btn-outline-secondary px-4">
+                <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save"></i> 
+                <span th:text="${reto.id} != null ? 'Actualizar' : 'Guardar'"></span> Reto
+            </button>
+        </div>
+    </form>
+</div>
+
+<th:block layout:fragment="scripts">
+    <!-- Validación del formulario -->
+    <script>
+    (function() {
+        'use strict';
+        
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation');
+        
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+    </script>
+</th:block>
+</body>
+</html>
+<style>
+    .titulo-principal {
+        font-size: 2.2rem;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 2rem !important;
+    }
+
+    .form-retos {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        padding: 10px 15px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.25rem rgba(0,123,255,0.25);
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #2980b9;
+        border-color: #2980b9;
+    }
+
+    .btn-primary:hover {
+        background-color: #1a6ca1;
+        border-color: #1a6ca1;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+
+    @media (max-width: 768px) {
+        .titulo-principal {
+            font-size: 1.8rem;
+        }
+        
+        .form-retos {
+            padding: 15px;
+        }
+    }
+</style>

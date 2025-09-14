@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Retos y Eventos Ambientales</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <th:block layout:fragment="css">
+        <style>
+            :root {
+              --primary: #15631b;
+              --primary-light: #07661c;
+              --accent: #4caf7d;
+              --accent-hover: #3d9e6d;
+              --text: #2d3748;
+              --text-light: #4a5568;
+              --border-color: #2d83127e;
+              --secondary: #f0f7f4;
+              --accent-light: #9fe7b0;
+              --accent-dark: #3a8d66;
+              --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+            
+            body {
+              font-family: 'Poppins', sans-serif;
+              color: var(--text);
+              background-color: #f5fef6;
+              position: relative;
+              overflow-x: hidden;
+              min-height: 100vh;
+            }
+            
+            body::before {
+              content: "";
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: 
+                linear-gradient(135deg, rgba(220, 243, 220, 0.8) 0%, rgba(245, 254, 246, 0.9) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%2315631b" d="M30,10 Q50,0 70,10 T90,30 Q100,50 90,70 T70,90 Q50,100 30,90 T10,70 Q0,50 10,30 T30,10" opacity="0.05"/></svg>');
+              background-size: 300px 300px;
+              background-position: 0 0;
+              z-index: -2;
+              animation: bgMove 120s linear infinite;
+            }
+            
+            @keyframes bgMove {
+              0% { background-position: 0 0, 0 0; }
+              100% { background-position: 0 0, 300px 300px; }
+            }
+            
+            .nature-bg-element {
+              position: fixed;
+              z-index: -1;
+              opacity: 0.15;
+              animation: floatElement 25s infinite ease-in-out;
+            }
+            
+            .leaf-1 {
+              width: 120px;
+              height: 120px;
+              background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%234caf7d" d="M50,0 C70,20 80,40 90,60 C80,80 70,90 50,100 C30,90 20,80 10,60 C20,40 30,20 50,0"/></svg>');
+              top: 15%;
+              left: 5%;
+              animation-delay: 0s;
+            }
+            
+            .leaf-2 {
+              width: 180px;
+              height: 180px;
+              background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%2315631b" d="M50,0 C70,20 80,40 90,60 C80,80 70,90 50,100 C30,90 20,80 10,60 C20,40 30,20 50,0"/></svg>');
+              top: 65%;
+              right: 3%;
+              animation-delay: 5s;
+            }
+            
+            .leaf-3 {
+              width: 150px;
+              height: 150px;
+              background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%2307661c" d="M50,0 C70,20 80,40 90,60 C80,80 70,90 50,100 C30,90 20,80 10,60 C20,40 30,20 50,0"/></svg>');
+              bottom: 10%;
+              left: 8%;
+              animation-delay: 10s;
+            }
+            
+            .bubble {
+              width: 200px;
+              height: 200px;
+              border-radius: 50%;
+              background: radial-gradient(circle, rgba(76, 175, 125, 0.1) 0%, rgba(76, 175, 125, 0) 70%);
+              top: 30%;
+              right: 10%;
+              animation-delay: 7s;
+            }
+            
+            @keyframes floatElement {
+              0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+              25% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
+              50% { transform: translateY(0) rotate(0deg) scale(1); }
+              75% { transform: translateY(30px) rotate(-5deg) scale(0.95); }
+            }
+            
+            .particles {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              pointer-events: none;
+            }
+            
+            .particle {
+              position: absolute;
+              background-color: rgba(76, 175, 125, 0.3);
+              border-radius: 50%;
+              animation: floatParticle 15s infinite linear;
+            }
+            
+            @keyframes floatParticle {
+              0% { transform: translateY(0) translateX(0); opacity: 0; }
+              10% { opacity: 0.3; }
+              90% { opacity: 0.3; }
+              100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+            }
+            
+            .seccion-independiente {
+              border: 1px solid var(--border-color);
+              border-radius: 12px;
+              padding: 1.75rem;
+              margin-bottom: 2rem;
+              background: rgba(255, 255, 255, 0.92);
+              box-shadow: var(--card-shadow);
+              transition: var(--transition);
+              max-width: 100%;
+              backdrop-filter: blur(4px);
+              position: relative;
+              overflow: hidden;
+              border-top: 3px solid rgba(76, 175, 125, 0.3);
+            }
+            
+            .seccion-independiente::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+              pointer-events: none;
+            }
+            
+            .seccion-independiente::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 4px;
+              background: linear-gradient(90deg, var(--accent), var(--primary));
+              transform: scaleX(0);
+              transform-origin: left;
+              transition: transform 0.5s ease;
+            }
+            
+            .seccion-independiente:hover {
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+              transform: translateY(-5px);
+            }
+            
+            .seccion-independiente:hover::after {
+              transform: scaleX(1);
+            }
+            
+            .layout-container {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 2rem;
+              padding: 1.5rem;
+              max-width: 1300px;
+              margin: 0 auto;
+            }
+            
+            .seccion-grande {
+              grid-column: span 2;
+              background: linear-gradient(135deg, rgba(240, 247, 244, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            }
+            
+            .encabezado-principal {
+              grid-column: 1 / -1;
+              text-align: center;
+              margin-bottom: 1rem;
+              background: linear-gradient(135deg, var(--primary), var(--primary-light));
+              color: white;
+              padding: 2rem;
+              border-radius: 12px;
+              box-shadow: 0 8px 20px rgba(242, 243, 242, 0.3);
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .encabezado-principal::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle fill="%23ffffff10" cx="50" cy="50" r="40"/></svg>');
+              background-size: 150px 150px;
+              opacity: 0.1;
+              animation: bgRotate 60s linear infinite;
+            }
+            
+            @keyframes bgRotate {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            
+            .titulo-principal {
+              font-family: 'Playfair Display', serif;
+              font-size: 2.25rem;
+              font-weight: 700;
+              margin-bottom: 0.5rem;
+              letter-spacing: -0.5px;
+              position: relative;
+              display: inline-block;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            
+            .titulo-principal::after {
+              content: "";
+              position: absolute;
+              bottom: -10px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 80px;
+              height: 3px;
+              background: var(--accent-light);
+              border-radius: 3px;
+              transition: width 0.5s ease;
+            }
+            
+            .encabezado-principal:hover .titulo-principal::after {
+              width: 120px;
+            }
+            
+            .subtitulo {
+              font-family: 'Poppins', sans-serif;
+              font-size: 1.1rem;
+              opacity: 0.9;
+            }
+            
+            .seccion-titulo {
+              font-size: 1.25rem;
+              font-weight: 700;
+              color: var(--primary);
+              margin-bottom: 1.25rem;
+              border-bottom: 2px solid var(--accent-light);
+              padding-bottom: 0.75rem;
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              position: relative;
+            }
+            
+            .seccion-titulo::before {
+              content: "";
+              position: absolute;
+              bottom: -2px;
+              left: 0;
+              width: 30px;
+              height: 2px;
+              background: var(--accent);
+              transition: width 0.3s ease;
+            }
+            
+            .seccion-independiente:hover .seccion-titulo::before {
+              width: 100px;
+            }
+            
+            .lista-detalles {
+              padding-left: 1.5rem;
+              list-style-type: none;
+              color: var(--text);
+            }
+            
+            .lista-detalles li {
+              margin-bottom: 0.75rem;
+              position: relative;
+              padding-left: 1.5rem;
+              transition: var(--transition);
+            }
+            
+            .lista-detalles li:hover {
+              transform: translateX(5px);
+            }
+            
+            .lista-detalles li:before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 8px;
+              height: 8px;
+              background-color: var(--accent);
+              border-radius: 50%;
+              transition: all 0.3s ease;
+            }
+            
+            .lista-detalles li:hover:before {
+              width: 12px;
+              height: 12px;
+              background-color: var(--primary);
+            }
+            
+            .destacado {
+              color: var(--accent);
+              font-weight: 600;
+              transition: var(--transition);
+              position: relative;
+              display: inline-block;
+            }
+            
+            .destacado:hover {
+              color: var(--accent-dark);
+              transform: translateY(-2px);
+            }
+            
+            .destacado::after {
+              content: "";
+              position: absolute;
+              bottom: -2px;
+              left: 0;
+              width: 0;
+              height: 2px;
+              background: var(--primary);
+              transition: width 0.3s ease;
+            }
+            
+            .destacado:hover::after {
+              width: 100%;
+            }
+            
+            .badge-nuevo {
+              background-color: var(--accent-light);
+              color: var(--accent-dark);
+              padding: 0.35rem 1rem;
+              border-radius: 50px;
+              font-size: 0.8rem;
+              font-weight: 600;
+              display: inline-block;
+              margin-top: 0.5rem;
+              letter-spacing: 0.5px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+              transition: var(--transition);
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .badge-nuevo::before {
+              content: "";
+              position: absolute;
+              top: -50%;
+              left: -50%;
+              width: 200%;
+              height: 200%;
+              background: linear-gradient(45deg, transparent 33%, rgba(255,255,255,0.3) 50%, transparent 66%);
+              background-size: 300% 300%;
+              animation: shine 3s infinite linear;
+              opacity: 0.5;
+            }
+            
+            @keyframes shine {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(100%); }
+            }
+            
+            .badge-nuevo:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0.5rem 1.25rem;
+              border-radius: 8px;
+              font-size: 0.875rem;
+              font-weight: 600;
+              text-decoration: none;
+              transition: var(--transition);
+              cursor: pointer;
+              border: none;
+              gap: 0.5rem;
+              position: relative;
+              overflow: hidden;
+              z-index: 1;
+            }
+            
+            .btn::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%);
+              background-size: 400% 400%;
+              z-index: -1;
+              transition: background-position 0.6s ease;
+              opacity: 0;
+            }
+            
+            .btn:hover::before {
+              opacity: 1;
+              background-position: 100% 100%;
+            }
+            
+            .btn-primary {
+              background-color: var(--accent);
+              color: white;
+              box-shadow: 0 2px 5px rgba(76, 175, 125, 0.3);
+            }
+            
+            .btn-primary:hover {
+              background-color: var(--accent-hover);
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(76, 175, 125, 0.3);
+            }
+            
+            .btn-outline-secondary {
+              background-color: transparent;
+              color: var(--text-light);
+              border: 1px solid var(--border-color);
+            }
+            
+            .btn-outline-secondary:hover {
+              background-color: #f8f9fa;
+              border-color: var(--accent);
+              color: var(--accent);
+            }
+            
+            .btn-outline-danger {
+              background-color: transparent;
+              color: #dc3545;
+              border: 1px solid #dc3545;
+            }
+            
+            .btn-outline-danger:hover {
+              background-color: #fff5f5;
+            }
+            
+            .btn-accion {
+              width: 36px;
+              height: 36px;
+              padding: 0;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 8px;
+              transition: var(--transition);
+            }
+            
+            .btn-accion i {
+              font-size: 0.9rem;
+            }
+            
+            .acciones-evento {
+              display: flex;
+              gap: 0.5rem;
+            }
+            
+            .mes-card {
+              background-color: var(--secondary);
+              padding: 1.5rem;
+              border-radius: 10px;
+              margin-top: 1.25rem;
+              border-left: 4px solid var(--accent);
+              transition: var(--transition);
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .mes-card::after {
+              content: "";
+              position: absolute;
+              bottom: -30px;
+              right: -30px;
+              width: 100px;
+              height: 100px;
+              background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%234caf7d20" d="M50,0 C70,20 80,40 90,60 C80,80 70,90 50,100 C30,90 20,80 10,60 C20,40 30,20 50,0"/></svg>');
+              background-repeat: no-repeat;
+              opacity: 0.3;
+              z-index: 0;
+            }
+            
+            .mes-card:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            
+            .mes-titulo {
+              font-size: 1.3rem;
+              color: var(--primary);
+              margin-bottom: 1rem;
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              position: relative;
+              z-index: 1;
+            }
+            
+            .lista-retos {
+              padding-left: 0;
+              list-style-type: none;
+              margin: 0.75rem 0;
+              position: relative;
+              z-index: 1;
+            }
+            
+            .lista-retos li {
+              margin-bottom: 0.75rem;
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              padding: 0.5rem 0.75rem;
+              background-color: rgba(255,255,255,0.7);
+              border-radius: 6px;
+              transition: var(--transition);
+              position: relative;
+            }
+            
+            .lista-retos li::before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 3px;
+              height: 100%;
+              background: var(--accent);
+              border-radius: 3px 0 0 3px;
+              transform: scaleY(0);
+              transform-origin: top;
+              transition: transform 0.3s ease;
+            }
+            
+            .lista-retos li:hover {
+              background-color: white;
+              transform: translateX(5px);
+            }
+            
+            .lista-retos li:hover::before {
+              transform: scaleY(1);
+            }
+            
+            .badge-dificultad {
+              display: inline-block;
+              padding: 0.35rem 1rem;
+              border-radius: 50px;
+              font-size: 0.75rem;
+              font-weight: 700;
+              margin-top: 0.5rem;
+              letter-spacing: 0.5px;
+              transition: var(--transition);
+            }
+            
+            .badge-dificultad:hover {
+              transform: translateY(-2px);
+            }
+            
+            .badge-dificultad.moderado {
+              background-color: #fff3cd;
+              color: #856404;
+            }
+            
+            .badge-dificultad.dificil {
+              background-color: #f8d7da;
+              color: #721c24;
+            }
+            
+            .badge-dificultad.facil {
+              background-color: #d4edda;
+              color: #155724;
+            }
+            
+            .footer-links {
+              list-style: none;
+              padding-left: 0;
+            }
+            
+            .footer-links li {
+              margin-bottom: 0.75rem;
+              transition: var(--transition);
+              position: relative;
+            }
+            
+            .footer-links li::before {
+              content: "";
+              position: absolute;
+              left: -15px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 6px;
+              height: 6px;
+              background-color: var(--accent-light);
+              border-radius: 50%;
+              transition: var(--transition);
+              opacity: 0;
+            }
+            
+            .footer-links li:hover {
+              transform: translateX(5px);
+            }
+            
+            .footer-links li:hover::before {
+              opacity: 1;
+              left: -10px;
+            }
+            
+            .footer-link {
+              color: var(--text-light);
+              text-decoration: none;
+              transition: var(--transition);
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+            }
+            
+            .footer-link:hover {
+              color: var(--accent);
+            }
+            
+            .footer-link i {
+              color: var(--accent);
+              transition: var(--transition);
+            }
+            
+            .footer-link:hover i {
+              transform: rotate(90deg);
+              color: var(--primary);
+            }
+            
+            .water-effect {
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .event-card {
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+              cursor: pointer;
+            }
+            
+            .event-card:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+            }
+            
+            .event-card .acciones-evento {
+              z-index: 2;
+            }
+            
+            @media (max-width: 768px) {
+              .layout-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+              }
+              
+              .seccion-grande {
+                grid-column: span 1;
+              }
+              
+              .encabezado-principal {
+                padding: 1.5rem 1rem;
+              }
+              
+              .titulo-principal {
+                font-size: 1.75rem;
+              }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <!-- Elementos decorativos de fondo -->
+    <div class="nature-bg-element leaf-1"></div>
+    <div class="nature-bg-element leaf-2"></div>
+    <div class="nature-bg-element leaf-3"></div>
+    <div class="nature-bg-element bubble"></div>
+    
+    <div class="particles" id="particles-js"></div>
+    
+    <div layout:fragment="content" class="layout-container">
+        <!-- Encabezado mejorado -->
+        <div class="encabezado-principal seccion-independiente water-effect">
+            <h1 class="titulo-principal">Retos y Eventos Ambientales</h1>
+            <p class="subtitulo">Pequeñas acciones, grandes cambios para nuestro planeta</p>
+        </div>
+        
+        <!-- Caja Eventos -->
+        <div class="seccion-independiente water-effect">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="seccion-titulo mb-0">
+                    <i class="fas fa-calendar-alt"></i>
+                    Próximos Eventos en Bogotá
+                </h3>
+                <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <a th:href="@{/eventos/nuevo}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nuevo Evento
+                    </a>
+                </div>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(eventos)}" class="layout-container">
+                <div th:each="evento : ${eventos}"
+                     class="seccion-independiente water-effect event-card"
+                     style="display: flex; flex-direction: column; justify-content: space-between; position: relative; padding: 1.5rem;"
+                     th:attr="data-href=@{/eventos/{id}(id=${evento.id})}">
+
+                    <div style="flex-grow: 1;">
+                        <h4 class="seccion-titulo mb-2">
+                            <i class="fas fa-leaf"></i>
+                            <span th:text="${evento.titulo} ?: 'Sin título'"></span>
+                        </h4>
+
+                        <p class="mb-2">
+                            <strong th:text="${#temporals.format(evento.fechaHora, 'dd MMM. yyyy')}"></strong><br>
+                            <span th:if="${evento.ubicacion}">
+                                📍 <span th:text="${evento.ubicacion}"></span><br>
+                            </span>
+                            <span th:if="${evento.descripcion}" th:text="${#strings.abbreviate(evento.descripcion, 100)}"></span>
+                        </p>
+                    </div>
+
+                    <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="acciones-evento mt-2" style="justify-content: flex-end;">
+                        <a th:href="@{/eventos/editar/{id}(id=${evento.id})}"
+                           class="btn btn-outline-secondary btn-accion"
+                           title="Editar evento"
+                           onclick="event.stopPropagation();">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <form th:action="@{/eventos/eliminar/{id}(id=${evento.id})}"
+                              method="post"
+                              onsubmit="event.stopPropagation();" style="display: inline;">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-accion"
+                                    title="Eliminar evento"
+                                    onclick="return confirm('¿Eliminar este evento?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(eventos)}" class="alert alert-info mt-3">
+                No hay eventos programados para este mes.
+            </div>
+        </div>
+        
+        <!-- Caja Retos mejorada -->
+        <div class="seccion-independiente water-effect">
+            <h3 class="seccion-titulo">
+                <i class="fas fa-seedling"></i>
+                Retos Ambientales Mensuales
+            </h3>
+            <div class="text-center mt-3">
+                    <a th:href="@{/eventos/retos/mensuales}" class="btn btn-primary">
+                        <i class="fas fa-calendar-alt"></i> Ver Retos
+                    </a>
+                </div>
+            
+            <div class="mes-card mb-6">
+                <h3 class="mes-titulo">💧 Febrero - Ahorro de Agua</h3>
+                <span class="badge-nuevo">Temporada 2025</span>
+                <ul class="lista-retos">
+                    <li>🚿 Reduce tiempo de ducha a 5 minutos</li>
+                    <li>🌧️ Instala un sistema de captación de agua lluvia</li>
+                    <li>🍃 Riega plantas con agua reutilizada</li>
+                </ul>
+                <span class="badge-dificultad moderado">Dificultad: Moderado</span>
+                <ul class="lista-detalles">
+                  <br>
+                <li>✅ Usa botella reutilizable todo el mes</li>
+                <li>♻️ Separa correctamente tus residuos (orgánicos, reciclables, no reciclables)</li>
+                <li>🛍️ Compra a granel evitando empaques plásticos</li>
+                <li>🌱 Planta un árbol nativo en tu comunidad</li>
+                <li>📅 Participa en un evento ambiental local</li>
+                <li>📸 Comparte tus avances en redes sociales con el hashtag #RetoAgua2025</li>
+                
+              </ul>
+            </div>
+        </div>
+        
+        <!-- Caja Organizaciones mejorada -->
+        <div class="seccion-independiente water-effect">
+            <h3 class="seccion-titulo">
+                <i class="fas fa-hands-helping"></i>
+                Organizaciones Ambientales
+            </h3>
+            <p class="text-gray-700">
+                Descubre y conecta con organizaciones que trabajan por el medio ambiente. 
+                Tu participación puede marcar la diferencia.
+            </p>
+            
+            <ul class="footer-links">
+                <li><a href="https://www.unep.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> ONU Medio Ambiente</a></li>
+                <li><a href="https://www.worldwildlife.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> WWF Internacional</a></li>
+                <li><a href="https://www.greenpeace.org/international/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Greenpeace</a></li>
+                <li><a href="https://natura.org.co/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Fundación Natura Colombia</a></li>
+                <li><a href="https://oceanconservancy.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Ocean Conservancy</a></li>
+                <li><a href="https://water.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Water.org</a></li>
+                <li><a href="https://www.fundacionhumedales.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Fundación Humedales Bogotá (Colombia)</a></li>
+                <li><a href="https://www.proaves.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Fundación ProAves (Colombia)</a></li>
+                <li><a href="https://www.faunacc.org/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Fundación Fauna Acc (Colombia)</a></li>
+                <li><a href="https://www.parquesnacionales.gov.co/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> Parques Nacionales Naturales de Colombia</a></li>
+                <li><a href="https://www.siac.gov.co/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> SIAC - Sistema de Información Ambiental de Colombia</a></li>
+                <li><a href="https://www.ideam.gov.co/" class="footer-link" target="_blank"><i class="fas fa-chevron-right"></i> IDEAM (Instituto de Hidrología, Meteorología y Estudios Ambientales - Colombia)</a></li>
+              </ul>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Manejar clic en las tarjetas de evento
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // Solo redireccionar si no se hizo clic en un elemento interactivo
+                        if (!e.target.closest('a, button, [onclick], form, input')) {
+                            window.location.href = this.getAttribute('data-href');
+                        }
+                    });
+                });
+
+                // Código existente para el calendario y partículas
+                var calendarEl = document.getElementById('calendar');
+                if(calendarEl) {
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        locale: 'es',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        }
+                    });
+                    calendar.render();
+                }
+                
+                // Crear partículas animadas
+                const particlesContainer = document.querySelector('.particles');
+                if(particlesContainer) {
+                    for(let i = 0; i < 30; i++) {
+                        const particle = document.createElement('div');
+                        particle.classList.add('particle');
+                        
+                        const posX = Math.random() * 100;
+                        const size = Math.random() * 5 + 3;
+                        const duration = Math.random() * 10 + 10;
+                        const delay = Math.random() * 15;
+                        
+                        particle.style.width = `${size}px`;
+                        particle.style.height = `${size}px`;
+                        particle.style.left = `${posX}%`;
+                        particle.style.animationDuration = `${duration}s`;
+                        particle.style.animationDelay = `${delay}s`;
+                        
+                        particlesContainer.appendChild(particle);
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

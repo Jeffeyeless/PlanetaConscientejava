@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Noticias Ambientales - Planeta Consciente</title>
+    <link th:href="@{/css/noticia.css}" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+
+<body>
+<div layout:fragment="content" class="container noticias-container">
+    <div class="noticias-header">
+        <h1>NOTICIAS AMBIENTALES</h1>
+        <p>Mantente informado sobre las últimas novedades en sostenibilidad y cuidado del medio ambiente</p>
+    </div>
+
+    <!-- Formulario de Filtrado -->
+    <div class="filtro-noticias">
+        <form th:action="@{/noticias}" method="GET" class="filtro-form" id="filtroForm" onsubmit="return validarFechas()">
+            <!-- Búsqueda -->
+            <div class="filtro-group">
+                <label for="busqueda">Buscar noticias</label>
+                <input type="text" name="busqueda" id="busqueda" 
+                       placeholder="Ej: cambio climático" 
+                       th:value="${param.busqueda != null} ? ${param.busqueda} : ''">
+            </div>
+
+            <!-- Fuente -->
+            <div class="filtro-group">
+                <label for="fuente">Fuente</label>
+                <select name="fuente" id="fuente">
+                    <option value="">Todas las fuentes</option>
+                    <option th:each="fuente : ${fuentes}" 
+                            th:value="${fuente}"
+                            th:text="${fuente}"
+                            th:selected="${param.fuente != null && param.fuente == fuente}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Fecha Desde -->
+            <div class="filtro-group">
+                <label for="fecha_desde">Fecha desde</label>
+                <input type="date" name="fecha_desde" id="fecha_desde" 
+                        th:value="${paramFechaDesde != null} ? ${#temporals.format(paramFechaDesde, 'yyyy-MM-dd')} : ''">
+            </div>
+
+            <!-- Fecha Hasta -->
+            <div class="filtro-group">
+                <label for="fecha_hasta">Fecha hasta</label>
+                <input type="date" name="fecha_hasta" id="fecha_hasta" 
+                        th:value="${paramFechaHasta != null} ? ${#temporals.format(paramFechaHasta, 'yyyy-MM-dd')} : ''">
+            </div>
+
+            <!-- Botones -->
+            <div class="filtro-actions">
+                <button type="submit" class="btn-filtrar">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+
+                <th:block th:if="${param.busqueda != null or 
+                                param.fuente != null or 
+                                param.fecha_desde != null or 
+                                param.fecha_hasta != null}">
+                    <a th:href="@{/noticias}" class="btn-limpiar">
+                        Limpiar
+                    </a>
+                </th:block>
+
+                <th:block th:if="${param.busqueda != null or 
+                                param.fuente != null or 
+                                param.fecha_desde != null or 
+                                param.fecha_hasta != null}">
+                    <button type="submit" name="generar_pdf" value="1" class="btn-filtrar">
+                        <i class="fas fa-file-pdf"></i> Generar PDF
+                    </button>
+                </th:block>
+            </div>
+        </form>
+    </div>
+
+    <div class="update-info">
+        Última actualización: <span id="update-time"></span>
+    </div>
+
+    <th:block th:if="${noticias.empty}">
+        <div class="no-resultados">
+            <i class="fas fa-info-circle"></i> No se encontraron noticias con los criterios seleccionados
+        </div>
+    </th:block>
+
+    <th:block th:unless="${noticias.empty}">
+        <!-- ✅ Mostrar solo a administradores -->
+        <div sec:authorize="hasRole('ADMIN')" class="admin-actions">
+            <a th:href="@{/noticias/nueva}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Crear Nueva Noticia
+            </a>
+        </div>
+
+        <div class="grid-noticias">
+            <th:block th:each="noticia : ${noticias}">
+                <div class="noticia-card">
+                    <div class="noticia-imagen-container">
+                        <th:block th:if="${noticia.imagenUrl}">
+                            <img th:src="@{${noticia.imagenUrl} + '?v=' + ${#dates.createNow().time}}" 
+                                 th:alt="${noticia.titulo}" 
+                                 class="noticia-imagen" 
+                                 loading="lazy"
+                                 onerror="this.src='https://source.unsplash.com/random/600x400/?nature,eco'">
+                        </th:block>
+                        <th:block th:unless="${noticia.imagenUrl}">
+                            <img src="https://source.unsplash.com/random/600x400/?nature,eco" 
+                                 alt="Imagen de noticia" 
+                                 class="noticia-imagen" 
+                                 loading="lazy">
+                        </th:block>
+                    </div>
+
+                    <div class="noticia-content">
+                        <div class="noticia-meta">
+                            <span class="noticia-date"><i class="far fa-calendar-alt"></i> 
+                                <span th:text="${noticia.fechaPublicacion != null ? #temporals.format(noticia.fechaPublicacion, 'dd MMM, yyyy') : 'Sin fecha'}"></span>
+                            </span>
+                            <th:block th:if="${noticia.fuente}">
+                                <span class="noticia-source" th:text="${noticia.fuente}"></span>
+                            </th:block>
+                        </div>
+
+                        <h3 class="noticia-title" th:text="${noticia.titulo}"></h3>
+                        <p class="noticia-excerpt" th:text="${noticia.resumen}"></p>
+
+                        <a th:href="@{/noticias/{id}(id=${noticia.id})}" class="noticia-link">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+
+                        <!-- ✅ Botones solo para administradores -->
+                        <div sec:authorize="hasRole('ADMIN')" class="noticia-admin-actions">
+                            <a th:href="@{/noticias/{id}/editar(id=${noticia.id})}" class="btn btn-sm btn-warning">Editar</a>
+                            <form th:action="@{/noticias/{id}/eliminar(id=${noticia.id})}" method="POST" style="display:inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- Paginación -->
+        <div class="pagination-container">
+            <div th:if="${noticias.totalPages > 1}">
+                <ul class="pagination">
+                    <li th:class="${noticias.first} ? 'page-item disabled' : 'page-item'">
+                        <a th:href="@{/noticias(page=0)}" class="page-link">« Primera</a>
+                    </li>
+                    <li th:class="${noticias.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                        <a th:href="@{/noticias(page=${noticias.number - 1})}" class="page-link">‹ Anterior</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(1, noticias.totalPages)}" 
+                        th:class="${noticias.number + 1 == i} ? 'page-item active' : 'page-item'">
+                        <a th:href="@{/noticias(page=${i - 1})}" th:text="${i}" class="page-link"></a>
+                    </li>
+                    <li th:class="${noticias.hasNext()} ? 'page-item' : 'page-item disabled'">
+                        <a th:href="@{/noticias(page=${noticias.number + 1})}" class="page-link">Siguiente ›</a>
+                    </li>
+                    <li th:class="${noticias.last} ? 'page-item disabled' : 'page-item'">
+                        <a th:href="@{/noticias(page=${noticias.totalPages - 1})}" class="page-link">Última »</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Mensaje de error de filtro con SweetAlert2 -->
+    <div th:if="${errorFiltro}" id="errorFiltroMsg" th:data-msg="${errorFiltro}" style="display:none;"></div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Función para validar las fechas antes de enviar el formulario
+        function validarFechas() {
+            const fechaDesdeInput = document.getElementById('fecha_desde');
+            const fechaHastaInput = document.getElementById('fecha_hasta');
+
+            const fechaDesde = fechaDesdeInput.value ? new Date(fechaDesdeInput.value) : null;
+            const fechaHasta = fechaHastaInput.value ? new Date(fechaHastaInput.value) : null;
+
+            // Resetear estilos
+            fechaDesdeInput.style.borderColor = '';
+            fechaHastaInput.style.borderColor = '';
+
+            if (fechaDesde && fechaHasta) {
+                if (fechaDesde > fechaHasta) {
+                    // Destacar campos con error
+                    fechaDesdeInput.style.borderColor = 'red';
+                    fechaHastaInput.style.borderColor = 'red';
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Rango de fechas inválido',
+                        text: 'La fecha "Desde" no puede ser posterior a la fecha "Hasta". Se limpiará la fecha "Hasta".',
+                        confirmButtonText: 'Entendido'
+                    });
+
+                    // 🚨 Fallback: borrar la fecha Hasta
+                    fechaHastaInput.value = '';
+                    return false;
+                }
+                if (fechaHasta < fechaDesde) {
+                    fechaDesdeInput.style.borderColor = 'red';
+                    fechaHastaInput.style.borderColor = 'red';
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Rango de fechas inválido',
+                        text: 'La fecha "Hasta" no puede ser anterior a la fecha "Desde". Se limpiará la fecha "Desde".',
+                        confirmButtonText: 'Entendido'
+                    });
+
+                    // 🚨 Fallback: borrar la fecha Desde
+                    fechaDesdeInput.value = '';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Validación en tiempo real
+            document.getElementById('fecha_desde').addEventListener('change', validarFechas);
+            document.getElementById('fecha_hasta').addEventListener('change', validarFechas);
+
+            // Mostrar mensajes de error del backend
+            const errorMsg = document.getElementById('errorFiltroMsg');
+            if (errorMsg && errorMsg.dataset.msg) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en filtros',
+                    text: errorMsg.dataset.msg,
+                    confirmButtonText: 'Cerrar'
+                });
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>

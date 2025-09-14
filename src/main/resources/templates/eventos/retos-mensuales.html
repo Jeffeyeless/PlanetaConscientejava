@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>🌱 Retos por Mes | Planeta Consciente</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            color: #2e7d32;
+        }
+
+        .titulo-principal {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: #1b5e20;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .mes-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            border-left: 8px solid #81c784;
+            transition: transform 0.2s ease;
+        }
+
+        .mes-card:hover {
+            transform: scale(1.01);
+        }
+
+        .mes-titulo {
+            font-size: 1.9rem;
+            color: #388e3c;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        .reto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9fbe7;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px dashed #c5e1a5;
+        }
+
+        .reto-descripcion {
+            margin: 0;
+            flex-grow: 1;
+            font-size: 1.05rem;
+            color: #33691e;
+        }
+
+        .badge-dificultad {
+            padding: 8px 16px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .badge-dificultad.facil {
+            background-color: #66bb6a; /* Verde claro */
+        }
+
+        .badge-dificultad.media {
+            background-color: #ffee58; /* Amarillo */
+            color: #3e2723;
+        }
+
+        .badge-dificultad.alta {
+            background-color: #ef5350; /* Rojo claro */
+        }
+
+        .alert-info {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            color: #388e3c;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .btn-outline-secondary {
+            border-color: #2e7d32;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .volver {
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container py-4">
+    <h1 class="titulo-principal text-center">🌿 Retos Ambientales por Mes</h1>
+
+    <div th:if="${#maps.isEmpty(retosPorMes)}" class="alert alert-info text-center">
+        No hay retos disponibles por el momento.
+    </div>
+
+    <!-- Reto Abril -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Abril</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Consumir solo productos locales y de temporada durante el mes, evitando alimentos importados o procesados.</p>
+            <span class="badge-dificultad alta">Alta</span>
+        </div>
+    </div>
+
+    <!-- Reto Enero -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Enero</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Evitar el uso de plásticos de un solo uso durante todo el mes. Incluye llevar bolsas reutilizables, usar botellas de agua recargables y evitar productos empaquetados en plástico.</p>
+            <span class="badge-dificultad media">Media</span>
+        </div>
+    </div>
+
+    <!-- Reto Febrero -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Febrero</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Utilizar transporte público, bicicleta o caminar en lugar del coche privado al menos 3 días a la semana.</p>
+            <span class="badge-dificultad facil">Fácil</span>
+        </div>
+    </div>
+
+    <!-- Reto Junio -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Junio</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Generar menos de 1 kg de basura no reciclable durante todo el mes, aplicando técnicas de compostaje y reutilización.</p>
+            <span class="badge-dificultad alta">Alta</span>
+        </div>
+    </div>
+
+    <div class="volver">
+        <a th:href="@{/eventos}" class="btn btn-outline-secondary btn-lg">← Volver a Eventos</a>
+    </div>
+</div>
+</body>
+</html>

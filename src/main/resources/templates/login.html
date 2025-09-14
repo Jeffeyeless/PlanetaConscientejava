@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login | Planeta Consciente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #2e7d32; /* Verde principal */
+            --secondary-color: #81c784; /* Verde claro */
+            --accent-color: #388e3c; /* Verde oscuro */
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --light-text: #fff;
+            --error-color: #d32f2f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                              url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border-top: 5px solid var(--primary-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .message {
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .info {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+        }
+        
+        label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        input {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.3);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .register-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .register-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        /* Efectos adicionales */
+        .leaf-decoration {
+            position: absolute;
+            width: 150px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .leaf-1 {
+            top: 10%;
+            left: 10%;
+            transform: rotate(45deg);
+        }
+        
+        .leaf-2 {
+            bottom: 10%;
+            right: 10%;
+            transform: rotate(-20deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+        
+        <div th:if="${param.error}" class="message error">
+            Correo electrónico o contraseña incorrectos
+        </div>
+        
+        <div th:if="${param.logout}" class="message info">
+            Has cerrado sesión correctamente
+        </div>
+        
+        <div th:if="${param.success}" class="message success">
+            ¡Registro exitoso! Por favor inicia sesión
+        </div>
+        
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">Correo Electrónico</label>
+                <input type="email" id="username" name="username" placeholder="Ingresa tu correo electrónico" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        
+        <a th:href="@{/register}" class="register-link">¿No tienes cuenta? Regístrate</a>
+    </div>
+    
+    <!-- Decoración ambiental -->
+    <svg class="leaf-decoration leaf-1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path fill="var(--primary-color)" d="M416 127.1C416 247.4 319.4 344 200 344C158.8 344 120.3 331.3 88.53 309.7C83.42 306.1 77.42 307.7 73.7 312.8C70.06 317.9 71.67 323.9 76.78 327.6C112.3 353.1 154.8 368 200 368C337.2 368 448 257.2 448 120C448 74.84 433.1 32.31 407.6 3.223C403.9-1.886 397.9-3.497 392.8 .1487C387.7 3.795 386.1 9.793 389.7 14.89C411.3 46.72 424 85.22 424 127.1H416z"/>
+    </svg>
+    
+    <svg class="leaf-decoration leaf-2" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path fill="var(--secondary-color)" d="M272 96c26.5 0 48-21.5 48-48S298.5 0 272 0s-48 21.5-48 48s21.5 48 48 48zm-64 160c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm160 0c0 26.5 21.5 48 48 48s48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48zm-96 128c-26.5 0-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48s-21.5-48-48-48z"/>
+    </svg>
+</body>
+</html>

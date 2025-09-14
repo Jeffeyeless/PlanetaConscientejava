@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Huella de Carbono | EcoDashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #15631b;
+            --light-green: #2d5e4a;
+            --dark-green: #1b5e20;
+            --eco-blue: #c1d7e2;
+            --border-color: #2d83127e;
+            --text-dark: rgb(26, 15, 15);
+            --text-light: #607d8b;
+            --white: #ffffff;
+        }
+        
+        .eco-nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .nav-brand {
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-link.active {
+            background-color: white;
+            color: var(--primary-green);
+        }
+        
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .calculator-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .calculator-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .calculator-body {
+            padding: 2rem;
+        }
+        
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+        
+        .progress-tracker {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+        
+        .progress-step {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .progress-step.active {
+            background-color: var(--primary-green);
+            transform: scale(1.3);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--dark-green));
+            transition: width 0.5s ease;
+        }
+        
+        .question-container {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .question-text {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background-color: var(--dark-green);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+            outline: none;
+        }
+        
+        .option-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .option-card:hover {
+            border-color: var(--primary-green);
+            background-color: rgba(129, 199, 132, 0.05);
+        }
+        
+        .option-card.selected {
+            border-color: var(--primary-green);
+            background-color: rgba(129, 199, 132, 0.1);
+        }
+        
+        .option-radio {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .option-radio:checked {
+            border-color: var(--primary-green);
+            background-color: var(--primary-green);
+        }
+        
+        .option-radio:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: white;
+        }
+        
+        .option-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            flex-grow: 1;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-name {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .calculator-header {
+                padding: 1.5rem;
+            }
+            
+            .calculator-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<div layout:fragment="content">
+    
+    <!-- Contenido de la calculadora -->
+    <div class="calculator-container">
+        <div class="calculator-card">
+            <div class="calculator-header">
+                <h2 class="calculator-title"><i class="fas fa-leaf"></i> Calculadora de Huella de Carbono</h2>
+            </div>
+            <div class="calculator-body">
+                <!-- Barra de progreso -->
+                <div class="progress-container">
+                    <div class="progress-tracker">
+                        <div th:each="i : ${#numbers.sequence(1, preguntas.size())}"
+                             class="progress-step"
+                             th:classappend="${i <= preguntaActual + 1} ? 'active' : ''"></div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill"
+                             th:style="'width:' + ${(preguntaActual + 1) * 100 / preguntas.size()} + '%'"></div>
+                    </div>
+                    <p class="text-center text-muted mb-0"
+                       th:text="${'Pregunta ' + (preguntaActual + 1) + ' de ' + preguntas.size()}"></p>
+                </div>
+
+                <!-- Pregunta -->
+                <div class="question-container">
+                    <form th:action="@{/calculadora/responder}" method="post">
+                        <input type="hidden" name="preguntaActual" th:value="${preguntaActual}">
+                        <div class="question-number">Pregunta <span th:text="${preguntaActual + 1}"></span></div>
+                        <h4 class="question-text" th:text="${preguntas[preguntaActual].texto}"></h4>
+
+                        <!-- Pregunta numérica -->
+                        <div th:if="${preguntas[preguntaActual].tipo == 'numero'}" class="mb-4">
+                            <div class="input-group">
+                                <input type="number" class="form-control input-field" name="respuesta" required
+                                       th:min="${preguntas[preguntaActual].min ?: 0}"
+                                       th:max="${preguntas[preguntaActual].max ?: 10000}"
+                                       placeholder="Ingresa tu respuesta">
+                                <span class="input-group-text bg-light"
+                                      th:text="${preguntas[preguntaActual].unidad}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta selección -->
+                        <div th:if="${preguntas[preguntaActual].tipo == 'seleccion'}">
+                            <div th:each="opcion : ${preguntas[preguntaActual].opciones}" class="mb-2">
+                                <label class="option-card">
+                                    <input class="option-radio" type="radio"
+                                           th:id="${'opcion' + opcion.key}"
+                                           name="respuesta"
+                                           th:value="${opcion.key}" required>
+                                    <span class="option-label" th:text="${opcion.value}"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span th:if="${preguntaActual < preguntas.size() - 1}">
+                                <i class="fas fa-arrow-right"></i> Siguiente
+                            </span>
+                            <span th:if="${preguntaActual == preguntas.size() - 1}">
+                                <i class="fas fa-calculator"></i> Calcular Huella
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</div>

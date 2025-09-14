@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Medio Ambiente Sostenible | Transforma tu Impacto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.0.0/css/all.min.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+    :root {
+        --primary-color: #1a7431;
+        --primary-dark: #0d5a20;
+        --primary-light: #2e8b57;
+        --secondary-color: #ffc107;
+        --accent-color: #4cc9f0;
+        --dark-color: #2d3748;
+        --light-color: #f8f9fa;
+        --gradient-green: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        --gradient-accent: linear-gradient(135deg, var(--accent-color), #4361ee);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+        color: #4a5568;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    
+    h1, h2, h3, h4, h5 {
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 1rem;
+    }
+    
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    /* Hero Section - Versión Mejorada */
+    .hero-container {
+        background: linear-gradient(135deg, rgba(26, 116, 49, 0.9), rgba(13, 90, 32, 0.9)), 
+                    url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        padding: 10rem 2rem;
+        text-align: center;
+        margin-bottom: 5rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .hero-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: clamp(2.5rem, 8vw, 4.5rem);
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        line-height: 1.2;
+        background: linear-gradient(to right, #fff, #e0f7e0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+        animation: fadeInDown 1s ease-out;
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
+        font-weight: 300;
+        margin-bottom: 3rem;
+        opacity: 0.95;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        animation: fadeInUp 1s ease-out 0.3s forwards;
+        opacity: 0;
+    }
+    
+    .btn-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-hero {
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: var(--transition);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        display: inline-flex;
+        align-items: center;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        animation: fadeIn 1s ease-out 0.6s forwards;
+        opacity: 0;
+    }
+    
+    .btn-hero:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        color: var(--primary-dark);
+    }
+    
+    .btn-hero i {
+        margin-right: 12px;
+        transition: transform 0.3s;
+        font-size: 1.2rem;
+    }
+    
+    .btn-hero:hover i {
+        transform: translateX(8px);
+    }
+    
+    /* Features Section */
+    .features-section {
+        position: relative;
+        padding: 6rem 0;
+        background: url('https://www.transparenttextures.com/patterns/soft-circle-scales.png');
+    }
+    
+    .features-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245, 247, 250, 0.9));
+        z-index: -1;
+    }
+    
+    .feature-card {
+        background: white;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: var(--transition-slow);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    .feature-card .card-body {
+        padding: 3rem;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .feature-icon {
+        font-size: 4.5rem;
+        margin-bottom: 2.5rem;
+        color: var(--primary-color);
+        transition: var(--transition);
+        display: inline-block;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.2) rotate(5deg);
+        color: var(--primary-dark);
+    }
+    
+    .feature-card h3 {
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        color: var(--dark-color);
+        position: relative;
+    }
+    
+    .btn-feature {
+        background: var(--gradient-green);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 8px 20px rgba(26, 116, 49, 0.3);
+        margin-top: 1.5rem;
+        cursor: pointer;
+    }
+    
+    .btn-feature:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(26, 116, 49, 0.4);
+    }
+    
+    .btn-feature i {
+        margin-right: 10px;
+        transition: transform 0.3s;
+    }
+    
+    .btn-feature:hover i {
+        transform: translateX(8px);
+    }
+    
+    /* Stats Section */
+    .stats-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stat-number {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(to right, #fff, #e0f7e0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Mission Section */
+    .mission-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, #f8f9fa, #e9f5ec);
+        position: relative;
+    }
+    
+    .mission-card {
+        background: white;
+        border-radius: 30px;
+        box-shadow: var(--shadow-xl);
+        border: none;
+        overflow: hidden;
+    }
+    
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 50px;
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--dark-color);
+        text-align: center;
+    }
+    
+    .mission-item {
+        padding: 3rem 2rem;
+        transition: var(--transition);
+        border-radius: 20px;
+        text-align: center;
+        background: white;
+        height: 100%;
+    }
+    
+    .mission-item:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .hero-container {
+            padding: 8rem 1.5rem;
+        }
+        
+        .feature-card .card-body {
+            padding: 2.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-container {
+            padding: 6rem 1rem;
+            background-attachment: scroll;
+        }
+        
+        .btn-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-hero {
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+        }
+    }
+    </style>
+</head>
+
+<body layout:fragment="content">
+
+<!-- Hero Section -->
+<div class="hero-container">
+    <div class="hero-content">
+        <h1 class="hero-title">TRANSFORMA TU IMPACTO AMBIENTAL</h1>
+        <p class="hero-subtitle">Únete al movimiento global que está revolucionando la sostenibilidad y creando un futuro mejor para nuestro planeta</p>
+        
+        <div class="btn-container">
+            <a th:href="@{/foro}" class="btn-hero">
+                <i class="fas fa-comments"></i> Foro Comunitario
+            </a>
+            <a th:href="@{/capacitaciones}" class="btn-hero">
+                <i class="fas fa-graduation-cap"></i> Capacitaciones
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Foro de Sostenibilidad</h3>
+                        <p>Conéctate con una comunidad global de activistas, expertos y entusiastas.</p>
+                        <a th:href="@{/foro}" class="btn-feature">
+                            <i class="fas fa-arrow-right"></i> Únete a la Conversación
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Aprendizaje Experto</h3>
+                        <p>Domina las últimas técnicas de sostenibilidad con nuestros cursos certificados.</p>
+                        <a th:href="@{/capacitaciones}" class="btn-feature">
+                            <i class="fas fa-arrow-right"></i> Explora los Cursos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-item">
+                    <div class="stat-number" id="members-count">0</div>
+                    <div class="stat-label">Miembros Activos</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-item">
+                    <div class="stat-number" id="projects-count">0</div>
+                    <div class="stat-label">Proyectos Verdes</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-item">
+                    <div class="stat-number" id="courses-count">0</div>
+                    <div class="stat-label">Cursos Disponibles</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-item">
+                    <div class="stat-number" id="countries-count">0</div>
+                    <div class="stat-label">Países Involucrados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mission Section -->
+<div class="mission-section">
+    <div class="container">
+        <div class="mission-card">
+            <div class="card-body">
+                <h3 class="section-title">Nuestra Misión</h3>
+                <p class="text-center mb-5">Empoderamos a individuos y organizaciones para que lideren el cambio hacia un futuro sostenible.</p>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mission-item">
+                            <div class="mission-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h5>Acción Sostenible</h5>
+                            <p>Convertimos conceptos abstractos en acciones concretas con impacto real.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mission-item">
+                            <div class="mission-icon">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <h5>Red Global</h5>
+                            <p>Conectamos personas de más de 100 países para compartir soluciones.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mission-item">
+                            <div class="mission-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h5>Innovación Verde</h5>
+                            <p>Impulsamos la próxima generación de tecnologías sostenibles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animación de contadores
+    function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+    
+    // Iniciar contadores cuando la sección es visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateValue("members-count", 0, 12543, 2000);
+                animateValue("projects-count", 0, 892, 2000);
+                animateValue("courses-count", 0, 156, 2000);
+                animateValue("countries-count", 0, 124, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold: 0.5});
+
+    observer.observe(document.querySelector('.stats-section'));
+});
+</script>
+
+</body>
+</html>

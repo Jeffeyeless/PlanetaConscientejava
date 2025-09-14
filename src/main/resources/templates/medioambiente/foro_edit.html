@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Publicación | Planeta Consciente</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #eaf4ec;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            margin-top: 8px;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-guardar {
+            background-color: #2e7d32;
+        }
+
+        .btn-cancelar {
+            background-color: #c62828;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Planeta Consciente</h1>
+    <p>Editar publicación en el foro ecológico</p>
+</header>
+
+<main>
+    <h2>Editar Publicación</h2>
+
+    <form th:action="@{'/foro/update/' + ${publicacion.id}}" method="post" th:object="${publicacion}">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" th:field="*{titulo}" placeholder="Título de la publicación" required>
+
+        <label for="contenido">Contenido</label>
+        <textarea id="contenido" th:field="*{contenido}" placeholder="Escribe el contenido..." required></textarea>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-guardar">Guardar cambios</button>
+            <a th:href="@{/foro}" class="btn btn-cancelar">Cancelar</a>
+        </div>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2025 Planeta Consciente. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

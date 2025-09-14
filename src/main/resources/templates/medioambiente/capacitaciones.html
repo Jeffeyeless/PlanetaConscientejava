@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Capacitaciones Ambientales</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+    :root {
+        --primary-color: #1a7431;
+        --primary-dark: #0d5a20;
+        --primary-light: #2e8b57;
+        --secondary-color: #ffc107;
+        --dark-color: #2d3748;
+        --light-color: #f8f9fa;
+        --gradient-green: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+        color: #4a5568;
+        line-height: 1.6;
+    }
+    
+    .capacitaciones-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    /* Hero Section Mejorada */
+    .hero-section {
+        background: linear-gradient(135deg, rgba(26, 116, 49, 0.9), rgba(13, 90, 32, 0.9)), 
+                    url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 6rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 3rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transform-style: preserve-3d;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    }
+    
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'%3E%3C/path%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23ffffff'%3E%3C/path%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E");
+        background-size: cover;
+        background-repeat: no-repeat;
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        transform: translateZ(50px);
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.5rem;
+        font-weight: 300;
+        opacity: 0.95;
+        margin-bottom: 2.5rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        background: white;
+        color: var(--primary-color);
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        transform: translateY(0);
+    }
+    
+    .hero-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        color: var(--primary-dark);
+    }
+    
+    .hero-cta i {
+        margin-left: 8px;
+        transition: transform 0.3s;
+    }
+    
+    .hero-cta:hover i {
+        transform: translateX(5px);
+    }
+    
+    /* Tarjetas Modernas */
+    .card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+        background: white;
+    }
+    
+    .card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-5px);
+    }
+    
+    .card-header-custom {
+        background: var(--gradient-green);
+        color: white;
+        padding: 1.25rem 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: none;
+    }
+    
+    .card-header-custom i {
+        font-size: 1.4rem;
+    }
+    
+    /* Formulario Mejorado */
+    .upload-card {
+        border: none;
+        margin-bottom: 3rem;
+    }
+    
+    .upload-card .card-body {
+        padding: 2rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        transition: var(--transition);
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(26, 116, 49, 0.2);
+    }
+    
+    .btn-submit {
+        background: var(--gradient-green);
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(26, 116, 49, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(26, 116, 49, 0.4);
+        background: linear-gradient(135deg, var(--primary-dark), #0a4a1a);
+    }
+    
+    .btn-submit:active {
+        transform: translateY(1px);
+    }
+    
+    /* Tarjetas de Capacitaciones Mejoradas */
+    .card-capacitacion {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .media-container {
+        height: 220px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        position: relative;
+    }
+    
+    .media-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.1) 100%);
+    }
+    
+    .media-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .card-capacitacion:hover .media-container img {
+        transform: scale(1.08);
+    }
+    
+    .media-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card-title {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    .card-text {
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+    
+    .card-footer {
+        background: white;
+        border-top: 1px solid #edf2f7;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    
+    /* Estado Vacío Mejorado */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .empty-state i {
+        font-size: 5rem;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        opacity: 0.8;
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .empty-state h4 {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .empty-state p {
+        color: #718096;
+        max-width: 500px;
+        margin: 0 auto 2rem;
+    }
+    
+    /* Placeholder para archivos */
+    .placeholder-image {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: #a0aec0;
+        background: #f7fafc;
+    }
+    
+    .placeholder-image i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.6;
+    }
+    
+    /* Sección de Insignias Mejorada */
+    .badge-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .badge-item {
+        text-align: center;
+        transition: var(--transition);
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .badge-item:hover {
+        transform: translateY(-10px) scale(1.05);
+    }
+    
+    .badge-svg {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 15px;
+        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+        transition: var(--transition);
+    }
+    
+    .badge-item:hover .badge-svg {
+        filter: drop-shadow(0 8px 25px rgba(0,0,0,0.15));
+    }
+    
+    .badge-label {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .badge-label::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+    }
+    
+    .badge-item:hover .badge-label::after {
+        width: 100%;
+    }
+    
+    .badge-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        background: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: var(--shadow-md);
+        font-size: 0.9rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        width: 200px;
+        z-index: 10;
+    }
+    
+    .badge-item:hover .badge-tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(-15px);
+    }
+    
+    /* Sección de Título */
+    .section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--gradient-green);
+        border-radius: 2px;
+    }
+    
+    .section-title i {
+        font-size: 1.8rem;
+        margin-right: 15px;
+        color: var(--primary-color);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .section-title h3 {
+        font-weight: 700;
+        color: var(--dark-color);
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    
+    /* Efectos de hover en cards */
+    .card-hover-effect {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-hover-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(26, 116, 49, 0.1), rgba(26, 116, 49, 0.05));
+        opacity: 0;
+        transition: var(--transition);
+    }
+    
+    .card-hover-effect:hover::before {
+        opacity: 1;
+    }
+    
+    /* Progress bar para insignias */
+    .progress-container {
+        margin-top: 40px;
+        padding: 0 20px;
+    }
+    
+    .progress-title {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .progress-bar-container {
+        height: 10px;
+        background: #e2e8f0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: var(--gradient-green);
+        border-radius: 5px;
+        width: 65%; /* Esto debería ser dinámico según el progreso real */
+        transition: width 1s ease;
+    }
+    
+    /* Animaciones */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+    
+    .floating {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.8rem;
+        }
+        
+        .badge-svg {
+            width: 100px;
+            height: 100px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 4rem 1.5rem;
+            border-radius: 0;
+            margin-left: -20px;
+            margin-right: -20px;
+            width: calc(100% + 40px);
+        }
+        
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .media-container {
+            height: 180px;
+        }
+        
+        .badge-container {
+            gap: 20px;
+        }
+        
+        .section-title h3 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 1.8rem;
+        }
+        
+        .badge-item {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .badge-svg {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    /* Efecto de partículas para el hero */
+    .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        overflow: hidden;
+    }
+    
+    .particle {
+        position: absolute;
+        background: rgba(255,255,255,0.6);
+        border-radius: 50%;
+        animation: float-particle linear infinite;
+    }
+    
+    @keyframes float-particle {
+        0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100vh) translateX(100px);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="capacitaciones-container">
+    <!-- Hero Section Mejorada -->
+    <div class="hero-section">
+        <div class="particles" id="particles"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Transforma tu Conocimiento Ambiental</h1>
+            <p class="hero-subtitle">Accede a recursos educativos premium y conviértete en un agente de cambio para nuestro planeta</p>
+            <a href="#capacitaciones" class="hero-cta">
+                Explorar Capacitaciones <i class="fas fa-arrow-down"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Insignias Mejoradas -->
+    <div class="card mb-5">
+        <div class="card-header-custom">
+            <i class="fas fa-trophy"></i> Tu Progreso Ambiental
+        </div>
+        <div class="card-body">
+            <div class="progress-container">
+                <div class="progress-title">
+                    <span>Tu progreso hacia la siguiente insignia</span>
+                    <span>65% completado</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="badge-container">
+                <!-- Insignia 1 -->
+                <div class="badge-item">
+                    <svg class="badge-svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#FFD700" stroke="#C0C0C0" stroke-width="2"/>
+                        <path d="M50 25L60 40L75 45L65 60L70 75L50 70L30 75L35 60L25 45L40 40Z" fill="var(--primary-color)"/>
+                        <text x="50" y="85" text-anchor="middle" font-size="10" fill="var(--primary-color)">Nivel 1</text>
+                    </svg>
+                    <div class="badge-label">Eco-Aprendiz</div>
+                    <div class="badge-tooltip">Completa 3 capacitaciones básicas para desbloquear esta insignia</div>
+                </div>
+                <!-- Insignia 2 -->
+                <div class="badge-item">
+                    <svg class="badge-svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#C0C0C0" stroke="#FFD700" stroke-width="2"/>
+                        <path d="M50 20L60 35L75 40L65 55L70 70L50 65L30 70L35 55L25 40L40 35Z" fill="var(--primary-color)"/>
+                        <circle cx="50" cy="50" r="15" fill="#FF5722"/>
+                        <text x="50" y="85" text-anchor="middle" font-size="10" fill="var(--primary-color)">Nivel 2</text>
+                    </svg>
+                    <div class="badge-label">Guardián Verde</div>
+                    <div class="badge-tooltip">Completa 8 capacitaciones y 2 proyectos prácticos</div>
+                </div>
+                <!-- Insignia 3 -->
+                <div class="badge-item">
+                    <svg class="badge-svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#FF4500" stroke="#FFD700" stroke-width="2"/>
+                        <path d="M50 15L60 30L75 35L65 50L70 65L50 60L30 65L35 50L25 35L40 30Z" fill="#FFD700"/>
+                        <path d="M50 35L60 45L75 45L65 55L70 70L50 65L30 70L35 55L25 45L40 45Z" fill="var(--primary-color)"/>
+                        <text x="50" y="85" text-anchor="middle" font-size="10" fill="var(--primary-color)">Nivel 3</text>
+                    </svg>
+                    <div class="badge-label">Héroe del Planeta</div>
+                    <div class="badge-tooltip">Completa todas las capacitaciones y lidera un proyecto comunitario</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subida solo para admin -->
+    <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <div class="card upload-card shadow-sm">
+            <div class="card-header-custom">
+                <i class="fas fa-cloud-upload-alt"></i> Subir Nueva Capacitación
+            </div>
+            <div class="card-body">
+                <form th:action="@{/capacitaciones}" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="form-label">Título de la Capacitación</label>
+                        <input type="text" name="titulo" class="form-control" placeholder="Ej: Introducción a la Economía Circular" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Descripción Detallada</label>
+                        <textarea name="descripcion" class="form-control" rows="4" placeholder="Describe los objetivos y contenido de esta capacitación..." required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Material de Apoyo</label>
+                        <input type="file" name="material" class="form-control" accept="image/*,video/*,.pdf,.ppt,.pptx,.doc,.docx" required>
+                        <small class="text-muted">Formatos aceptados: imágenes, videos, PDF, PowerPoint, Word (Máx. 50MB)</small>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-submit">
+                            <i class="fas fa-upload me-1"></i> Publicar Capacitación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Capacitaciones -->
+    <div id="capacitaciones" class="mt-5">
+        <div class="section-title">
+            <i class="fas fa-book-open"></i>
+            <h3>Material Educativo Disponible</h3>
+        </div>
+
+        <div class="row">
+            <!-- Capacitación 1 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="img-fluid" alt="Fundamentos de Sostenibilidad">
+                        </div>
+                        <h5 class="card-title">Fundamentos de Sostenibilidad</h5>
+                        <p class="card-text">Aprende los principios básicos del desarrollo sostenible y cómo aplicarlos en tu vida diaria y entorno laboral.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 45 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Básico
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 15 Mar 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación 2 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <video controls class="w-100">
+                                <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <h5 class="card-title">Energías Renovables en el Hogar</h5>
+                        <p class="card-text">Descubre cómo implementar soluciones de energía renovable en tu hogar para reducir tu huella de carbono.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 1 h 20 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Intermedio
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 02 Abr 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación 3 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="img-fluid" alt="Economía Circular">
+                        </div>
+                        <h5 class="card-title">Introducción a la Economía Circular</h5>
+                        <p class="card-text">Conoce los principios de la economía circular y cómo las empresas están implementando este modelo sostenible.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 35 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Básico
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 18 May 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación 4 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <div class="placeholder-image">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>Guía Completa en PDF</span>
+                            </div>
+                        </div>
+                        <h5 class="card-title">Guía de Huella Hídrica</h5>
+                        <p class="card-text">Aprende a calcular y reducir tu huella hídrica con esta guía práctica llena de ejemplos y consejos.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 50 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Avanzado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 10 Jun 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación 5 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="img-fluid" alt="Agricultura Urbana">
+                        </div>
+                        <h5 class="card-title">Agricultura Urbana Sostenible</h5>
+                        <p class="card-text">Todo lo que necesitas saber para crear tu propio huerto urbano y cultivar alimentos orgánicos en casa.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 1 h 10 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Intermedio
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 22 Jul 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacitación 6 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-capacitacion card-hover-effect h-100">
+                    <div class="card-body">
+                        <div class="media-container">
+                            <video controls class="w-100">
+                                <source src="https://samplelib.com/lib/preview/mp4/sample-10s.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <h5 class="card-title">Gestión de Residuos en Empresas</h5>
+                        <p class="card-text">Estrategias comprobadas para implementar un sistema efectivo de gestión de residuos en tu organización.</p>
+                        <div class="mt-auto">
+                            <span class="badge bg-light text-dark mb-2">
+                                <i class="far fa-clock me-1"></i> 1 h 45 min
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                <i class="fas fa-chart-line me-1"></i> Avanzado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> 05 Ago 2023
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Efecto de partículas
+    document.addEventListener('DOMContentLoaded', function() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Tamaño aleatorio entre 2px y 5px
+            const size = Math.random() * 3 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Posición aleatoria
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.bottom = `-${size}px`;
+            
+            // Duración de animación aleatoria entre 10s y 20s
+            const duration = Math.random() * 10 + 10;
+            particle.style.animationDuration = `${duration}s`;
+            
+            // Retraso aleatorio para que no todas empiecen juntas
+            particle.style.animationDelay = `${Math.random() * 20}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Animación de cards al aparecer
+        const cards = document.querySelectorAll('.card-capacitacion');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.animation = `fadeInUp 0.5s ease-out ${index * 0.1}s forwards`;
+        });
+        
+        // Tooltips para badges
+        const badgeItems = document.querySelectorAll('.badge-item');
+        badgeItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.querySelector('.badge-svg').style.transform = 'rotate(5deg)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.querySelector('.badge-svg').style.transform = 'rotate(0)';
+            });
+        });
+    });
+
+    // Validación de archivos
+    document.querySelector('input[name="material"]')?.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const validTypes = [
+            'image/jpeg', 'image/png', 'image/gif', 
+            'video/mp4', 'video/webm', 'video/ogg',
+            'application/pdf', 
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        
+        const maxSize = 50 * 1024 * 1024; // 50MB
+        
+        if (!validTypes.includes(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Formato no soportado',
+                text: 'Por favor, sube solo imágenes, videos o documentos PDF/PPT/DOC válidos.',
+                confirmButtonColor: 'var(--primary-color)'
+            });
+            this.value = '';
+            return;
+        }
+        
+        if (file.size > maxSize) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo demasiado grande',
+                text: 'El tamaño máximo permitido es de 50MB. Por favor, elige un archivo más pequeño.',
+                confirmButtonColor: 'var(--primary-color)'
+            });
+            this.value = '';
+            return;
+        }
+    });
+    
+    // Smooth scroll para el CTA
+    document.querySelector('.hero-cta').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+</script>
+
+<!-- SweetAlert2 para mejores alertas -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

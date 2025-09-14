@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Inicio - Planeta Consciente</title>
+    <!-- El CSS específico de esta página -->
+    <th:block layout:fragment="css">
+        <link th:href="@{/css/home.css}" rel="stylesheet">
+        <!-- Fuentes adicionales -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+        <!-- Iconos adicionales -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Librería para animaciones de partículas -->
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Mensaje de bienvenida para usuarios autenticados -->
+        <div th:if="${#authentication.principal != 'anonymousUser'}" class="welcome-message-overlay">
+            <div class="welcome-message-card">
+                <!-- Decoración de hojas flotantes -->
+                <div class="welcome-decoration">
+                    <span th:each="i : ${#numbers.sequence(1, 12)}" 
+                          th:style="'width: 15px; height: 15px; left: ' + ${i * 8} + '%; animation-duration: 12s; animation-delay: ' + ${i * 0.5} + 's; opacity: 0.5;'"></span>
+                </div>
+                
+                <!-- Contenido principal con animación -->
+                <div class="welcome-content">
+                    <div class="welcome-icon-circle">
+                        <i class="fas fa-leaf welcome-icon"></i>
+                    </div>
+                    <h2>
+                        <span class="welcome-title-main">Bienvenido a Planeta Consciente,</span>
+                        <span class="welcome-user-name" th:text="${#authentication.principal != null ? #authentication.principal.username : 'Usuario'}"></span>!
+                    </h2>
+                    
+                    <p class="welcome-success-message">
+                        <i class="fas fa-check-circle"></i>
+                        ¡Has iniciado sesión correctamente!
+                    </p>
+                    
+                    <div class="welcome-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-text">Tu viaje ecológico comienza ahora</span>
+                    </div>
+                    
+                    <!-- Botón de cierre -->
+                    <button class="close-welcome" onclick="this.closest('.welcome-message-overlay').remove()">
+                        &times;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section con efecto de partículas -->
+        <section class="hero-section" id="particles-js">
+            <div class="hero-content">
+                <div class="hero-tag">
+                    <span>#JuntosPorElPlaneta</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="title-line">Cuidando Nuestro</span>
+                    <span class="title-highlight">Planeta</span>
+                    <span class="title-line">Juntos</span>
+                </h1>
+                <p class="hero-text">Únete a nuestra comunidad comprometida con la sostenibilidad y el medio ambiente. Cada pequeña acción cuenta en la construcción de un futuro mejor.</p>
+                <div class="hero-buttons">
+                    <a th:href="@{/eventos}" class="hero-button primary">
+                        <span>Participa en Eventos</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a th:href="@{/calculadora}" class="hero-button secondary">
+                        <span>Calcula tu Huella</span>
+                        <i class="fas fa-calculator"></i>
+                    </a>
+                </div>
+                
+                <!-- Elementos decorativos -->
+                <div class="hero-decoration">
+                    <div class="deco-circle deco-1"></div>
+                    <div class="deco-circle deco-2"></div>
+                    <div class="deco-circle deco-3"></div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="image-container">
+                    <img th:src="@{/images/amb4.jpg}" alt="Planeta Tierra" class="main-image">
+                    <div class="image-frame"></div>
+                    <div class="image-badge">
+                        <i class="fas fa-globe-americas"></i>
+                        <span>+1200 árboles plantados</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section con efecto de acordeón -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Nuestras Iniciativas</h2>
+                <p>Descubre cómo puedes contribuir a un futuro más sostenible</p>
+                <div class="section-divider">
+                    <div class="divider-line"></div>
+                    <i class="fas fa-leaf divider-icon"></i>
+                    <div class="divider-line"></div>
+                </div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <h3>Educación Ambiental</h3>
+                    <p>Aprende sobre prácticas sostenibles y su impacto en nuestro ecosistema a través de nuestros cursos interactivos y talleres prácticos.</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Talleres mensuales</li>
+                            <li><i class="fas fa-check"></i> Guías descargables</li>
+                            <li><i class="fas fa-check"></i> Certificaciones</li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/medio_ambiente}" class="feature-link">
+                        <span>Saber más</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <h3>Retos y Eventos</h3>
+                    <p>Participa en nuestras actividades comunitarias para proteger el medio ambiente y conoce a personas con tus mismos valores.</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Limpieza de playas</li>
+                            <li><i class="fas fa-check"></i> Talleres de reciclaje</li>
+                            <li><i class="fas fa-check"></i> Charlas con expertos</li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/eventos}" class="feature-link">
+                        <span>Ver eventos</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <h3>Calculadora Ecológica</h3>
+                    <p>Mide tu impacto ambiental con nuestra herramienta interactiva y descubre cómo reducirlo con recomendaciones personalizadas.</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Huella de carbono</li>
+                            <li><i class="fas fa-check"></i> Consumo de agua</li>
+                            <li><i class="fas fa-check"></i> Plan personalizado</li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/calculadora}" class="feature-link">
+                        <span>Calcular ahora</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section con animaciones mejoradas -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" data-count="12500">0</div>
+                    <div class="stat-label">Personas involucradas</div>
+                    <div class="stat-progress">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-number" data-count="320">0</div>
+                    <div class="stat-label">Eventos realizados</div>
+                    <div class="stat-progress">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-number" data-count="45">0</div>
+                    <div class="stat-label">Comunidades impactadas</div>
+                    <div class="stat-progress">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="stat-number" data-count="1200">0</div>
+                    <div class="stat-label">Toneladas de CO₂ reducidas</div>
+                    <div class="stat-progress">
+                        <div class="progress-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-quote">
+                <p>"Cada pequeño esfuerzo suma en la gran tarea de proteger nuestro hogar."</p>
+                <div class="quote-author">- Equipo Planeta Consciente</div>
+            </div>
+        </section>
+
+        <!-- News Section con efecto de hover mejorado -->
+        <section class="news-section">
+            <div class="section-header">
+                <h2>Últimas Noticias</h2>
+                <p>Mantente informado sobre temas ambientales</p>
+                <div class="section-divider">
+                    <div class="divider-line"></div>
+                    <i class="fas fa-newspaper divider-icon"></i>
+                    <div class="divider-line"></div>
+                </div>
+            </div>
+            
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-image">
+                        <img th:src="@{/images/amb5.jpg}" alt="Noticia 1">
+                        <div class="news-date">15 Mar 2025</div>
+                        <div class="news-category">Reforestación</div>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="meta-author"><i class="fas fa-user"></i> Equipo PC</span>
+                            <span class="meta-comments"><i class="fas fa-comment"></i> 24</span>
+                        </div>
+                        <h3>Nueva iniciativa de reforestación urbana</h3>
+                        <p>Lanzamos nuestro programa para plantar 10,000 árboles en áreas urbanas durante este año, con participación comunitaria y seguimiento científico.</p>
+                        <div class="news-tags">
+                            <span class="tag">Árboles</span>
+                            <span class="tag">Ciudades</span>
+                            <span class="tag">Voluntariado</span>
+                        </div>
+                        <a th:href="@{/noticia/1}" class="news-link">
+                            <span>Leer más</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-image">
+                        <img th:src="@{/images/amb3.jpg}" alt="Noticia 2">
+                        <div class="news-date">28 Feb 2025</div>
+                        <div class="news-category">Talleres</div>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="meta-author"><i class="fas fa-user"></i> María López</span>
+                            <span class="meta-comments"><i class="fas fa-comment"></i> 18</span>
+                        </div>
+                        <h3>Talleres de reciclaje creativo</h3>
+                        <p>Aprende a transformar materiales reciclables en objetos útiles y decorativos en nuestros talleres mensuales con expertos en diseño sostenible.</p>
+                        <div class="news-tags">
+                            <span class="tag">Reciclaje</span>
+                            <span class="tag">Arte</span>
+                            <span class="tag">DIY</span>
+                        </div>
+                        <a th:href="@{/noticia/2}" class="news-link">
+                            <span>Leer más</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-image">
+                        <img th:src="@{/images/amb2.jpg}" alt="Noticia 3">
+                        <div class="news-date">10 Feb 2025</div>
+                        <div class="news-category">Voluntariado</div>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="meta-author"><i class="fas fa-user"></i> Carlos M.</span>
+                            <span class="meta-comments"><i class="fas fa-comment"></i> 32</span>
+                        </div>
+                        <h3>Resultados de nuestra campaña de limpieza</h3>
+                        <p>Gracias a la participación de 500 voluntarios, recolectamos 2 toneladas de residuos en playas locales y clasificamos materiales para reciclaje.</p>
+                        <div class="news-tags">
+                            <span class="tag">Playas</span>
+                            <span class="tag">Limpieza</span>
+                            <span class="tag">Comunidad</span>
+                        </div>
+                        <a th:href="@{/noticia/3}" class="news-link">
+                            <span>Leer más</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-footer">
+                <a th:href="@{/noticia}" class="view-all">
+                    <span>Ver todas las noticias</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- CTA Section con efecto parallax -->
+        <section class="cta-section" style="background-image: url('/images/cta-bg.jpg')">
+            <div class="cta-overlay"></div>
+            <div class="cta-content">
+                <div class="cta-badge">
+                    <span>Únete ahora</span>
+                </div>
+                <h2>¿Listo para marcar la diferencia?</h2>
+                <p>Regístrate ahora y recibe nuestro plan de acción personalizado para reducir tu impacto ambiental. Cada paso cuenta en la protección de nuestro planeta.</p>
+
+                <div class="cta-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <span>+12,500 miembros</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Eventos semanales</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating action button -->
+        <div class="floating-action">
+            <button class="fab-button">
+                <i class="fas fa-leaf"></i>
+            </button>
+            <div class="fab-tooltip">¡Actúa ahora!</div>
+            <div class="fab-menu">
+                <a href="#" class="fab-menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Eventos</span>
+                </a>
+                <a href="#" class="fab-menu-item">
+                    <i class="fas fa-book"></i>
+                    <span>Recursos</span>
+                </a>
+                <a href="#" class="fab-menu-item">
+                    <i class="fas fa-question"></i>
+                    <span>Ayuda</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts específicos de esta página -->
+    <th:block layout:fragment="scripts">
+        <script>
+            // Inicializar partículas.js para el hero section
+            document.addEventListener('DOMContentLoaded', function() {
+                if (document.getElementById('particles-js')) {
+                    particlesJS('particles-js', {
+                        "particles": {
+                            "number": {
+                                "value": 80,
+                                "density": {
+                                    "enable": true,
+                                    "value_area": 800
+                                }
+                            },
+                            "color": {
+                                "value": "#3a8d66"
+                            },
+                            "shape": {
+                                "type": "circle",
+                                "stroke": {
+                                    "width": 0,
+                                    "color": "#000000"
+                                },
+                                "polygon": {
+                                    "nb_sides": 5
+                                }
+                            },
+                            "opacity": {
+                                "value": 0.3,
+                                "random": false,
+                                "anim": {
+                                    "enable": false,
+                                    "speed": 1,
+                                    "opacity_min": 0.1,
+                                    "sync": false
+                                }
+                            },
+                            "size": {
+                                "value": 3,
+                                "random": true,
+                                "anim": {
+                                    "enable": false,
+                                    "speed": 40,
+                                    "size_min": 0.1,
+                                    "sync": false
+                                }
+                            },
+                            "line_linked": {
+                                "enable": true,
+                                "distance": 150,
+                                "color": "#3a8d66",
+                                "opacity": 0.2,
+                                "width": 1
+                            },
+                            "move": {
+                                "enable": true,
+                                "speed": 2,
+                                "direction": "none",
+                                "random": false,
+                                "straight": false,
+                                "out_mode": "out",
+                                "bounce": false,
+                                "attract": {
+                                    "enable": false,
+                                    "rotateX": 600,
+                                    "rotateY": 1200
+                                }
+                            }
+                        },
+                        "interactivity": {
+                            "detect_on": "canvas",
+                            "events": {
+                                "onhover": {
+                                    "enable": true,
+                                    "mode": "grab"
+                                },
+                                "onclick": {
+                                    "enable": true,
+                                    "mode": "push"
+                                },
+                                "resize": true
+                            },
+                            "modes": {
+                                "grab": {
+                                    "distance": 140,
+                                    "line_linked": {
+                                        "opacity": 1
+                                    }
+                                },
+                                "bubble": {
+                                    "distance": 400,
+                                    "size": 40,
+                                    "duration": 2,
+                                    "opacity": 8,
+                                    "speed": 3
+                                },
+                                "repulse": {
+                                    "distance": 200,
+                                    "duration": 0.4
+                                },
+                                "push": {
+                                    "particles_nb": 4
+                                },
+                                "remove": {
+                                    "particles_nb": 2
+                                }
+                            }
+                        },
+                        "retina_detect": true
+                    });
+                }
+
+                // Counter animation for stats
+                const statNumbers = document.querySelectorAll('.stat-number');
+                
+                const options = {
+                    threshold: 0.5
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const statNumber = entry.target;
+                            const target = parseInt(statNumber.getAttribute('data-count'));
+                            const duration = 2000;
+                            const increment = target / (duration / 16);
+                            
+                            let current = 0;
+                            
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= target) {
+                                    clearInterval(timer);
+                                    current = target;
+                                }
+                                statNumber.textContent = Math.floor(current).toLocaleString();
+                            }, 16);
+                            
+                            observer.unobserve(statNumber);
+                        }
+                    });
+                }, options);
+                
+                statNumbers.forEach(statNumber => {
+                    observer.observe(statNumber);
+                });
+
+                // Testimonial slider functionality
+                const track = document.querySelector('.testimonials-track');
+                const dots = document.querySelectorAll('.slider-dot');
+                const prevBtn = document.querySelector('.slider-prev');
+                const nextBtn = document.querySelector('.slider-next');
+                let currentIndex = 0;
+                const cardWidth = document.querySelector('.testimonial-card').offsetWidth;
+                const gap = 30; // gap between cards
+
+                function updateSlider() {
+                    track.style.transform = `translateX(-${currentIndex * (cardWidth + gap)}px`;
+                    
+                    // Update dots
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                }
+
+                nextBtn.addEventListener('click', () => {
+                    if (currentIndex < dots.length - 1) {
+                        currentIndex++;
+                        updateSlider();
+                    }
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateSlider();
+                    }
+                });
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        currentIndex = index;
+                        updateSlider();
+                    });
+                });
+
+                // Feature card accordion effect
+                const featureCards = document.querySelectorAll('.feature-card');
+                featureCards.forEach(card => {
+                    const link = card.querySelector('.feature-link');
+                    const details = card.querySelector('.feature-details');
+                    
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const isOpen = card.classList.contains('open');
+                        
+                        // Close all other cards
+                        featureCards.forEach(c => {
+                            if (c !== card) {
+                                c.classList.remove('open');
+                                c.querySelector('.feature-details').style.maxHeight = null;
+                            }
+                        });
+                        
+                        // Toggle current card
+                        if (!isOpen) {
+                            card.classList.add('open');
+                            details.style.maxHeight = details.scrollHeight + 'px';
+                        } else {
+                            card.classList.remove('open');
+                            details.style.maxHeight = null;
+                        }
+                    });
+                });
+
+                // Floating action button
+                const fabButton = document.querySelector('.fab-button');
+                const fabMenu = document.querySelector('.fab-menu');
+                
+                fabButton.addEventListener('click', () => {
+                    fabButton.classList.toggle('active');
+                    fabMenu.classList.toggle('show');
+                });
+
+                // Close welcome message
+                document.querySelector('.close-welcome')?.addEventListener('click', function() {
+                    document.querySelector('.welcome-message-overlay').style.display = 'none';
+                });
+                
+                // Close when clicking outside
+                document.querySelector('.welcome-message-overlay')?.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

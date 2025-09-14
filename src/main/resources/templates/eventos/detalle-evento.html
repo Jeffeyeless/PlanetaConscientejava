@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <title th:text="${evento.titulo}">Detalle del Evento</title>
+
+    <th:block layout:fragment="css">
+        <style>
+            .detalle-contenedor {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 0.75rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+
+            .detalle-titulo {
+                font-family: 'Playfair Display', serif;
+                font-size: 2rem;
+                font-weight: bold;
+                color: var(--primary);
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .detalle-linea {
+                margin-bottom: 1rem;
+                font-size: 1rem;
+                color: var(--text);
+            }
+
+            .detalle-linea i {
+                color: var(--accent);
+                margin-right: 0.5rem;
+            }
+
+            .detalle-descripcion {
+                background-color: var(--secondary);
+                border-left: 4px solid var(--accent);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                line-height: 1.6;
+                margin-bottom: 2rem;
+            }
+
+            .btn-volver {
+                display: inline-block;
+                background-color: transparent;
+                border: 1px solid var(--accent-dark);
+                color: var(--accent-dark);
+                padding: 0.5rem 1.25rem;
+                border-radius: 9999px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-volver:hover {
+                background-color: var(--accent-light);
+            }
+
+            @media (max-width: 768px) {
+                .detalle-contenedor {
+                    padding: 1rem;
+                    margin: 1rem;
+                }
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+<div layout:fragment="content" class="detalle-contenedor">
+    <h2 class="detalle-titulo" th:text="${evento.titulo}">Título del Evento</h2>
+
+    <div class="detalle-linea">
+        <i class="fas fa-calendar-alt"></i>
+        <strong>Fecha:</strong>
+        <span th:text="${#temporals.format(evento.fechaHora, 'dd MMM yyyy HH:mm')}">01 Ene 2025 10:00</span>
+    </div>
+
+    <div class="detalle-linea" th:if="${evento.ubicacion}">
+        <i class="fas fa-map-marker-alt"></i>
+        <strong>Ubicación:</strong>
+        <span th:text="${evento.ubicacion}">Bogotá</span>
+    </div>
+
+    <div class="detalle-linea">
+        <i class="fas fa-align-left"></i>
+        <strong>Descripción:</strong>
+        <div class="detalle-descripcion" th:text="${evento.descripcion}">Descripción del evento...</div>
+    </div>
+
+    <div class="text-center">
+        <a th:href="@{/eventos}" class="btn-volver">
+            ← Volver a la lista
+        </a>
+    </div>
+</div>
+</body>
+</html>

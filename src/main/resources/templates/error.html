@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Error - Planeta Consciente</title>
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px 20px;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        .error-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .error-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        .btn-home {
+            background-color: #2e7d32;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-home:hover {
+            background-color: #1b5e20;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="error-container">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <h1 class="error-title">¡Oops! Algo salió mal</h1>
+            <p class="error-message">
+                Lo sentimos, ha ocurrido un error inesperado. 
+                Nuestro equipo ha sido notificado y está trabajando para solucionarlo.
+            </p>
+            <div>
+                <a th:href="@{/}" class="btn-home">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

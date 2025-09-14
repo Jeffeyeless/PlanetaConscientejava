@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Noticias Ambientales - Planeta Consciente</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f9fbf7;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 25px;
+            padding: 20px 0;
+            background-color: #4caf7d;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { 
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header p { 
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .filtros { 
+            background: #e8f5e9;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            border-left: 5px solid #4caf7d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .filtros h2 { 
+            font-size: 16px; 
+            margin: 0 0 10px 0;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        .filtro-item { 
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .filtro-item strong {
+            color: #1b5e20;
+        }
+        .noticia { 
+            margin-bottom: 30px; 
+            page-break-inside: avoid;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #81c784;
+        }
+        .noticia-titulo { 
+            font-size: 18px; 
+            color: #1b5e20;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .noticia-meta { 
+            font-size: 13px; 
+            color: #689f38;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .noticia-meta span {
+            display: flex;
+            align-items: center;
+        }
+        .noticia-meta i {
+            margin-right: 5px;
+            font-size: 12px;
+        }
+        .noticia-resumen { 
+            font-size: 14px; 
+            line-height: 1.6;
+            color: #424242;
+        }
+        .footer { 
+            font-size: 11px; 
+            text-align: center; 
+            color: #689f38; 
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e8f5e9;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(76, 175, 125, 0), rgba(76, 175, 125, 0.75), rgba(76, 175, 125, 0));
+            margin: 25px 0;
+        }
+        .leaf-icon {
+            color: #4caf7d;
+            margin: 0 5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+            color: white;
+            background-color: #4caf7d;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+        .pdf-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .btn-pdf {
+            background-color: #4caf7d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(76, 175, 125, 0.3);
+        }
+        .btn-pdf:hover {
+            background-color: #3d8b63;
+            box-shadow: 0 4px 8px rgba(76, 175, 125, 0.3);
+            transform: translateY(-1px);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.1;
+            font-size: 72px;
+            color: #4caf7d;
+            pointer-events: none;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-content img.logo {
+            height: 50px;
+            width: auto;
+        }
+    </style>
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="watermark">
+        <i class="fas fa-leaf"></i>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <img th:src="/images/1.jpg" alt="Logo Planeta Consciente" class="logo">
+            <div>
+                <h1><i class="fas fa-leaf"></i> Reporte de Noticias Ambientales</h1>
+                <p>Planeta Consciente - Generado el <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${filtros.busqueda != null or filtros.fuente != null or filtros.fechaDesde != null or filtros.fechaHasta != null or filtros.categoria != null}" class="filtros">
+        <h2><i class="fas fa-filter"></i> Filtros aplicados:</h2>
+        <div th:if="${filtros.busqueda != null}" class="filtro-item">
+            <strong><i class="fas fa-search leaf-icon"></i> Búsqueda:</strong> <span th:text="${filtros.busqueda}"></span>
+        </div>
+        <div th:if="${filtros.fuente != null}" class="filtro-item">
+            <strong><i class="fas fa-newspaper leaf-icon"></i> Fuente:</strong> <span th:text="${filtros.fuente}"></span>
+        </div>
+        <div th:if="${filtros.categoria != null}" class="filtro-item">
+            <strong><i class="fas fa-tag leaf-icon"></i> Categoría:</strong> <span th:text="${filtros.categoria}"></span>
+        </div>
+        <div th:if="${filtros.fechaDesde != null or filtros.fechaHasta != null}" class="filtro-item">
+            <strong><i class="far fa-calendar-alt leaf-icon"></i> Rango de fechas:</strong>
+            <span th:if="${filtros.fechaDesde != null}" th:text="'Desde ' + ${#temporals.format(filtros.fechaDesde, 'dd/MM/yyyy')}"></span>
+            <span th:if="${filtros.fechaDesde != null and filtros.fechaHasta != null}"> al </span>
+            <span th:if="${filtros.fechaHasta != null and filtros.fechaDesde == null}">Hasta </span>
+            <span th:if="${filtros.fechaHasta != null}" th:text="#temporals.format(filtros.fechaHasta, 'dd/MM/yyyy')"></span>
+        </div>
+    </div>
+
+    <div th:each="noticia : ${noticias}" class="noticia">
+        <div class="noticia-titulo">
+            <span th:text="${noticia.titulo}"></span>
+            <span th:if="${noticia.destacada}" class="badge">
+                <i class="fas fa-star"></i> Destacada
+            </span>
+        </div>
+        <!-- Mostrar imagen si existe -->
+        <div th:if="${noticia.imagenUrl != null and #strings.isNotEmpty(noticia.imagenUrl)}" style="text-align:center;margin-bottom:10px;">
+            <img th:src="@{${noticia.imagenUrl}}" alt="Imagen noticia" style="max-width:350px;max-height:200px;border-radius:8px;">
+        </div>
+        <div class="noticia-meta">
+            <span><i class="far fa-calendar"></i> <span th:text="${#temporals.format(noticia.fechaPublicacion, 'dd/MM/yyyy')}"></span></span>
+            <span th:if="${noticia.fuente != null}">
+                <i class="fas fa-newspaper"></i> <span th:text="${noticia.fuente}"></span>
+            </span>
+            <span th:if="${noticia.categoria != null}">
+                <i class="fas fa-tag"></i> <span th:text="${noticia.categoria}"></span>
+            </span>
+        </div>
+        <div class="noticia-resumen" th:text="${noticia.resumen}"></div>
+    </div>
+       
+    <hr th:unless="${noticias.empty}">
+
+    <div class="footer">
+        <p>
+            <i class="fas fa-recycle"></i> Este documento fue generado electrónicamente para reducir el consumo de papel <i class="fas fa-recycle"></i>
+        </p>
+        <p th:if="${page != null and pageCount != null}">
+            Página <span th:text="${page}"></span> de <span th:text="${pageCount}"></span> | 
+        </p>
+        <p>&copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}"></span> Planeta Consciente - Todos los derechos reservados</p>
+    </div>
+</body>
+</html>
