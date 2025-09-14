@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Confirma tu cuenta - Planeta Consciente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --accent-color: #388e3c;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --light-text: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .email-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .email-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .email-body {
+            padding: 2.5rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .welcome-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .confirmation-text {
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .confirm-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .confirm-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .token-info {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            color: #666;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .email-footer {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .support-info {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .leaf-decoration {
+            text-align: center;
+            margin: 1rem 0;
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 600px) {
+            .email-body {
+                padding: 1.5rem;
+            }
+            
+            .email-header {
+                padding: 1.5rem;
+            }
+            
+            .email-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>🌱 Planeta Consciente</h1>
+            <p>Confirma tu dirección de email</p>
+        </div>
+        
+        <div class="email-body">
+            <div class="welcome-text">¡Hola, <span th:text="${nombre}">Usuario</span>!</div>
+            
+            <div class="confirmation-text">
+                <p>Gracias por registrarte en <strong>Planeta Consciente</strong>. Para activar tu cuenta y comenzar a formar parte de nuestra comunidad ambiental, necesitamos que confirmes tu dirección de email.</p>
+                
+                <p>Haz clic en el botón siguiente para completar tu registro:</p>
+            </div>
+            
+            <div class="button-container">
+                <a th:href="${confirmationUrl}" class="confirm-button">
+                    Confirmar mi cuenta
+                </a>
+            </div>
+            
+            <div class="token-info">
+                <p><strong>¿Problemas con el botón?</strong> Copia y pega el siguiente enlace en tu navegador:</p>
+                <p style="word-break: break-all; color: var(--primary-color);">
+                    <span th:text="${confirmationUrl}">Enlace de confirmación</span>
+                </p>
+            </div>
+            
+            <div class="confirmation-text">
+                <p>Este enlace expirará en <strong>24 horas</strong> por motivos de seguridad.</p>
+                <p>Si no te registraste en Planeta Consciente, por favor ignora este mensaje.</p>
+            </div>
+        </div>
+        
+        <div class="leaf-decoration">
+            <svg width="60" height="60" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <path fill="var(--primary-color)" d="M416 127.1C416 247.4 319.4 344 200 344C158.8 344 120.3 331.3 88.53 309.7C83.42 306.1 77.42 307.7 73.7 312.8C70.06 317.9 71.67 323.9 76.78 327.6C112.3 353.1 154.8 368 200 368C337.2 368 448 257.2 448 120C448 74.84 433.1 32.31 407.6 3.223C403.9-1.886 397.9-3.497 392.8 .1487C387.7 3.795 386.1 9.793 389.7 14.89C411.3 46.72 424 85.22 424 127.1H416z"/>
+            </svg>
+        </div>
+        
+        <div class="email-footer">
+            <p>© 2024 Planeta Consciente. Todos los derechos reservados.</p>
+            <div class="support-info">
+                <p>¿Necesitas ayuda? Contáctanos en: <a href="mailto:soporte@planetaconsciente.com" style="color: var(--primary-color);">soporte@planetaconsciente.com</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

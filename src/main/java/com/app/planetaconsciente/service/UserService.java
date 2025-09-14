@@ -11,8 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +46,7 @@ public class UserService implements UserDetailsService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnabled(false); // Cuenta deshabilitada hasta verificación
         userRepository.save(user);
     }
 
@@ -54,24 +58,71 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
             user.getEmail(),
             user.getPassword(),
+            user.isEnabled(), // ✅ Ahora usa el campo enabled
+            true, // accountNonExpired
+            true, // credentialsNonExpired
+            true, // accountNonLocked
             getAuthorities(user.getRoles())
         );
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Asegura el prefijo ROLE_
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
 
-    // Método para crear usuario admin (opcional, para desarrollo)
+    // Métodos nuevos para verificación y recuperación
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // ✅ CORREGIDO: Devuelve Optional<User> en lugar de User
+    public Optional<User> findByVerificationToken(String token) {
+        return userRepository.findByVerificationToken(token);
+    }
+
+    // ✅ CORREGIDO: Devuelve Optional<User> en lugar de User
+    public Optional<User> findByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    /**
+     * Calcula la fecha de expiración para tokens
+     * @param hours horas de validez del token
+     * @return fecha de expiración
+     */
+    public Date calculateExpiryDate(int hours) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR, hours);
+        return cal.getTime();
+    }
+
+    /**
+     * Verifica si un usuario existe y está habilitado
+     */
+    public boolean userExistsAndEnabled(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::isEnabled)
+                .orElse(false);
+    }
+
+    // Método para crear usuario admin (actualizado)
     public void createAdminUser() {
-        if (!userRepository.findByEmail("admin@planetaconsciente.com").isPresent()) {
+        if (userRepository.findByEmail("admin@planetaconsciente.com").isEmpty()) {
             User admin = new User();
+            admin.setNombre("Administrador");
             admin.setEmail("admin@planetaconsciente.com");
-            admin.setPassword("admin123");
+            admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRoles(List.of("ADMIN"));
-            registerNewUser(admin);
+            admin.setEnabled(true); // Admin activo directamente
+            userRepository.save(admin);
         }
     }
 }

@@ -43,7 +43,12 @@ public class SecurityConfig {
                     "/noticias",
                     "/noticias/**",
                     "/access-denied",
-                    "/error"
+                    "/error",
+                    // Nuevas rutas para verificación y recuperación
+                    "/confirm-account",
+                    "/forgot-password",
+                    "/reset-password",
+                    "/reset-password/**"
                 ).permitAll()
                 
                 // Rutas administrativas
@@ -62,7 +67,7 @@ public class SecurityConfig {
             
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/dashboard")
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
