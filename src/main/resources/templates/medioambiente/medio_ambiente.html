@@ -59,7 +59,7 @@
         padding: 0 20px;
     }
     
-    /* Hero Section - Versión Mejorada */
+    /* Hero Section */
     .hero-container {
         background: linear-gradient(135deg, rgba(26, 116, 49, 0.9), rgba(13, 90, 32, 0.9)), 
                     url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
@@ -78,17 +78,6 @@
         justify-content: center;
     }
     
-    .hero-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
-        z-index: 1;
-    }
-    
     .hero-content {
         position: relative;
         z-index: 3;
@@ -105,8 +94,6 @@
         background: linear-gradient(to right, #fff, #e0f7e0);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        letter-spacing: -1px;
-        animation: fadeInDown 1s ease-out;
     }
     
     .hero-subtitle {
@@ -117,9 +104,6 @@
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        animation: fadeInUp 1s ease-out 0.3s forwards;
-        opacity: 0;
     }
     
     .btn-container {
@@ -145,8 +129,6 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
-        animation: fadeIn 1s ease-out 0.6s forwards;
-        opacity: 0;
     }
     
     .btn-hero:hover {
@@ -161,26 +143,11 @@
         font-size: 1.2rem;
     }
     
-    .btn-hero:hover i {
-        transform: translateX(8px);
-    }
-    
     /* Features Section */
     .features-section {
         position: relative;
         padding: 6rem 0;
         background: url('https://www.transparenttextures.com/patterns/soft-circle-scales.png');
-    }
-    
-    .features-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245, 247, 250, 0.9));
-        z-index: -1;
     }
     
     .feature-card {
@@ -193,7 +160,6 @@
         box-shadow: var(--shadow-lg);
         height: 100%;
         position: relative;
-        transform-style: preserve-3d;
     }
     
     .feature-card:hover {
@@ -212,20 +178,12 @@
         font-size: 4.5rem;
         margin-bottom: 2.5rem;
         color: var(--primary-color);
-        transition: var(--transition);
-        display: inline-block;
-    }
-    
-    .feature-card:hover .feature-icon {
-        transform: scale(1.2) rotate(5deg);
-        color: var(--primary-dark);
     }
     
     .feature-card h3 {
         font-weight: 800;
         margin-bottom: 1.5rem;
         color: var(--dark-color);
-        position: relative;
     }
     
     .btn-feature {
@@ -235,26 +193,11 @@
         padding: 0.8rem 2rem;
         border-radius: 50px;
         font-weight: 600;
-        transition: var(--transition);
         display: inline-flex;
         align-items: center;
         box-shadow: 0 8px 20px rgba(26, 116, 49, 0.3);
         margin-top: 1.5rem;
         cursor: pointer;
-    }
-    
-    .btn-feature:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(26, 116, 49, 0.4);
-    }
-    
-    .btn-feature i {
-        margin-right: 10px;
-        transition: transform 0.3s;
-    }
-    
-    .btn-feature:hover i {
-        transform: translateX(8px);
     }
     
     /* Stats Section */
@@ -269,8 +212,6 @@
     .stat-item {
         text-align: center;
         padding: 2rem;
-        position: relative;
-        z-index: 1;
     }
     
     .stat-number {
@@ -287,7 +228,6 @@
     .mission-section {
         padding: 6rem 0;
         background: linear-gradient(135deg, #f8f9fa, #e9f5ec);
-        position: relative;
     }
     
     .mission-card {
@@ -299,7 +239,6 @@
     }
     
     .section-title {
-        position: relative;
         padding-bottom: 15px;
         margin-bottom: 50px;
         font-weight: 800;
@@ -316,56 +255,6 @@
         background: white;
         height: 100%;
     }
-    
-    .mission-item:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-lg);
-    }
-    
-    /* Animations */
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    /* Responsive */
-    @media (max-width: 992px) {
-        .hero-container {
-            padding: 8rem 1.5rem;
-        }
-        
-        .feature-card .card-body {
-            padding: 2.5rem;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .hero-container {
-            padding: 6rem 1rem;
-            background-attachment: scroll;
-        }
-        
-        .btn-container {
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .btn-hero {
-            width: 100%;
-            max-width: 300px;
-            justify-content: center;
-        }
-    }
     </style>
 </head>
 
@@ -381,9 +270,6 @@
             <a th:href="@{/foro}" class="btn-hero">
                 <i class="fas fa-comments"></i> Foro Comunitario
             </a>
-            <a th:href="@{/capacitaciones}" class="btn-hero">
-                <i class="fas fa-graduation-cap"></i> Capacitaciones
-            </a>
         </div>
     </div>
 </div>
@@ -392,7 +278,7 @@
 <div class="features-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card feature-card">
                     <div class="card-body">
                         <div class="feature-icon">
@@ -406,20 +292,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card feature-card">
-                    <div class="card-body">
-                        <div class="feature-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h3>Aprendizaje Experto</h3>
-                        <p>Domina las últimas técnicas de sostenibilidad con nuestros cursos certificados.</p>
-                        <a th:href="@{/capacitaciones}" class="btn-feature">
-                            <i class="fas fa-arrow-right"></i> Explora los Cursos
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -428,25 +300,19 @@
 <div class="stats-section">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="stat-item">
                     <div class="stat-number" id="members-count">0</div>
                     <div class="stat-label">Miembros Activos</div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="stat-item">
                     <div class="stat-number" id="projects-count">0</div>
                     <div class="stat-label">Proyectos Verdes</div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="stat-item">
-                    <div class="stat-number" id="courses-count">0</div>
-                    <div class="stat-label">Cursos Disponibles</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <div class="stat-item">
                     <div class="stat-number" id="countries-count">0</div>
                     <div class="stat-label">Países Involucrados</div>
@@ -500,7 +366,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Animación de contadores
     function animateValue(id, start, end, duration) {
         const obj = document.getElementById(id);
         let startTimestamp = null;
@@ -514,14 +379,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         window.requestAnimationFrame(step);
     }
-    
-    // Iniciar contadores cuando la sección es visible
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 animateValue("members-count", 0, 12543, 2000);
                 animateValue("projects-count", 0, 892, 2000);
-                animateValue("courses-count", 0, 156, 2000);
                 animateValue("countries-count", 0, 124, 2000);
                 observer.unobserve(entry.target);
             }
