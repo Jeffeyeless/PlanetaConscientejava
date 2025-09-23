@@ -4,198 +4,17 @@
     <title>Registro | Planeta Consciente</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --primary-color: #2e7d32; /* Verde principal */
-            --secondary-color: #81c784; /* Verde claro */
-            --accent-color: #388e3c; /* Verde oscuro */
-            --background-color: #f5f5f5;
-            --text-color: #333;
-            --light-text: #fff;
-            --error-color: #d32f2f;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--background-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
-                              url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .register-container {
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            border-top: 5px solid var(--primary-color);
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .message {
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            text-align: left;
-        }
-        
-        .error {
-            background-color: #ffebee;
-            color: var(--error-color);
-            border-left: 4px solid var(--error-color);
-        }
-        
-        .success {
-            background-color: #e8f5e9;
-            color: var(--accent-color);
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .info {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            border-left: 4px solid #1976d2;
-        }
-        
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            text-align: left;
-        }
-        
-        label {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-        
-        input {
-            padding: 0.75rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.3);
-        }
-        
-        input.error-field {
-            border-color: var(--error-color);
-        }
-        
-        input.error-field:focus {
-            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.3);
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
-        
-        button:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-        
-        .login-link {
-            display: inline-block;
-            margin-top: 1.5rem;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .login-link:hover {
-            color: var(--accent-color);
-            text-decoration: underline;
-        }
-        
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-        
-        .error-message.show {
-            display: block;
-        }
-        
-        .password-requirements {
-            font-size: 0.8rem;
-            color: #666;
-            text-align: left;
-            margin-top: -0.5rem;
-        }
-        
-        /* Efectos adicionales */
-        .leaf-decoration {
-            position: absolute;
-            width: 150px;
-            opacity: 0.1;
-            z-index: -1;
-        }
-        
-        .leaf-1 {
-            top: 10%;
-            left: 10%;
-            transform: rotate(45deg);
-        }
-        
-        .leaf-2 {
-            bottom: 10%;
-            right: 10%;
-            transform: rotate(-20deg);
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
 <body>
     <div class="register-container">
         <h1>Crear Cuenta</h1>
         
-        <div th:if="${param.error}" class="message error">
-            Error en el registro. Por favor verifica los datos e intenta nuevamente.
+        <!-- Mensaje de error desde flash attributes -->
+        <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}">
         </div>
         
+        <!-- Mensaje de éxito desde parámetros URL -->
         <div th:if="${param.success}" class="message success">
             ¡Registro exitoso! Por favor inicia sesión.
         </div>
@@ -249,85 +68,177 @@
         
         <a th:href="@{/login}" class="login-link">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
-    
-    <!-- Decoración ambiental -->
-    <svg class="leaf-decoration leaf-1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-        <path fill="var(--primary-color)" d="M416 127.1C416 247.4 319.4 344 200 344C158.8 344 120.3 331.3 88.53 309.7C83.42 306.1 77.42 307.7 73.7 312.8C70.06 317.9 71.67 323.9 76.78 327.6C112.3 353.1 154.8 368 200 368C337.2 368 448 257.2 448 120C448 74.84 433.1 32.31 407.6 3.223C403.9-1.886 397.9-3.497 392.8 .1487C387.7 3.795 386.1 9.793 389.7 14.89C411.3 46.72 424 85.22 424 127.1H416z"/>
-    </svg>
-    
-    <svg class="leaf-decoration leaf-2" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-        <path fill="var(--secondary-color)" d="M272 96c26.5 0 48-21.5 48-48S298.5 0 272 0s-48 21.5-48 48s21.5 48 48 48zm-64 160c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm160 0c0 26.5 21.5 48 48 48s48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48zm-96 128c-26.5 0-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48s-21.5-48-48-48z"/>
-    </svg>
 
+    <!-- JavaScript en tiempo real - DENTRO del body -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('registerForm');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirmPassword');
-            const confirmPasswordError = document.getElementById('confirmPasswordError');
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🔔 JavaScript de registro cargado');
+        
+        const form = document.getElementById('registerForm');
+        const nombre = document.getElementById('nombre');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        
+        // Ocultar mensajes de error de Thymeleaf inicialmente
+        const thymeleafErrors = document.querySelectorAll('.error-message[th\\:if]');
+        thymeleafErrors.forEach(error => {
+            error.style.display = 'none';
+        });
+        
+        // Crear elementos de error dinámicos si no existen
+        let nombreError = document.getElementById('nombreError');
+        let emailError = document.getElementById('emailError'); 
+        let passwordError = document.getElementById('passwordError');
+        let confirmPasswordError = document.getElementById('confirmPasswordError');
+        
+        if (!nombreError) nombreError = crearElementoError('nombre');
+        if (!emailError) emailError = crearElementoError('email');
+        if (!confirmPasswordError) confirmPasswordError = crearElementoError('confirmPassword');
+        
+        function crearElementoError(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (!field) return null;
             
-            // Validación en tiempo real de contraseñas coincidentes
+            const errorDiv = document.createElement('div');
+            errorDiv.id = fieldId + 'Error';
+            errorDiv.className = 'error-message';
+            field.parentNode.appendChild(errorDiv);
+            return errorDiv;
+        }
+        
+        // Validación en tiempo real - AMBOS CAMPOS
+        if (nombre) nombre.addEventListener('input', validarNombre);
+        if (email) email.addEventListener('input', validarEmail);
+        if (password) {
+            password.addEventListener('input', function() {
+                validarPassword(); // Validar longitud
+                validarConfirmPassword(); // Validar coincidencia (IMPORTANTE)
+            });
+        }
+        if (confirmPassword) {
             confirmPassword.addEventListener('input', function() {
+                validarConfirmPassword(); // Validar coincidencia
+            });
+        }
+        
+        // También validar al perder foco
+        if (nombre) nombre.addEventListener('blur', validarNombre);
+        if (email) email.addEventListener('blur', validarEmail);
+        if (password) {
+            password.addEventListener('blur', function() {
+                validarPassword();
+                validarConfirmPassword();
+            });
+        }
+        if (confirmPassword) confirmPassword.addEventListener('blur', validarConfirmPassword);
+        
+        function validarNombre() {
+            if (!nombreError) return;
+            
+            if (nombre.value.trim() === '') {
+                nombre.classList.add('error-field');
+                nombreError.textContent = 'El nombre es obligatorio';
+                nombreError.style.display = 'block';
+            } else {
+                nombre.classList.remove('error-field');
+                nombreError.style.display = 'none';
+            }
+        }
+        
+        function validarEmail() {
+            if (!emailError) return;
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.value.trim() === '') {
+                email.classList.add('error-field');
+                emailError.textContent = 'El email es obligatorio';
+                emailError.style.display = 'block';
+            } else if (!emailRegex.test(email.value)) {
+                email.classList.add('error-field');
+                emailError.textContent = 'Formato de email inválido';
+                emailError.style.display = 'block';
+            } else {
+                email.classList.remove('error-field');
+                emailError.style.display = 'none';
+            }
+        }
+        
+        function validarPassword() {
+            if (!passwordError) return;
+            
+            // Ocultar mensaje de Thymeleaf para contraseña
+            const thymeleafPasswordError = document.querySelector('#passwordError[th\\:if]');
+            if (thymeleafPasswordError) {
+                thymeleafPasswordError.style.display = 'none';
+            }
+            
+            if (password.value.length < 8) {
+                password.classList.add('error-field');
+                passwordError.textContent = 'La contraseña debe tener al menos 8 caracteres';
+                passwordError.style.display = 'block';
+                return false;
+            } else {
+                password.classList.remove('error-field');
+                passwordError.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validarConfirmPassword() {
+            if (!confirmPasswordError) return;
+            
+            // Solo validar si ambos campos tienen contenido
+            if (password.value && confirmPassword.value) {
                 if (password.value !== confirmPassword.value) {
                     confirmPassword.classList.add('error-field');
-                    confirmPasswordError.classList.add('show');
+                    confirmPasswordError.textContent = 'Las contraseñas no coinciden';
+                    confirmPasswordError.style.display = 'block';
                 } else {
                     confirmPassword.classList.remove('error-field');
-                    confirmPasswordError.classList.remove('show');
+                    confirmPasswordError.textContent = '✓ Las contraseñas coinciden';
+                    confirmPasswordError.style.display = 'block';
+                    confirmPasswordError.style.color = '#2e7d32'; // Verde
                 }
-            });
-            
-            // Validación al enviar el formulario
+            } else {
+                // Si algún campo está vacío, ocultar el mensaje
+                confirmPassword.classList.remove('error-field');
+                confirmPasswordError.style.display = 'none';
+            }
+        }
+        
+        // Validación al enviar
+        if (form) {
             form.addEventListener('submit', function(e) {
-                let isValid = true;
+                validarNombre();
+                validarEmail();
+                validarPassword();
+                validarConfirmPassword();
                 
-                // Validar campos requeridos
-                const requiredFields = ['nombre', 'email', 'password', 'confirmPassword'];
-                requiredFields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (!field.value.trim()) {
-                        field.classList.add('error-field');
-                        isValid = false;
-                    } else {
-                        field.classList.remove('error-field');
-                    }
-                });
-                
-                // Validar coincidencia de contraseñas
-                if (password.value !== confirmPassword.value) {
-                    confirmPassword.classList.add('error-field');
-                    confirmPasswordError.classList.add('show');
-                    isValid = false;
-                }
-                
-                // Validar longitud mínima de contraseña
-                if (password.value.length < 8) {
-                    password.classList.add('error-field');
-                    isValid = false;
-                }
-                
-                if (!isValid) {
+                const errores = document.querySelectorAll('.error-field');
+                if (errores.length > 0) {
                     e.preventDefault();
-                    // Desplazarse al primer error
-                    const firstError = document.querySelector('.error-field');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    errores[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             });
-            
-            // Limpiar errores al empezar a escribir
-            const inputs = form.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
+        }
+        
+        // Limpiar errores al escribir (pero mantener validación de coincidencia)
+        const inputs = form.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // No limpiar errores de confirmación automáticamente
+                if (this.id !== 'confirmPassword') {
                     this.classList.remove('error-field');
-                    const errorMsg = this.nextElementSibling;
-                    if (errorMsg && errorMsg.classList.contains('error-message')) {
-                        errorMsg.classList.remove('show');
+                    const errorElement = document.getElementById(this.id + 'Error');
+                    if (errorElement && this.id !== 'confirmPassword') {
+                        errorElement.style.display = 'none';
                     }
-                });
+                }
             });
         });
+    });
     </script>
 </body>
 </html>

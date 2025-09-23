@@ -39,10 +39,7 @@ public class DataInitializer {
                 
                 userRepository.save(adminUser);
                 System.out.println("✅ Usuario ADMIN creado: admin@admin.com / admin123");
-            }
-            
-            // También puedes crear el admin usando el servicio si prefieres
-            userService.createAdminUser();
+            } 
         };
     }
 }

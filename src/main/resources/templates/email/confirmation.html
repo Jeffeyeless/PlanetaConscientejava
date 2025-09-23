@@ -5,15 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #81c784;
-            --accent-color: #388e3c;
-            --background-color: #f5f5f5;
-            --text-color: #333;
-            --light-text: #fff;
-        }
-        
+        /* Reset y variables CSS */
         * {
             margin: 0;
             padding: 0;
@@ -21,10 +13,22 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --accent-color: #388e3c;
+            --background-color: #f5f5f5;
+            --text-color: #333333;
+            --light-text: #ffffff;
+            --border-color: #e0e0e0;
+        }
+        
+        /* Estilos principales */
         body {
             background-color: var(--background-color);
             margin: 0;
             padding: 20px;
+            color: var(--text-color);
         }
         
         .email-container {
@@ -34,42 +38,52 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            /* Forzar contenedor blanco */
+            background-color: #ffffff !important;
         }
         
+        /* Encabezado con colores sólidos para mejor compatibilidad */
         .email-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background: #2e7d32; /* Fallback sólido */
+            background: linear-gradient(135deg, #2e7d32, #388e3c);
             padding: 2rem;
             text-align: center;
-            color: white;
+            color: #ffffff; /* Blanco sólido para máximo contraste */
         }
         
         .email-header h1 {
             font-size: 2rem;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
         
         .email-header p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: #f0f0f0; /* Blanco ligeramente gris para mejor legibilidad */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         
+        /* Cuerpo del email con colores explícitos */
         .email-body {
             padding: 2.5rem;
-            color: var(--text-color);
+            color: #333333; /* Color de texto oscuro explícito */
             line-height: 1.6;
+            background-color: #ffffff; /* Fondo blanco explícito */
         }
         
         .welcome-text {
             font-size: 1.2rem;
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: #2e7d32; /* Color primario explícito */
             font-weight: 500;
         }
         
         .confirmation-text {
             margin-bottom: 2rem;
             font-size: 1rem;
+            color: #333333; /* Color de texto oscuro explícito */
         }
         
         .button-container {
@@ -79,7 +93,8 @@
         
         .confirm-button {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background: #2e7d32; /* Fallback sólido */
+            background: linear-gradient(135deg, #2e7d32, #388e3c);
             color: white;
             text-decoration: none;
             padding: 1rem 2rem;
@@ -87,11 +102,13 @@
             font-weight: 500;
             font-size: 1.1rem;
             transition: all 0.3s ease;
+            border: 1px solid #1b5e20; /* Borde más oscuro para contraste */
         }
         
         .confirm-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+            background: #388e3c; /* Color más claro al hacer hover */
         }
         
         .token-info {
@@ -100,15 +117,15 @@
             border-radius: 6px;
             margin: 1.5rem 0;
             font-size: 0.9rem;
-            color: #666;
-            border-left: 4px solid var(--secondary-color);
+            color: #666666;
+            border-left: 4px solid #81c784;
         }
         
         .email-footer {
             background-color: #f8f9fa;
             padding: 1.5rem;
             text-align: center;
-            color: #666;
+            color: #666666;
             font-size: 0.9rem;
             border-top: 1px solid #e9ecef;
         }
@@ -119,13 +136,23 @@
             border-top: 1px solid #dee2e6;
         }
         
+        .support-info a {
+            color: #2e7d32 !important;
+            text-decoration: none;
+        }
+        
         .leaf-decoration {
             text-align: center;
             margin: 1rem 0;
             opacity: 0.3;
         }
         
+        /* Media queries para responsividad */
         @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
             .email-body {
                 padding: 1.5rem;
             }
@@ -137,6 +164,19 @@
             .email-header h1 {
                 font-size: 1.5rem;
             }
+        }
+        
+        /* Estilos específicos para modo oscuro */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+            }
+            
+            .email-container {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            }
+            
+            /* El contenido del email mantiene colores claros para legibilidad */
         }
     </style>
 </head>
@@ -164,7 +204,7 @@
             
             <div class="token-info">
                 <p><strong>¿Problemas con el botón?</strong> Copia y pega el siguiente enlace en tu navegador:</p>
-                <p style="word-break: break-all; color: var(--primary-color);">
+                <p style="word-break: break-all; color: #2e7d32;">
                     <span th:text="${confirmationUrl}">Enlace de confirmación</span>
                 </p>
             </div>
@@ -177,14 +217,14 @@
         
         <div class="leaf-decoration">
             <svg width="60" height="60" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <path fill="var(--primary-color)" d="M416 127.1C416 247.4 319.4 344 200 344C158.8 344 120.3 331.3 88.53 309.7C83.42 306.1 77.42 307.7 73.7 312.8C70.06 317.9 71.67 323.9 76.78 327.6C112.3 353.1 154.8 368 200 368C337.2 368 448 257.2 448 120C448 74.84 433.1 32.31 407.6 3.223C403.9-1.886 397.9-3.497 392.8 .1487C387.7 3.795 386.1 9.793 389.7 14.89C411.3 46.72 424 85.22 424 127.1H416z"/>
+                <path fill="#2e7d32" d="M416 127.1C416 247.4 319.4 344 200 344C158.8 344 120.3 331.3 88.53 309.7C83.42 306.1 77.42 307.7 73.7 312.8C70.06 317.9 71.67 323.9 76.78 327.6C112.3 353.1 154.8 368 200 368C337.2 368 448 257.2 448 120C448 74.84 433.1 32.31 407.6 3.223C403.9-1.886 397.9-3.497 392.8 .1487C387.7 3.795 386.1 9.793 389.7 14.89C411.3 46.72 424 85.22 424 127.1H416z"/>
             </svg>
         </div>
         
         <div class="email-footer">
             <p>© 2024 Planeta Consciente. Todos los derechos reservados.</p>
             <div class="support-info">
-                <p>¿Necesitas ayuda? Contáctanos en: <a href="mailto:soporte@planetaconsciente.com" style="color: var(--primary-color);">soporte@planetaconsciente.com</a></p>
+                <p>¿Necesitas ayuda? Contáctanos en: <a href="mailto:soporte@planetaconsciente.com">soporte@planetaconsciente.com</a></p>
             </div>
         </div>
     </div>

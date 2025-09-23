@@ -23,6 +23,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Muestra formulario de login
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(value = "success", required = false) String success,
@@ -30,18 +33,6 @@ public class AuthController {
                                @RequestParam(value = "resetSent", required = false) String resetSent,
                                @RequestParam(value = "passwordChanged", required = false) String passwordChanged,
                                Model model) {
-        if (success != null) {
-            model.addAttribute("message", "¡Registro completado! Por favor revisa tu email para confirmar tu cuenta.");
-        }
-        if (verified != null) {
-            model.addAttribute("message", "¡Cuenta verificada exitosamente! Ya puedes iniciar sesión.");
-        }
-        if (resetSent != null) {
-            model.addAttribute("message", "Se ha enviado un enlace de recuperación a tu email.");
-        }
-        if (passwordChanged != null) {
-            model.addAttribute("message", "Contraseña cambiada exitosamente. Ya puedes iniciar sesión.");
-        }
         return "login";
     }
 
@@ -58,7 +49,7 @@ public class AuthController {
         return "register";
     }
 
-    // Procesa el registro de nuevos usuarios
+    // Procesa el registro de nuevos usuarios - CORREGIDO
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {
@@ -75,13 +66,11 @@ public class AuthController {
             // Enviar email de confirmación
             emailService.sendConfirmationEmail(user.getEmail(), user.getNombre(), verificationToken);
             
-            redirectAttributes.addFlashAttribute("successMessage", 
-                "¡Registro completado! Se ha enviado un email de verificación a " + user.getEmail() + 
-                ". Por favor revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.");
-            
+            // SOLO redirigir con parámetro en la URL - SIN addFlashAttribute
             return "redirect:/login?success";
             
         } catch (Exception e) {
+            // Para errores sí usar flash attribute (ya que no hay parámetro de URL para errores)
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Error en el registro: " + e.getMessage());
             return "redirect:/register";
@@ -91,7 +80,6 @@ public class AuthController {
     // Confirmación de cuenta mediante token
     @GetMapping("/confirm-account")
     public String confirmAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
-        // ✅ CORREGIDO: Usar .orElse(null)
         User user = userService.findByVerificationToken(token).orElse(null);
         
         if (user != null && !user.isTokenExpired()) {
@@ -99,10 +87,10 @@ public class AuthController {
             user.setVerificationToken(null);
             userService.updateUser(user);
             
-            redirectAttributes.addFlashAttribute("successMessage", 
-                "¡Cuenta verificada exitosamente! Ya puedes iniciar sesión.");
+            // Usar parámetro en URL para éxito
             return "redirect:/login?verified";
         } else {
+            // Para errores usar flash attribute
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Enlace inválido o expirado. Por favor regístrate nuevamente.");
             return "redirect:/register";
@@ -120,7 +108,6 @@ public class AuthController {
     public String processForgotPassword(@RequestParam("email") String email, 
                                       RedirectAttributes redirectAttributes) {
         try {
-            // ✅ CORREGIDO: Usar .orElse(null)
             User user = userService.findByEmail(email).orElse(null);
             
             if (user != null) {
@@ -134,12 +121,11 @@ public class AuthController {
                 emailService.sendPasswordResetEmail(user.getEmail(), user.getNombre(), resetToken);
             }
             
-            // Por seguridad, siempre mostrar el mismo mensaje aunque el email no exista
-            redirectAttributes.addFlashAttribute("successMessage", 
-                "Si el email existe en nuestro sistema, recibirás un enlace de recuperación.");
+            // Usar parámetro en URL para éxito
             return "redirect:/login?resetSent";
             
         } catch (Exception e) {
+            // Para errores usar flash attribute
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Error al procesar la solicitud: " + e.getMessage());
             return "redirect:/forgot-password";
@@ -149,7 +135,6 @@ public class AuthController {
     // Muestra formulario para resetear contraseña
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        // ✅ CORREGIDO: Usar .orElse(null)
         User user = userService.findByResetPasswordToken(token).orElse(null);
         
         if (user != null && !user.isTokenExpired()) {
@@ -167,7 +152,6 @@ public class AuthController {
                                     @RequestParam("password") String password,
                                     RedirectAttributes redirectAttributes) {
         try {
-            // ✅ CORREGIDO: Usar .orElse(null)
             User user = userService.findByResetPasswordToken(token).orElse(null);
             
             if (user != null && !user.isTokenExpired()) {
@@ -177,21 +161,20 @@ public class AuthController {
                 user.setTokenExpirationDate(null);
                 userService.updateUser(user);
                 
-                redirectAttributes.addFlashAttribute("successMessage", 
-                    "Contraseña cambiada exitosamente. Ya puedes iniciar sesión.");
+                // Usar parámetro en URL para éxito
                 return "redirect:/login?passwordChanged";
             } else {
+                // Para errores usar flash attribute
                 redirectAttributes.addFlashAttribute("errorMessage", 
                     "Enlace inválido o expirado. Por favor solicita un nuevo enlace de recuperación.");
                 return "redirect:/forgot-password";
             }
             
         } catch (Exception e) {
+            // Para errores usar flash attribute
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Error al cambiar la contraseña: " + e.getMessage());
             return "redirect:/reset-password?token=" + token;
         }
     }
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 }

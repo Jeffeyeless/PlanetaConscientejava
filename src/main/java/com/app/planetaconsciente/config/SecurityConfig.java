@@ -21,6 +21,7 @@ public class SecurityConfig {
             )
             
             .authorizeHttpRequests(auth -> auth
+                // 1. RECURSOS ESTÁTICOS (acceso total)
                 .requestMatchers(
                     "/css/**",
                     "/js/**",
@@ -31,27 +32,19 @@ public class SecurityConfig {
                     "/uploads/**"
                 ).permitAll()
                 
+                // 2. RUTAS PÚBLICAS MÍNIMAS (sin registro necesario)
                 .requestMatchers(
-                    "/",
-                    "/home",
-                    "/inicio",
-                    "/login",
-                    "/register",
-                    "/calculadora/**",
-                    "/medio_ambiente",
-                    "/eventos",
-                    "/noticias",
-                    "/noticias/**",
-                    "/access-denied",
-                    "/error",
-                    // Nuevas rutas para verificación y recuperación
-                    "/confirm-account",
-                    "/forgot-password",
-                    "/reset-password",
-                    "/reset-password/**"
+                    "/login",               // Formulario de login
+                    "/register",            // Formulario de registro
+                    "/confirm-account",     // Confirmación de email
+                    "/forgot-password",     // Recuperación de contraseña
+                    "/reset-password",      // Reset de contraseña
+                    "/reset-password/**",   // Reset de contraseña con token
+                    "/access-denied",       // Página de acceso denegado
+                    "/error"                // Página de error
                 ).permitAll()
                 
-                // Rutas administrativas
+                // 3. RUTAS ADMINISTRATIVAS (solo para ADMIN)
                 .requestMatchers(
                     "/admin/**",
                     "/noticias/nueva/**",
@@ -62,19 +55,36 @@ public class SecurityConfig {
                     "/eventos/eliminar/**"
                 ).hasRole("ADMIN")
                 
+                // 4. TODAS LAS DEMÁS RUTAS requieren usuario AUTENTICADO y VERIFICADO
+                .requestMatchers(
+                    "/",                // Home principal
+                    "/inicio",              // Página de inicio
+                    "/calculadora/**",      // Calculadora ecológica
+                    "/medio_ambiente",      // Información medio ambiente
+                    "/eventos",             // Lista de eventos
+                    "/noticias",            // Lista de noticias
+                    "/noticias/**",         // Detalles de noticias
+                    "/perfil",              // Perfil de usuario
+                    "/mi-cuenta",           // Configuración de cuenta
+                    "/comunidad",           // Comunidad de usuarios
+                    "/recursos",            // Recursos educativos
+                    "/proyectos"            // Proyectos comunitarios
+                ).authenticated()           // Solo usuarios autenticados
+                
+                // 5. Cualquier otra ruta no listada también requiere autenticación
                 .anyRequest().authenticated()
             )
             
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/dashboard")
+                .defaultSuccessUrl("/", true)  // Redirige al home después del login
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
             
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/?logout=true")
+                .logoutSuccessUrl("/?logout=true")  // Al logout, va a la página pública
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .permitAll()

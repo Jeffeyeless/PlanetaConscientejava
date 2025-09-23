@@ -112,17 +112,4 @@ public class UserService implements UserDetailsService {
                 .map(User::isEnabled)
                 .orElse(false);
     }
-
-    // Método para crear usuario admin (actualizado)
-    public void createAdminUser() {
-        if (userRepository.findByEmail("admin@planetaconsciente.com").isEmpty()) {
-            User admin = new User();
-            admin.setNombre("Administrador");
-            admin.setEmail("admin@planetaconsciente.com");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setRoles(List.of("ADMIN"));
-            admin.setEnabled(true); // Admin activo directamente
-            userRepository.save(admin);
-        }
-    }
 }
