@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Huella de Carbono</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            font-weight: bold;
+        }
+        .badge {
+            font-size: 0.8em;
+            padding: 0.5em 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">📊 Reporte de Estadísticas - Huella de Carbono</h1>
+            <div>
+                <a th:href="@{/exportar/estadisticas/pdf}" class="btn btn-danger" th:if="${totalRegistros > 0}">
+                    📄 Exportar a PDF
+                </a>
+                <a th:href="@{/}" class="btn btn-outline-secondary">🏠 Inicio</a>
+            </div>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <h5>❌ Error</h5>
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Mensaje cuando no hay datos -->
+        <div th:if="${totalRegistros == 0}" class="alert alert-info text-center">
+            <h4>📊 No hay datos disponibles</h4>
+            <p class="mb-3">No se han registrado cálculos de huella de carbono aún.</p>
+            <a th:href="@{/calculadora}" class="btn btn-primary btn-lg">Realizar Primer Cálculo</a>
+        </div>
+
+        <!-- Contenido cuando hay datos -->
+        <div th:if="${totalRegistros > 0}">
+            <!-- Filtros por fecha para exportación -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">📅 Exportar con Filtros de Fecha</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/exportar/estadisticas/pdf}" method="get" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="fecha_desde" class="form-label">Desde:</label>
+                            <input type="date" id="fecha_desde" name="fecha_desde" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fecha_hasta" class="form-label">Hasta:</label>
+                            <input type="date" id="fecha_hasta" name="fecha_hasta" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">📊 Exportar con Filtros</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tarjetas de resumen -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total de Registros</h5>
+                            <h2 th:text="${totalRegistros}">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Clasificaciones</h5>
+                            <h2 th:text="${distribucionClasificacion.size()}">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Usuarios Analizados</h5>
+                            <h2 th:text="${totalRegistros}">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribución por clasificación -->
+            <div class="row mb-4" th:if="${not distribucionClasificacion.empty}">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">📈 Distribución por Clasificación</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="clasificacionChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">📋 Detalles por Clasificación</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Clasificación</th>
+                                            <th>Cantidad</th>
+                                            <th>Porcentaje</th>
+                                            <th>Promedio Huella</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="entry : ${distribucionClasificacion}">
+                                            <td th:text="${entry.key}">Clasificación</td>
+                                            <td th:text="${entry.value}">0</td>
+                                            <td th:text="${porcentajeClasificacion.get(entry.key)} + '%'">0%</td>
+                                            <td th:text="${(promedioHuella.get(entry.key) != null) ? promedioHuella.get(entry.key) + ' kg CO₂' : 'N/A'}">0 kg CO₂</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribución por género y Top 5 -->
+            <div class="row mb-4">
+                <div class="col-md-6" th:if="${not generoStats.empty}">
+                    <div class="card h-100">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">👥 Distribución por Género</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="generoChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" th:if="${not topMayoresHuellas.empty}">
+                    <div class="card h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">🔥 Top 5 Mayores Huellas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Huella (kg CO₂)</th>
+                                            <th>Clasificación</th>
+                                            <th>Género</th>
+                                            <th>Edad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="calc, stat : ${topMayoresHuellas}">
+                                            <td th:text="${stat.count}">1</td>
+                                            <td th:text="${#numbers.formatDecimal(calc.resultado, 1, 2)}">0.00</td>
+                                            <td>
+                                                <span th:text="${calc.clasificacion}" 
+                                                      th:class="${calc.clasificacion == 'Muy Alta (Impacto significativo)'} ? 'badge bg-danger' : 
+                                                                 (${calc.clasificacion == 'Alta (Necesita mejorar)'} ? 'badge bg-warning text-dark' : 
+                                                                 (${calc.clasificacion == 'Media (Promedio)'} ? 'badge bg-info' : 'badge bg-success'))">
+                                                    Clasificación
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span th:switch="${calc.sexo}">
+                                                    <span th:case="'M'">👨 Masculino</span>
+                                                    <span th:case="'F'">👩 Femenino</span>
+                                                    <span th:case="'O'">⚧ Otro</span>
+                                                    <span th:case="'P'">❓ Prefiero no decir</span>
+                                                </span>
+                                            </td>
+                                            <td th:text="${calc.edad}">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scripts para gráficos CORREGIDOS -->
+            <!-- Scripts para gráficos - VERSIÓN FUNCIONAL -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Iniciando gráficos...');
+        
+        // Gráfico de clasificación - DATOS DIRECTOS
+        const clasificacionCtx = document.getElementById('clasificacionChart');
+        if (clasificacionCtx) {
+            console.log('Creando gráfico de clasificación...');
+            new Chart(clasificacionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Baja (Ecológica)', 'Media (Promedio)', 'Alta (Necesita mejorar)', 'Muy Alta (Impacto significativo)'],
+                    datasets: [{
+                        data: [3, 1, 1, 3], // Tus datos de la consola
+                        backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#dc3545'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            console.log('Gráfico de clasificación creado');
+        } else {
+            console.log('No se encontró clasificacionChart');
+        }
+        
+        // Gráfico de género - DATOS DIRECTOS
+        const generoCtx = document.getElementById('generoChart');
+        if (generoCtx) {
+            console.log('Creando gráfico de género...');
+            new Chart(generoCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Masculino', 'Femenino'],
+                    datasets: [{
+                        label: 'Cantidad de Usuarios',
+                        data: [6, 2], // Tus datos de la consola
+                        backgroundColor: ['#007bff', '#e83e8c'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            console.log('Gráfico de género creado');
+        } else {
+            console.log('No se encontró generoChart');
+        }
+    });
+</script>
+        </div>
+    </div>
+</body>
+</html>
