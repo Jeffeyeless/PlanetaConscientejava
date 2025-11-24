@@ -5,7 +5,6 @@ import com.app.planetaconsciente.service.FileStorageService;
 import com.app.planetaconsciente.service.NoticiaService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
