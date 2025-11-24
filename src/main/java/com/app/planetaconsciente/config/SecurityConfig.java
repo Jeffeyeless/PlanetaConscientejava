@@ -20,11 +20,6 @@ public class SecurityConfig {
                 .frameOptions().sameOrigin()
             )
             
-            .authorizeHttpRequests(authz -> authz
-                //Permitir endpoints públicos
-                .requestMatchers("/api/public/**").permitAll()
-            )
-            
             .authorizeHttpRequests(auth -> auth
                 // 1. RECURSOS ESTÁTICOS (acceso total)
                 .requestMatchers(
