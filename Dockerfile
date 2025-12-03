@@ -1,20 +1,23 @@
 # Imagen base con Java 17
 FROM eclipse-temurin:17-jdk-alpine
 
-# Directorio de trabajo dentro del contenedor
+# Directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos del proyecto
+# Copiar todo el proyecto
 COPY . .
 
-# Dar permisos a mvnw
+# Permisos para mvnw
 RUN chmod +x mvnw
 
 # Compilar el proyecto
 RUN ./mvnw clean package -DskipTests
 
-# Exponer el puerto de Render
+# Buscar el jar real y renombrarlo a app.jar
+RUN cp target/*.jar app.jar
+
+# Exponer puerto
 EXPOSE 8080
 
-# Ejecutar la aplicación
-CMD ["java", "-jar", "target/*.jar"]
+# Ejecutar aplicación
+CMD ["java", "-jar", "app.jar"]
