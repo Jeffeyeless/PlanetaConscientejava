@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.8</version>
         <relativePath/>
     </parent>
 
@@ -113,6 +113,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Si necesitas Mockito adicional -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        
+        <!-- JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>        
+
         <!-- Thymeleaf Layout Dialect -->
         <dependency>
             <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -132,6 +145,25 @@
             <version>2.1.7</version>
         </dependency>
 
+        <!-- Apache POI para Excel -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+
+        <!-- Para compatibilidad con versiones más nuevas de XML -->
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>5.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>

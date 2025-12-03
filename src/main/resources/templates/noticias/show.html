@@ -19,6 +19,10 @@
             --ivory: #fffff5;
             --natural-white: #f9f9f7;
             
+            /* Colores de estado */
+            --error-red: #dc3545;
+            --warning-orange: #ff9800;
+            
             /* Degradados */
             --green-gradient: linear-gradient(135deg, var(--medium-green) 0%, var(--eco-teal) 100%);
             --light-green-gradient: linear-gradient(to right, var(--light-green), var(--medium-green));
@@ -297,11 +301,97 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
         /* Efecto de flotación para la imagen */
         @keyframes floatImage {
             0% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0); }
+        }
+
+        /* Estilos para SweetAlert */
+        .swal-eliminar-popup {
+            border-radius: var(--border-radius-lg);
+            border: 2px solid rgba(220, 53, 69, 0.1);
+            font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        .swal-eliminar-popup .swal2-title {
+            color: var(--deep-green);
+            font-family: 'Montserrat', 'Arial Rounded MT Bold', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .swal-eliminar-popup .swal2-html-container {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #455a64;
+        }
+
+        .swal-eliminar-popup .text-danger {
+            color: var(--error-red) !important;
+            background: rgba(220, 53, 69, 0.05);
+            padding: 0.8rem;
+            border-radius: var(--border-radius-sm);
+            border-left: 3px solid var(--error-red);
+            margin-top: 1rem;
+        }
+
+        .swal-eliminar-popup .text-danger i {
+            margin-right: 0.5rem;
+        }
+
+        .swal-eliminar-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333) !important;
+            border: none !important;
+            padding: 0.8rem 2rem !important;
+            border-radius: var(--border-radius-md) !important;
+            font-family: 'Poppins', 'Segoe UI', sans-serif !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            transition: var(--transition-medium) !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        .swal-eliminar-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        .swal-cancelar-btn {
+            background: linear-gradient(135deg, #6c757d, #495057) !important;
+            border: none !important;
+            padding: 0.8rem 2rem !important;
+            border-radius: var(--border-radius-md) !important;
+            font-family: 'Poppins', 'Segoe UI', sans-serif !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            transition: var(--transition-medium) !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        .swal-cancelar-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        /* Animación de eliminación */
+        .noticia-detalle.eliminando {
+            animation: slideOut 0.5s ease forwards;
+            pointer-events: none;
         }
 
         /* Responsive Design */
@@ -367,9 +457,8 @@
 </head>
 <body>
     <div layout:fragment="content" class="container noticia-detalle-container">
-
         <!-- Tarjeta de Noticia Premium -->
-        <article class="noticia-detalle">
+        <article class="noticia-detalle" id="noticia-detalle">
             <div class="noticia-detalle-img-container">
                 <th:block th:if="${noticia.imagenUrl}">
                     <img th:src="@{${noticia.imagenUrl}}" th:alt="${noticia.titulo}" class="noticia-detalle-img" loading="lazy"
@@ -400,9 +489,14 @@
                         <a th:href="@{/noticias/{id}/editar(id=${noticia.id})}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <form th:action="@{/noticias/{id}/eliminar(id=${noticia.id})}" method="POST" style="display:inline;">
+                        <form th:action="@{/noticias/{id}/eliminar(id=${noticia.id})}" 
+                              method="POST" 
+                              style="display:inline;"
+                              class="form-eliminar">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit" 
+                                    class="btn btn-danger"
+                                    th:attr="data-id=${noticia.id}, data-titulo=${noticia.titulo}">
                                 <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                         </form>
@@ -411,5 +505,127 @@
             </div>
         </article>
     </div>
+
+    <th:block layout:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            // ========== CONFIRMACIÓN DE ELIMINACIÓN ==========
+            class ConfirmacionEliminarDetalle {
+                static init() {
+                    // Usar event delegation para manejar clics en botones de eliminar
+                    document.addEventListener('click', (e) => {
+                        const btnEliminar = e.target.closest('.btn-danger[data-id]');
+                        
+                        if (btnEliminar) {
+                            e.preventDefault(); // Prevenir envío inmediato
+                            
+                            const id = btnEliminar.getAttribute('data-id');
+                            const titulo = btnEliminar.getAttribute('data-titulo');
+                            const formulario = btnEliminar.closest('form.form-eliminar');
+                            
+                            this.mostrarConfirmacion(id, titulo, formulario, btnEliminar);
+                        }
+                    });
+                }
+                
+                static mostrarConfirmacion(id, titulo, formulario, btnEliminar) {
+                    const tituloEscapeado = this.escapeHtml(titulo);
+                    
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        html: `
+                            <div style="text-align: left;">
+                                <p>Vas a eliminar la noticia:</p>
+                                <p><strong>"${tituloEscapeado}"</strong></p>
+                                <p class="text-danger" style="margin-top: 10px;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Esta acción no se puede deshacer
+                                </p>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true,
+                        backdrop: true,
+                        allowOutsideClick: false,
+                        allowEscapeKey: true,
+                        focusCancel: true,
+                        customClass: {
+                            popup: 'swal-eliminar-popup',
+                            confirmButton: 'swal-eliminar-btn',
+                            cancelButton: 'swal-cancelar-btn'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.eliminarNoticia(formulario, btnEliminar);
+                        }
+                    });
+                }
+
+                static escapeHtml(text) {
+                    if (!text) return '';
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+                
+                static animarEliminacion(btnEliminar) {
+                    const noticiaDetalle = document.getElementById('noticia-detalle');
+                    
+                    if (noticiaDetalle) {
+                        noticiaDetalle.classList.add('eliminando');
+                    }
+                }
+
+                static eliminarNoticia(formulario, btnEliminar) {
+                    // Animación
+                    this.animarEliminacion(btnEliminar);
+                    
+                    // Mostrar loader
+                    setTimeout(() => {
+                        Swal.fire({
+                            title: 'Eliminando...',
+                            text: 'Por favor espera',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Enviar formulario después de que la animación termine
+                        setTimeout(() => {
+                            formulario.submit();
+                        }, 500);
+                    }, 300); // Pequeño delay para ver la animación
+                }
+            }
+
+            // ========== INICIALIZACIÓN ==========
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inicializar sistema de confirmación de eliminación
+                if (document.querySelector('.btn-danger[data-id]')) {
+                    ConfirmacionEliminarDetalle.init();
+                }
+                
+                // Añadir clase para animación de entrada
+                const noticiaDetalle = document.getElementById('noticia-detalle');
+                if (noticiaDetalle) {
+                    noticiaDetalle.style.opacity = '0';
+                    noticiaDetalle.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        noticiaDetalle.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                        noticiaDetalle.style.opacity = '1';
+                        noticiaDetalle.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            });
+        </script>
+    </th:block>
 </body>
 </html>
