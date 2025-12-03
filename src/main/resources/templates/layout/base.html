@@ -69,9 +69,24 @@
                     <div class="user-dropdown">
                         <button class="dropdown-toggle nav-button" type="button" aria-expanded="false">
                             <!-- Mostrar inicial del usuario -->
-                            <div class="user-avatar" th:text="${#authentication.principal != null ? #strings.toUpperCase(#strings.substring(#authentication.principal.username, 0, 1)) : 'U'}">
+                            <div class="user-avatar" 
+                                th:if="${#authorization.expression('isAuthenticated()')}"
+                                th:text="${#strings.toUpperCase(#strings.substring(#authentication.principal.username, 0, 1))}">
                             </div>
-                            <span class="user-name" th:text="${#authentication.principal != null ? #authentication.principal.username : 'Usuario'}"></span>
+                            <div class="user-avatar" 
+                                th:unless="${#authorization.expression('isAuthenticated()')}">
+                                U
+                            </div>
+                            
+                            <span class="user-name" 
+                                th:if="${#authorization.expression('isAuthenticated()')}"
+                                th:text="${#authentication.principal.username}">
+                            </span>
+                            <span class="user-name" 
+                                th:unless="${#authorization.expression('isAuthenticated()')}">
+                                Usuario
+                            </span>
+                            
                             <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
 
