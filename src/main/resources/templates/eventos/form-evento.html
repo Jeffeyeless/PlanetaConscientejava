@@ -8,30 +8,57 @@
     
     <th:block layout:fragment="css">
         <style>
+            :root {
+                --primary: #2E7D32;
+                --primary-light: #4CAF50;
+                --primary-dark: #1B5E20;
+                --accent: #4CAF50;
+                --accent-light: #C8E6C9;
+                --accent-dark: #388E3C;
+                --secondary: #F5F5F5;
+                --border-color: #E0E0E0;
+                --text: #333333;
+                --error: #DC3545;
+                --success: #28A745;
+            }
+
             .form-container {
                 max-width: 850px;
                 margin: 2rem auto;
                 background: white;
                 border-radius: 1rem;
                 padding: 2rem 2.5rem;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
                 border-left: 6px solid var(--accent);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .form-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary-light), var(--accent));
             }
 
             .form-title {
                 font-family: 'Playfair Display', serif;
                 color: var(--primary);
                 text-align: center;
-                font-size: 2rem;
+                font-size: 2.2rem;
                 margin-bottom: 2rem;
                 position: relative;
+                padding-bottom: 0.5rem;
             }
 
             .form-title::after {
                 content: "";
-                width: 60px;
+                width: 80px;
                 height: 4px;
-                background: var(--accent);
+                background: linear-gradient(90deg, var(--accent), var(--primary-light));
                 display: block;
                 margin: 0.5rem auto 0;
                 border-radius: 999px;
@@ -39,59 +66,237 @@
 
             .form-label {
                 font-weight: 600;
-                color: var(--primary-light);
+                color: var(--primary-dark);
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .form-label i {
+                color: var(--accent);
+                font-size: 1.1rem;
             }
 
             .form-control {
-                border-radius: 0.5rem;
-                border: 1px solid var(--border-color);
-                transition: border-color 0.3s ease;
+                border-radius: 0.75rem;
+                border: 2px solid var(--border-color);
+                transition: all 0.3s ease;
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
             }
 
             .form-control:focus {
                 border-color: var(--accent);
-                box-shadow: 0 0 0 0.2rem rgba(76, 175, 125, 0.2);
+                box-shadow: 0 0 0 0.25rem rgba(76, 175, 125, 0.25);
+                outline: none;
+            }
+
+            .form-control.is-invalid {
+                border-color: var(--error);
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right calc(0.375em + 0.1875rem) center;
+                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                padding-right: calc(1.5em + 0.75rem);
+            }
+
+            .form-control.is-valid {
+                border-color: var(--success);
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right calc(0.375em + 0.1875rem) center;
+                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                padding-right: calc(1.5em + 0.75rem);
             }
 
             .form-section {
-                margin-bottom: 1.5rem;
+                margin-bottom: 1.75rem;
+                position: relative;
             }
 
             .badge-requerido {
                 background-color: var(--accent-light);
                 color: var(--accent-dark);
-                padding: 0.2rem 0.75rem;
+                padding: 0.25rem 0.75rem;
                 font-size: 0.75rem;
-                font-weight: 600;
+                font-weight: 700;
                 border-radius: 999px;
-                margin-left: 0.5rem;
+                margin-left: auto;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .btn-formulario {
-                padding: 0.5rem 1.5rem;
+                padding: 0.75rem 2rem;
                 font-size: 1rem;
                 font-weight: 600;
                 border-radius: 999px;
                 transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                min-width: 140px;
+                border: 2px solid transparent;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .btn-formulario.btn-primary {
-                background-color: var(--accent);
+                background: linear-gradient(135deg, var(--accent), var(--primary-dark));
                 color: white;
-                border: 1px solid var(--accent-dark);
+                border: none;
+                box-shadow: 0 4px 15px rgba(76, 175, 125, 0.3);
             }
 
             .btn-formulario.btn-primary:hover {
-                background-color: var(--accent-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(76, 175, 125, 0.4);
+                background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+            }
+
+            .btn-formulario.btn-primary:active {
+                transform: translateY(0);
             }
 
             .btn-formulario.btn-outline-secondary {
-                border: 1px solid var(--border-color);
+                border: 2px solid var(--border-color);
                 color: var(--text);
+                background: white;
             }
 
             .btn-formulario.btn-outline-secondary:hover {
                 background-color: var(--secondary);
+                border-color: var(--accent);
+                color: var(--accent-dark);
+            }
+
+            .error-message {
+                font-size: 0.85rem;
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+                background-color: rgba(220, 53, 69, 0.1);
+                border-left: 3px solid var(--error);
+                border-radius: 0 0.5rem 0.5rem 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .error-message i {
+                color: var(--error);
+            }
+
+            .date-container {
+                position: relative;
+            }
+
+            .date-container .form-control {
+                padding-left: 2.5rem;
+            }
+
+            .date-container::before {
+                content: '\f073';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--accent);
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            .form-text {
+                font-size: 0.85rem;
+                color: #6c757d;
+                margin-top: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background-color: rgba(76, 175, 125, 0.05);
+                border-radius: 0.5rem;
+            }
+
+            .form-text i {
+                color: var(--accent);
+            }
+
+            .info-box {
+                background: linear-gradient(135deg, rgba(76, 175, 125, 0.1), rgba(43, 149, 208, 0.1));
+                border: 1px solid rgba(76, 175, 125, 0.2);
+                border-radius: 0.75rem;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .info-box h6 {
+                color: var(--primary-dark);
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .info-box ul {
+                margin: 0;
+                padding-left: 1.5rem;
+                color: var(--text);
+                font-size: 0.9rem;
+            }
+
+            .info-box li {
+                margin-bottom: 0.25rem;
+            }
+
+            /* Animación para errores */
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+
+            .shake {
+                animation: shake 0.5s ease-in-out;
+            }
+
+            /* Spinner para botón */
+            .spinner {
+                display: inline-block;
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top-color: white;
+                animation: spin 1s ease-in-out infinite;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .form-container {
+                    padding: 1.5rem;
+                    margin: 1rem;
+                }
+                
+                .form-title {
+                    font-size: 1.75rem;
+                }
+                
+                .btn-formulario {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .d-flex.justify-content-between {
+                    flex-direction: column;
+                }
             }
         </style>
     </th:block>
@@ -100,8 +305,36 @@
 <div layout:fragment="content">
     <div class="form-container">
         <h1 class="form-title" th:text="${evento.id} != null ? 'Editar Evento' : 'Nuevo Evento'"></h1>
+        
+        <!-- Info box para instrucciones -->
+        <div class="info-box" th:if="${evento.id} == null">
+            <h6><i class="fas fa-info-circle"></i> Instrucciones importantes:</h6>
+            <ul>
+                <li>La fecha del evento no puede ser en el pasado</li>
+                <li>Se recomienda programar eventos con al menos 1 hora de anticipación</li>
+                <li>La fecha máxima permitida es 2 años en el futuro</li>
+                <li>Todos los campos marcados con <span class="badge-requerido" style="margin: 0 0.25rem; padding: 0.1rem 0.5rem;">Requerido</span> son obligatorios</li>
+            </ul>
+        </div>
+        
+        <!-- Mensajes flash -->
+        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
+        <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${mensajeError}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-        <form th:action="@{/eventos/guardar}" th:object="${evento}" method="post" class="needs-validation" novalidate>
+        <!-- Form action dinámico -->
+        <form th:action="${evento.id} != null ? 
+                          @{/eventos/editar/__${evento.id}__} : 
+                          @{/eventos/guardar}" 
+              th:object="${evento}" method="post" class="needs-validation" novalidate id="eventoForm">
             <input type="hidden" th:field="*{id}"/>
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
@@ -111,8 +344,22 @@
                     <i class="fas fa-heading"></i> Título del Evento
                     <span class="badge-requerido">Requerido</span>
                 </label>
-                <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>
-                <div class="invalid-feedback">Por favor ingresa un título</div>
+                <input type="text" 
+                       class="form-control" 
+                       id="titulo" 
+                       th:field="*{titulo}" 
+                       required
+                       placeholder="Ej: Limpieza de Playa, Taller de Reciclaje"
+                       minlength="5"
+                       maxlength="100">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    <span th:errors="*{titulo}"></span>
+                </div>
+                <div class="invalid-feedback" th:unless="${#fields.hasErrors('titulo')}">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    El título es requerido (5-100 caracteres)
+                </div>
             </div>
 
             <!-- Descripción -->
@@ -121,8 +368,25 @@
                     <i class="fas fa-align-left"></i> Descripción
                     <span class="badge-requerido">Requerido</span>
                 </label>
-                <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="4" required></textarea>
-                <div class="invalid-feedback">Por favor ingresa una descripción</div>
+                <textarea class="form-control" 
+                          id="descripcion" 
+                          th:field="*{descripcion}" 
+                          rows="4" 
+                          required
+                          placeholder="Describe el evento en detalle..."
+                          minlength="10"
+                          maxlength="1000"></textarea>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    <span th:errors="*{descripcion}"></span>
+                </div>
+                <div class="invalid-feedback" th:unless="${#fields.hasErrors('descripcion')}">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    La descripción es requerida (10-1000 caracteres)
+                </div>
+                <div class="text-end">
+                    <small class="text-muted" id="contadorDescripcion">0/1000 caracteres</small>
+                </div>
             </div>
 
             <!-- Fecha y ubicación -->
@@ -132,49 +396,465 @@
                         <i class="fas fa-calendar-alt"></i> Fecha y Hora
                         <span class="badge-requerido">Requerido</span>
                     </label>
-                    <input type="datetime-local" class="form-control" id="fechaHora" th:field="*{fechaHora}" required>
-                    <div class="invalid-feedback">Selecciona una fecha y hora</div>
+                    <div class="date-container">
+                        <input type="datetime-local" 
+                               class="form-control" 
+                               id="fechaHora" 
+                               th:field="*{fechaHora}" 
+                               th:attr="data-min-date=${fechaMinima}"
+                               required
+                               step="300"
+                               placeholder="Selecciona fecha y hora">
+                    </div>
+                    <!-- Mensaje de error desde servidor -->
+                    <div class="text-danger error-message" th:if="${#fields.hasErrors('fechaHora')}">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span th:errors="*{fechaHora}"></span>
+                    </div>
+                    <!-- Mensaje de validación de fecha -->
+                    <div class="text-danger error-message" id="fechaError" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="fechaErrorMessage"></span>
+                    </div>
+                    <!-- Info adicional -->
+                    <div class="form-text">
+                        <i class="fas fa-clock"></i>
+                        Fecha mínima: <strong><span id="fechaMinimaTexto"></span></strong>
+                        <br>
+                        <i class="fas fa-calendar-plus mt-1"></i>
+                        Fecha máxima: <strong><span id="fechaMaximaTexto"></span></strong>
+                    </div>
                 </div>
+                
                 <div class="col-md-6 form-section">
                     <label for="ubicacion" class="form-label">
                         <i class="fas fa-map-marker-alt"></i> Ubicación
                         <span class="badge-requerido">Requerido</span>
                     </label>
-                    <input type="text" class="form-control" id="ubicacion" th:field="*{ubicacion}" required>
-                    <div class="invalid-feedback">Ingresa una ubicación</div>
+                    <input type="text" 
+                           class="form-control" 
+                           id="ubicacion" 
+                           th:field="*{ubicacion}" 
+                           required
+                           placeholder="Ej: Playa Principal, Parque Central"
+                           minlength="5"
+                           maxlength="200">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('ubicacion')}">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        <span th:errors="*{ubicacion}"></span>
+                    </div>
+                    <div class="invalid-feedback" th:unless="${#fields.hasErrors('ubicacion')}">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        La ubicación es requerida (5-200 caracteres)
+                    </div>
                 </div>
             </div>
 
             <!-- Botones -->
-            <div class="d-flex justify-content-between mt-4">
+            <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
                 <a th:href="@{/eventos}" class="btn-formulario btn btn-outline-secondary">
                     <i class="fas fa-arrow-left"></i> Cancelar
                 </a>
-                <button type="submit" class="btn-formulario btn btn-primary">
-                    <i class="fas fa-save me-1"></i>
-                    <span th:text="${evento.id} != null ? 'Actualizar' : 'Guardar'"></span>
-                </button>
+                
+                <div class="d-flex gap-3">
+                    <button type="button" class="btn-formulario btn btn-outline-info" id="previewBtn">
+                        <i class="fas fa-eye"></i> Vista Previa
+                    </button>
+                    
+                    <button type="submit" class="btn-formulario btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i>
+                        <span th:text="${evento.id} != null ? 'Actualizar Evento' : 'Crear Evento'"></span>
+                    </button>
+                </div>
             </div>
         </form>
+    </div>
+    
+    <!-- Modal para vista previa -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Vista Previa del Evento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="previewContent">
+                        <!-- La vista previa se insertará aquí -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <th:block layout:fragment="scripts">
     <script>
-    // Validación del formulario
-    (function() {
-        'use strict';
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos DOM
+        const fechaInput = document.getElementById('fechaHora');
+        const fechaError = document.getElementById('fechaError');
+        const fechaErrorMessage = document.getElementById('fechaErrorMessage');
+        const fechaMinimaTexto = document.getElementById('fechaMinimaTexto');
+        const fechaMaximaTexto = document.getElementById('fechaMaximaTexto');
+        const form = document.getElementById('eventoForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const previewModalElement = document.getElementById('previewModal');
+        const contadorDescripcion = document.getElementById('contadorDescripcion');
+        const descripcionTextarea = document.getElementById('descripcion');
+        
+        let previewModal = null;
+        if (previewModalElement) {
+            previewModal = new bootstrap.Modal(previewModalElement);
+        }
+        
+        // Obtener fecha y hora actual
+        const ahora = new Date();
+        
+        // Formatear fecha mínima para input datetime-local
+        const fechaMinima = new Date(ahora.getTime() - (ahora.getTimezoneOffset() * 60000))
+            .toISOString()
+            .slice(0, 16);
+        
+        // Fecha máxima: 2 años en el futuro
+        const maxFecha = new Date(ahora);
+        maxFecha.setFullYear(ahora.getFullYear() + 2);
+        const fechaMaxima = new Date(maxFecha.getTime() - (maxFecha.getTimezoneOffset() * 60000))
+            .toISOString()
+            .slice(0, 16);
+        
+        // Configurar atributos del input de fecha
+        if (fechaInput) {
+            fechaInput.min = fechaMinima;
+            fechaInput.max = fechaMaxima;
+        }
+        
+        // Mostrar fechas en formato legible
+        const opcionesFechaCorta = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        
+        if (fechaMinimaTexto) {
+            fechaMinimaTexto.textContent = ahora.toLocaleDateString('es-ES', opcionesFechaCorta);
+        }
+        
+        if (fechaMaximaTexto) {
+            fechaMaximaTexto.textContent = maxFecha.toLocaleDateString('es-ES', opcionesFechaCorta);
+        }
+        
+        // Contador de caracteres para descripción
+        function actualizarContadorDescripcion() {
+            if (!contadorDescripcion || !descripcionTextarea) return;
+            
+            const longitud = descripcionTextarea.value.length;
+            const maxLength = descripcionTextarea.getAttribute('maxlength') || 1000;
+            contadorDescripcion.textContent = `${longitud}/${maxLength} caracteres`;
+            
+            if (longitud > maxLength * 0.9) {
+                contadorDescripcion.style.color = 'var(--error)';
+            } else if (longitud > maxLength * 0.7) {
+                contadorDescripcion.style.color = 'orange';
+            } else {
+                contadorDescripcion.style.color = '#6c757d';
+            }
+        }
+        
+        // Función para validar fecha
+        function validarFecha() {
+            if (!fechaInput || !fechaInput.value) {
+                if (fechaError) fechaError.style.display = 'none';
+                if (fechaInput) fechaInput.classList.remove('is-invalid', 'is-valid');
+                return true;
+            }
+            
+            const fechaSeleccionada = new Date(fechaInput.value);
+            const ahoraSinSegundos = new Date(
+                ahora.getFullYear(), 
+                ahora.getMonth(), 
+                ahora.getDate(), 
+                ahora.getHours(), 
+                ahora.getMinutes()
+            );
+            
+            // Validar que no sea en el pasado
+            if (fechaSeleccionada < ahoraSinSegundos) {
+                mostrarErrorFecha('La fecha y hora no pueden ser en el pasado');
+                return false;
+            }
+            
+            // Validar que no sea más de 2 años en el futuro
+            if (fechaSeleccionada > maxFecha) {
+                mostrarErrorFecha('La fecha no puede ser más de 2 años en el futuro');
+                return false;
+            }
+            
+            // Si pasa todas las validaciones
+            if (fechaError) fechaError.style.display = 'none';
+            if (fechaInput) {
+                fechaInput.classList.remove('is-invalid');
+                fechaInput.classList.add('is-valid');
+            }
+            return true;
+        }
+        
+        function mostrarErrorFecha(mensaje) {
+            if (fechaErrorMessage) fechaErrorMessage.textContent = mensaje;
+            if (fechaError) fechaError.style.display = 'block';
+            if (fechaInput) {
+                fechaInput.classList.add('is-invalid', 'shake');
+                fechaInput.classList.remove('is-valid');
+                
+                // Remover la clase shake después de la animación
+                setTimeout(() => {
+                    fechaInput.classList.remove('shake');
+                }, 500);
+                
+                // Enfocar el campo con error
+                setTimeout(() => {
+                    fechaInput.focus();
+                }, 100);
+            }
+        }
+        
+        // Función para validar todo el formulario
+        function validarFormularioCompleto() {
+            if (!form) return false;
+            
+            let esValido = true;
+            
+            // Validar campos requeridos
+            const camposRequeridos = form.querySelectorAll('[required]');
+            camposRequeridos.forEach(campo => {
+                if (!campo.value.trim()) {
+                    campo.classList.add('is-invalid');
+                    esValido = false;
+                    
+                    if (!campo.classList.contains('is-invalid')) {
+                        campo.classList.add('shake');
+                        setTimeout(() => campo.classList.remove('shake'), 500);
+                    }
+                } else {
+                    campo.classList.remove('is-invalid');
+                    campo.classList.add('is-valid');
                 }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    })();
+            });
+            
+            // Validar fecha específicamente
+            if (!validarFecha()) {
+                esValido = false;
+            }
+            
+            // Validar longitud de campos
+            const titulo = document.getElementById('titulo');
+            const ubicacion = document.getElementById('ubicacion');
+            
+            if (titulo && (titulo.value.length < 5 || titulo.value.length > 100)) {
+                titulo.classList.add('is-invalid');
+                esValido = false;
+            }
+            
+            if (ubicacion && (ubicacion.value.length < 5 || ubicacion.value.length > 200)) {
+                ubicacion.classList.add('is-invalid');
+                esValido = false;
+            }
+            
+            if (descripcionTextarea && (descripcionTextarea.value.length < 10 || descripcionTextarea.value.length > 1000)) {
+                descripcionTextarea.classList.add('is-invalid');
+                esValido = false;
+            }
+            
+            return esValido;
+        }
+        
+        // Función para mostrar vista previa
+        function mostrarVistaPrevia() {
+            if (!validarFormularioCompleto()) {
+                alert('Por favor, completa correctamente el formulario antes de ver la vista previa.');
+                return;
+            }
+            
+            const titulo = document.getElementById('titulo')?.value || '';
+            const descripcion = document.getElementById('descripcion')?.value || '';
+            const fechaHora = document.getElementById('fechaHora')?.value || '';
+            const ubicacion = document.getElementById('ubicacion')?.value || '';
+            
+            // Formatear fecha para vista previa
+            let fechaFormateada = '';
+            if (fechaHora) {
+                fechaFormateada = new Date(fechaHora).toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // Crear contenido de vista previa
+            const previewContent = `
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">${titulo || 'Sin título'}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong><i class="fas fa-calendar-alt me-2"></i>Fecha y Hora:</strong></p>
+                                <p class="text-muted">${fechaFormateada || 'No especificada'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong><i class="fas fa-map-marker-alt me-2"></i>Ubicación:</strong></p>
+                                <p class="text-muted">${ubicacion || 'No especificada'}</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <p class="mb-2"><strong><i class="fas fa-align-left me-2"></i>Descripción:</strong></p>
+                            <div class="border rounded p-3 bg-light">
+                                ${descripcion.replace(/\n/g, '<br>') || 'Sin descripción'}
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Esta es una vista previa de cómo se verá el evento para los usuarios.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const previewContentElement = document.getElementById('previewContent');
+            if (previewContentElement) {
+                previewContentElement.innerHTML = previewContent;
+            }
+            
+            if (previewModal) {
+                previewModal.show();
+            }
+        }
+        
+        // Event listeners para fecha
+        if (fechaInput) {
+            fechaInput.addEventListener('change', validarFecha);
+            fechaInput.addEventListener('input', validarFecha);
+        }
+        
+        // Event listeners para validación en tiempo real
+        if (form) {
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.hasAttribute('required') && !this.value.trim()) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                });
+            });
+        }
+        
+        // Event listener para descripción
+        if (descripcionTextarea) {
+            descripcionTextarea.addEventListener('input', actualizarContadorDescripcion);
+            descripcionTextarea.addEventListener('blur', function() {
+                if (this.value.length < 10 || this.value.length > 1000) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        }
+        
+        // Event listener para vista previa
+        if (previewBtn) {
+            previewBtn.addEventListener('click', mostrarVistaPrevia);
+        }
+        
+        // Validación antes de enviar el formulario
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                if (!validarFormularioCompleto()) {
+                    // Encontrar el primer campo con error
+                    const primerError = form.querySelector('.is-invalid');
+                    if (primerError) {
+                        primerError.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        primerError.focus();
+                    }
+                    
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                // Deshabilitar botón y mostrar spinner
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<div class="spinner"></div> Procesando...';
+                }
+                
+                // Enviar formulario después de un breve delay para mostrar el spinner
+                setTimeout(() => {
+                    form.submit();
+                }, 500);
+            });
+        }
+        
+        // Determinar si estamos en modo edición (verificando si hay un ID en el formulario)
+        const idInput = document.querySelector('input[name="id"]');
+        const esModoEdicion = idInput && idInput.value && idInput.value !== '';
+        
+        // Establecer valor predeterminado si está vacío (solo para creación)
+        if (fechaInput && !fechaInput.value && !esModoEdicion) {
+            // Establecer 1 hora en el futuro como predeterminado
+            const unaHoraDespues = new Date(ahora.getTime() + 60 * 60 * 1000);
+            const fechaPredeterminada = new Date(unaHoraDespues.getTime() - (unaHoraDespues.getTimezoneOffset() * 60000))
+                .toISOString()
+                .slice(0, 16);
+            fechaInput.value = fechaPredeterminada;
+            validarFecha();
+        }
+        
+        // Inicializar contador de descripción
+        actualizarContadorDescripcion();
+        
+        // Verificar si hay errores de validación del servidor
+        setTimeout(() => {
+            const errores = document.querySelectorAll('.is-invalid, .text-danger.error-message, .invalid-feedback');
+            if (errores.length > 0) {
+                const primerError = errores[0];
+                primerError.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+                // Enfocar el primer campo con error
+                const campoError = primerError.closest('.form-section')?.querySelector('input, textarea, select');
+                if (campoError) {
+                    campoError.focus();
+                }
+            }
+        }, 100);
+    });
     </script>
 </th:block>
 </body>
