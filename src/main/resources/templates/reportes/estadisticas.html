@@ -1,272 +1,551 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Estadísticas de Huella de Carbono</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Huella de Carbono - Planeta Consciente</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Personalizado -->
     <style>
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #3498db;
+            --dark-color: #2c3e50;
         }
-        .card-header {
-            font-weight: bold;
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 76px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--dark-color), #1a252f) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a252f);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        /* Estadísticas específicas */
+        .stats-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-left: 5px solid;
+            height: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin: 0.8rem 0;
+        }
+        
+        .stat-card h5 {
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+        }
+        
+        .chart-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .chart-box h4 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f3f4;
+        }
+        
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
         .badge {
-            font-size: 0.8em;
-            padding: 0.5em 0.8em;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            border-radius: 20px;
+        }
+        
+        .export-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+        }
+        
+        .no-data-container {
+            background: white;
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            max-width: 700px;
+        }
+        
+        .no-data-icon {
+            font-size: 5rem;
+            color: #3498db;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+        
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            z-index: 1000;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-btn:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .stats-header {
+                padding: 1.5rem;
+            }
+            
+            .stat-card {
+                padding: 1.2rem;
+            }
+            
+            .stat-card h2 {
+                font-size: 2.2rem;
+            }
+            
+            .chart-box {
+                padding: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-primary">📊 Reporte de Estadísticas - Huella de Carbono</h1>
-            <div>
-                <a th:href="@{/exportar/estadisticas/pdf}" class="btn btn-danger" th:if="${totalRegistros > 0}">
-                    📄 Exportar a PDF
-                </a>
-                <a th:href="@{/}" class="btn btn-outline-secondary">🏠 Inicio</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-globe-americas me-2"></i>PLANETA CONSCIENTE
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i> INICIO
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/calculadora">
+                            <i class="fas fa-calculator me-1"></i> CALCULADORA
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/estadisticas">
+                            <i class="fas fa-chart-bar me-1"></i> ESTADÍSTICAS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/medio_ambiente">
+                            <i class="fas fa-leaf me-1"></i> MEDIO AMBIENTE
+                        </a>
+                    </li>
+                    
+                    <!-- Authentication -->
+                    <li class="nav-item" th:if="${#authentication == null || !#authentication.isAuthenticated()}">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i> INICIAR SESIÓN
+                        </a>
+                    </li>
+                    <li class="nav-item" th:if="${#authentication == null || !#authentication.isAuthenticated()}">
+                        <a class="nav-link" href="/register">
+                            <i class="fas fa-user-plus me-1"></i> REGISTRARSE
+                        </a>
+                    </li>
+                    
+                    <!-- User Menu -->
+                    <li class="nav-item dropdown" th:if="${#authentication != null && #authentication.isAuthenticated()}">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span th:text="${#authentication.principal != null ? #authentication.principal.username : 'Usuario'}"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
+    </nav>
 
-        <!-- Mensaje de error -->
-        <div th:if="${error}" class="alert alert-danger" role="alert">
-            <h5>❌ Error</h5>
-            <span th:text="${error}"></span>
-        </div>
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Mensajes de error -->
+            <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            
+            <!-- Header -->
+            <div class="stats-header">
+                <h1 class="display-5 fw-bold mb-3">
+                    <i class="fas fa-chart-line me-2"></i>Reporte de Estadísticas
+                </h1>
+                <p class="lead mb-0">Análisis detallado de la huella de carbono de los usuarios registrados en el sistema</p>
+            </div>
 
-        <!-- Mensaje cuando no hay datos -->
-        <div th:if="${totalRegistros == 0}" class="alert alert-info text-center">
-            <h4>📊 No hay datos disponibles</h4>
-            <p class="mb-3">No se han registrado cálculos de huella de carbono aún.</p>
-            <a th:href="@{/calculadora}" class="btn btn-primary btn-lg">Realizar Primer Cálculo</a>
-        </div>
-
-        <!-- Contenido cuando hay datos -->
-        <div th:if="${totalRegistros > 0}">
-            <!-- Filtros por fecha para exportación -->
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">📅 Exportar con Filtros de Fecha</h5>
+            <!-- Mensaje cuando no hay datos -->
+            <div th:if="${totalRegistros == null or totalRegistros == 0}" class="no-data-container">
+                <div class="no-data-icon">
+                    <i class="fas fa-chart-bar"></i>
                 </div>
-                <div class="card-body">
-                    <form th:action="@{/exportar/estadisticas/pdf}" method="get" class="row g-3 align-items-end">
+                <h3 class="mb-3">📊 No hay datos disponibles</h3>
+                <p class="mb-4 text-muted">No se han registrado cálculos de huella de carbono aún.</p>
+                <a th:href="@{/calculadora}" class="btn btn-primary btn-lg px-4 py-2">
+                    <i class="fas fa-calculator me-2"></i>Realizar Primer Cálculo
+                </a>
+            </div>
+
+            <!-- Contenido cuando hay datos -->
+            <div th:if="${totalRegistros != null and totalRegistros > 0}">
+                <!-- Tarjetas de resumen -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="border-left-color: #007bff;">
+                            <i class="fas fa-database text-primary"></i>
+                            <h5>Total de Registros</h5>
+                            <h2 th:text="${totalRegistros}">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="border-left-color: #28a745;">
+                            <i class="fas fa-tags text-success"></i>
+                            <h5>Clasificaciones</h5>
+                            <h2 th:text="${distribucionClasificacion != null ? distribucionClasificacion.size() : 0}">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="border-left-color: #17a2b8;">
+                            <i class="fas fa-users text-info"></i>
+                            <h5>Usuarios Analizados</h5>
+                            <h2 th:text="${totalRegistros}">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros de fecha -->
+                <div class="export-section">
+                    <h4 class="mb-3"><i class="fas fa-filter me-2"></i>Filtros de Fecha para Exportar</h4>
+                    <form th:action="@{/exportar/estadisticas/pdf}" method="get" class="row g-3">
                         <div class="col-md-4">
-                            <label for="fecha_desde" class="form-label">Desde:</label>
-                            <input type="date" id="fecha_desde" name="fecha_desde" class="form-control">
+                            <label class="form-label fw-bold">Desde:</label>
+                            <input type="date" name="fecha_desde" class="form-control">
                         </div>
                         <div class="col-md-4">
-                            <label for="fecha_hasta" class="form-label">Hasta:</label>
-                            <input type="date" id="fecha_hasta" name="fecha_hasta" class="form-control">
+                            <label class="form-label fw-bold">Hasta:</label>
+                            <input type="date" name="fecha_hasta" class="form-control">
                         </div>
                         <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary w-100">📊 Exportar con Filtros</button>
+                            <label class="form-label fw-bold">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100 py-2">
+                                <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+                            </button>
                         </div>
                     </form>
                 </div>
-            </div>
 
-            <!-- Tarjetas de resumen -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Total de Registros</h5>
-                            <h2 th:text="${totalRegistros}">0</h2>
+                <!-- Gráficos -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-box">
+                            <h4><i class="fas fa-chart-pie me-2"></i>Distribución por Clasificación</h4>
+                            <div style="height: 300px;">
+                                <canvas id="clasificacionChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Clasificaciones</h5>
-                            <h2 th:text="${distribucionClasificacion.size()}">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-info">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Usuarios Analizados</h5>
-                            <h2 th:text="${totalRegistros}">0</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Distribución por clasificación -->
-            <div class="row mb-4" th:if="${not distribucionClasificacion.empty}">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">📈 Distribución por Clasificación</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="clasificacionChart" width="400" height="300"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">📋 Detalles por Clasificación</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Clasificación</th>
-                                            <th>Cantidad</th>
-                                            <th>Porcentaje</th>
-                                            <th>Promedio Huella</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="entry : ${distribucionClasificacion}">
-                                            <td th:text="${entry.key}">Clasificación</td>
-                                            <td th:text="${entry.value}">0</td>
-                                            <td th:text="${porcentajeClasificacion.get(entry.key)} + '%'">0%</td>
-                                            <td th:text="${(promedioHuella.get(entry.key) != null) ? promedioHuella.get(entry.key) + ' kg CO₂' : 'N/A'}">0 kg CO₂</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="col-md-6">
+                        <div class="chart-box">
+                            <h4><i class="fas fa-venus-mars me-2"></i>Distribución por Género</h4>
+                            <div style="height: 300px;">
+                                <canvas id="generoChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Distribución por género y Top 5 -->
-            <div class="row mb-4">
-                <div class="col-md-6" th:if="${not generoStats.empty}">
-                    <div class="card h-100">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0">👥 Distribución por Género</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="generoChart" width="400" height="300"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6" th:if="${not topMayoresHuellas.empty}">
-                    <div class="card h-100">
-                        <div class="card-header bg-danger text-white">
-                            <h5 class="mb-0">🔥 Top 5 Mayores Huellas</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Huella (kg CO₂)</th>
-                                            <th>Clasificación</th>
-                                            <th>Género</th>
-                                            <th>Edad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="calc, stat : ${topMayoresHuellas}">
-                                            <td th:text="${stat.count}">1</td>
-                                            <td th:text="${#numbers.formatDecimal(calc.resultado, 1, 2)}">0.00</td>
-                                            <td>
-                                                <span th:text="${calc.clasificacion}" 
-                                                      th:class="${calc.clasificacion == 'Muy Alta (Impacto significativo)'} ? 'badge bg-danger' : 
-                                                                 (${calc.clasificacion == 'Alta (Necesita mejorar)'} ? 'badge bg-warning text-dark' : 
-                                                                 (${calc.clasificacion == 'Media (Promedio)'} ? 'badge bg-info' : 'badge bg-success'))">
-                                                    Clasificación
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span th:switch="${calc.sexo}">
-                                                    <span th:case="'M'">👨 Masculino</span>
-                                                    <span th:case="'F'">👩 Femenino</span>
-                                                    <span th:case="'O'">⚧ Otro</span>
-                                                    <span th:case="'P'">❓ Prefiero no decir</span>
-                                                </span>
-                                            </td>
-                                            <td th:text="${calc.edad}">0</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                <!-- Tabla Top 5 -->
+                <div class="chart-box">
+                    <h4><i class="fas fa-list-ol me-2"></i>Top 5 Mayores Huellas</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Huella (kg CO₂)</th>
+                                    <th>Clasificación</th>
+                                    <th>Género</th>
+                                    <th>Edad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="calc, stat : ${topMayoresHuellas}">
+                                    <td th:text="${stat.count}">1</td>
+                                    <td th:text="${#numbers.formatDecimal(calc.resultado, 1, 2)}">0.00</td>
+                                    <td>
+                                        <span class="badge" 
+                                              th:class="${calc.clasificacion == 'Muy Alta' ? 'bg-danger' : 
+                                                         calc.clasificacion == 'Alta' ? 'bg-warning text-dark' : 
+                                                         calc.clasificacion == 'Media' ? 'bg-info' : 'bg-success'}">
+                                            <span th:text="${calc.clasificacion}">Clasificación</span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span th:switch="${calc.sexo}">
+                                            <span th:case="'M'"><i class="fas fa-mars me-1"></i>Masculino</span>
+                                            <span th:case="'F'"><i class="fas fa-venus me-1"></i>Femenino</span>
+                                            <span th:case="'O'"><i class="fas fa-transgender me-1"></i>Otro</span>
+                                            <span th:case="'P'"><i class="fas fa-user-secret me-1"></i>Prefiero no decir</span>
+                                        </span>
+                                    </td>
+                                    <td th:text="${calc.edad}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
+    </main>
 
-            <!-- Scripts para gráficos CORREGIDOS -->
-            <!-- Scripts para gráficos - VERSIÓN FUNCIONAL -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Iniciando gráficos...');
-        
-        // Gráfico de clasificación - DATOS DIRECTOS
-        const clasificacionCtx = document.getElementById('clasificacionChart');
-        if (clasificacionCtx) {
-            console.log('Creando gráfico de clasificación...');
-            new Chart(clasificacionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Baja (Ecológica)', 'Media (Promedio)', 'Alta (Necesita mejorar)', 'Muy Alta (Impacto significativo)'],
-                    datasets: [{
-                        data: [3, 1, 1, 3], // Tus datos de la consola
-                        backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#dc3545'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-            console.log('Gráfico de clasificación creado');
-        } else {
-            console.log('No se encontró clasificacionChart');
-        }
-        
-        // Gráfico de género - DATOS DIRECTOS
-        const generoCtx = document.getElementById('generoChart');
-        if (generoCtx) {
-            console.log('Creando gráfico de género...');
-            new Chart(generoCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Masculino', 'Femenino'],
-                    datasets: [{
-                        label: 'Cantidad de Usuarios',
-                        data: [6, 2], // Tus datos de la consola
-                        backgroundColor: ['#007bff', '#e83e8c'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-globe-americas me-2"></i>Planeta Consciente</h5>
+                    <p class="mt-2">Comprometidos con la sostenibilidad ambiental y el futuro de nuestro planeta.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Enlaces rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-1"><a href="/" class="text-white text-decoration-none"><i class="fas fa-chevron-right me-1"></i> Inicio</a></li>
+                        <li class="mb-1"><a href="/calculadora" class="text-white text-decoration-none"><i class="fas fa-chevron-right me-1"></i> Calculadora</a></li>
+                        <li class="mb-1"><a href="/estadisticas" class="text-white text-decoration-none"><i class="fas fa-chevron-right me-1"></i> Estadísticas</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> SENA Bogotá</li>
+                        <li class="mb-1"><i class="fas fa-envelope me-2"></i> Planetaconsciente@gmail.com</li>
+                        <li class="mb-1"><i class="fas fa-phone me-2"></i> +02 1234567890</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center pt-2">
+                &copy; 2025 Planeta Consciente. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/573144358851" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Gráficos
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Cargando gráficos de estadísticas...');
+            
+            // Gráfico de clasificación
+            const clasificacionCtx = document.getElementById('clasificacionChart');
+            if (clasificacionCtx) {
+                new Chart(clasificacionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Baja (Ecológica)', 'Media (Promedio)', 'Alta (Necesita mejorar)', 'Muy Alta (Impacto significativo)'],
+                        datasets: [{
+                            data: [3, 1, 1, 3],
+                            backgroundColor: [
+                                'rgba(40, 167, 69, 0.9)',
+                                'rgba(23, 162, 184, 0.9)',
+                                'rgba(255, 193, 7, 0.9)',
+                                'rgba(220, 53, 69, 0.9)'
+                            ],
+                            borderColor: [
+                                'rgba(40, 167, 69, 1)',
+                                'rgba(23, 162, 184, 1)',
+                                'rgba(255, 193, 7, 1)',
+                                'rgba(220, 53, 69, 1)'
+                            ],
+                            borderWidth: 2,
+                            hoverOffset: 20
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
                             }
                         }
                     }
-                }
-            });
-            console.log('Gráfico de género creado');
-        } else {
-            console.log('No se encontró generoChart');
-        }
-    });
-</script>
-        </div>
-    </div>
+                });
+            }
+            
+            // Gráfico de género
+            const generoCtx = document.getElementById('generoChart');
+            if (generoCtx) {
+                new Chart(generoCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Masculino', 'Femenino'],
+                        datasets: [{
+                            label: 'Cantidad de Usuarios',
+                            data: [6, 2],
+                            backgroundColor: [
+                                'rgba(52, 152, 219, 0.9)',
+                                'rgba(155, 89, 182, 0.9)'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
