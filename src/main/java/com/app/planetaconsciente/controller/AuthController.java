@@ -1,6 +1,7 @@
 package com.app.planetaconsciente.controller;
 
 import com.app.planetaconsciente.model.User;
+import com.app.planetaconsciente.model.UserRole;
 import com.app.planetaconsciente.service.EmailService;
 import com.app.planetaconsciente.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
 import java.util.UUID;
+import java.util.List; 
 
 @Controller
 public class AuthController {
@@ -52,26 +53,37 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {
-            user.setRoles(Collections.singletonList("USER"));
-            
+
+            // Crear objeto UserRole (porque ya no usamos String)
+            UserRole role = new UserRole(user, "USER");
+
+            // Asignar rol al usuario
+            user.setRoles(List.of(role));
+
             // Generar token de verificación
             String verificationToken = UUID.randomUUID().toString();
             user.setVerificationToken(verificationToken);
-            user.setTokenExpirationDate(userService.calculateExpiryDate(24)); // 24 horas de validez
-            
-            // Registrar usuario
+            user.setTokenExpirationDate(userService.calculateExpiryDate(24)); // 24 horas
+
+            // Registrar usuario en la base de datos
             userService.registerNewUser(user);
-            
-            // Enviar email de confirmación
-            emailService.sendConfirmationEmail(user.getEmail(), user.getNombre(), verificationToken);
-            
-            // SOLO redirigir con parámetro en la URL - SIN addFlashAttribute
+
+            // Enviar correo de verificación
+            emailService.sendConfirmationEmail(
+                    user.getEmail(),
+                    user.getNombre(),
+                    verificationToken
+            );
+
             return "redirect:/login?success";
-            
+
         } catch (Exception e) {
-            // Para errores sí usar flash attribute (ya que no hay parámetro de URL para errores)
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                "Error en el registro: " + e.getMessage());
+
+            redirectAttributes.addFlashAttribute(
+                "errorMessage",
+                "Error en el registro: " + e.getMessage()
+            );
+
             return "redirect:/register";
         }
     }
