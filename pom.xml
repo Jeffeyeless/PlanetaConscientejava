@@ -14,7 +14,7 @@
 
     <groupId>com.planetaconsciente</groupId>
     <artifactId>PlanetaConsciente</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>version1.0.0</version>
     <name>PlanetaConsciente</name>
     <description>Proyecto Spring Boot para sostenibilidad</description>
 

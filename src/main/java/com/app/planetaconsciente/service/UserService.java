@@ -1,6 +1,7 @@
 package com.app.planetaconsciente.service;
 
 import com.app.planetaconsciente.model.User;
+import com.app.planetaconsciente.model.UserRole;
 import com.app.planetaconsciente.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -40,14 +42,16 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("La contraseña no puede estar vacía");
         }
 
-        // Asignar rol por defecto si no viene ninguno
+        // Asignar rol por defecto
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(List.of("USER"));
+            user.setRoles(new ArrayList<>());
+            user.getRoles().add(new UserRole(user, "USER"));
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEnabled(false); // Cuenta deshabilitada hasta verificación
-        userRepository.save(user);
+        user.setEnabled(false);
+
+        userRepository.save(user); // cascade = ALL guarda roles
     }
 
     @Override
@@ -66,9 +70,9 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
+    private Collection<? extends GrantedAuthority> getAuthorities(List<UserRole> roles) {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRole()))
                 .collect(Collectors.toList());
     }
 

@@ -25,8 +25,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<UserRole> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Foro> publicaciones = new ArrayList<>();
@@ -48,7 +48,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRole()))
                 .collect(Collectors.toList());
     }
 
@@ -111,11 +111,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<String> getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(List<UserRole> roles) {
         this.roles = roles;
     }
 
