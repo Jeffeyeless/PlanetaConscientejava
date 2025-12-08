@@ -5,42 +5,84 @@
     <title>Editar Publicación | Planeta Consciente</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #eaf4ec;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f7f2;
             margin: 0;
             padding: 0;
         }
 
         header {
-            background-color: #2e7d32;
-            color: white;
-            padding: 20px;
             text-align: center;
+            padding: 30px 20px 10px;
+            color: #2e7d32;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        header p {
+            margin-top: 8px;
+            font-size: 1.1em;
+            color: #388e3c;
         }
 
         main {
-            max-width: 800px;
-            margin: 40px auto;
+            max-width: 750px;
+            margin: 30px auto;
             background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
         h2 {
-            margin-top: 0;
+            text-align: center;
+            font-size: 1.6em;
+            margin-bottom: 30px;
             color: #2e7d32;
+            position: relative;
+        }
+
+        h2::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #66bb6a;
+            margin: 8px auto 0;
+            border-radius: 2px;
         }
 
         form {
             display: flex;
             flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            font-weight: bold;
-            margin-top: 20px;
-            color: #555;
+            font-weight: 600;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+        }
+
+        label .required {
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 0.75em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
         }
 
         input[type="text"],
@@ -49,46 +91,66 @@
             padding: 12px;
             font-size: 1em;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
+            background: #fafafa;
+            transition: border 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border: 1px solid #2e7d32;
+            box-shadow: 0 0 6px rgba(46,125,50,0.3);
+            background: #fff;
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 130px;
+            resize: vertical;
         }
 
         .btn-container {
-            margin-top: 30px;
             display: flex;
             justify-content: space-between;
+            margin-top: 20px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 12px 28px;
             border: none;
-            border-radius: 6px;
+            border-radius: 30px;
             font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            color: white;
+            transition: all 0.3s ease;
         }
 
         .btn-guardar {
             background-color: #2e7d32;
+            color: #fff;
         }
 
         .btn-cancelar {
-            background-color: #c62828;
+            background-color: #f5f5f5;
+            color: #444;
+            border: 1px solid #ccc;
         }
 
-        .btn:hover {
-            opacity: 0.9;
+        .btn-guardar:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-cancelar:hover {
+            background-color: #e0e0e0;
         }
 
         footer {
             margin-top: 50px;
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #777;
+            padding: 15px;
         }
     </style>
 </head>
@@ -103,21 +165,31 @@
     <h2>Editar Publicación</h2>
 
     <form th:action="@{'/foro/update/' + ${publicacion.id}}" method="post" th:object="${publicacion}">
-        <label for="titulo">Título</label>
-        <input type="text" id="titulo" th:field="*{titulo}" placeholder="Título de la publicación" required>
+        <div class="form-group">
+            <label for="titulo">
+                <span>📝 Título</span>
+                <span class="required">Requerido</span>
+            </label>
+            <input type="text" id="titulo" th:field="*{titulo}" placeholder="Título de la publicación" required>
+        </div>
 
-        <label for="contenido">Contenido</label>
-        <textarea id="contenido" th:field="*{contenido}" placeholder="Escribe el contenido..." required></textarea>
+        <div class="form-group">
+            <label for="contenido">
+                <span>📄 Contenido</span>
+                <span class="required">Requerido</span>
+            </label>
+            <textarea id="contenido" th:field="*{contenido}" placeholder="Escribe el contenido..." required></textarea>
+        </div>
 
         <div class="btn-container">
-            <button type="submit" class="btn btn-guardar">Guardar cambios</button>
-            <a th:href="@{/foro}" class="btn btn-cancelar">Cancelar</a>
+            <a th:href="@{/foro}" class="btn btn-cancelar">← Cancelar</a>
+            <button type="submit" class="btn btn-guardar">💾 Guardar</button>
         </div>
     </form>
 </main>
 
 <footer>
-    <p>&copy; 2025 Planeta Consciente. Todos los derechos reservados.</p>
+    <p>&copy; 2025 🌱 Planeta Consciente. Todos los derechos reservados.</p>
 </footer>
 
 </body>
