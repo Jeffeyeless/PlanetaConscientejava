@@ -17,14 +17,28 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <!-- Mensaje de bienvenida para usuarios autenticados -->
-        <div th:if="${#authentication.principal != 'anonymousUser'}" class="welcome-message-overlay">
-            <div class="welcome-message-card">
-                <!-- Decoración de hojas flotantes -->
-                <div class="welcome-decoration">
-                    <span th:each="i : ${#numbers.sequence(1, 12)}" 
-                          th:style="'width: 15px; height: 15px; left: ' + ${i * 8} + '%; animation-duration: 12s; animation-delay: ' + ${i * 0.5} + 's; opacity: 0.5;'"></span>
-                </div>
+
+    <!-- Mensaje de bienvenida mostrado SOLO una vez por sesión -->
+    <div th:if="${showWelcome}" class="welcome-message-overlay">
+        <div class="welcome-message-card">
+
+            <div class="welcome-decoration">
+                <span th:each="i : ${#numbers.sequence(1, 12)}"
+                      th:style="'width: 15px; height: 15px; left: ' + ${i * 8} + '%; 
+                                animation-duration: 12s; 
+                                animation-delay: ' + ${i * 0.5} + 's; 
+                                opacity: 0.5;'">
+                </span>
+            </div>
+
+            <h2>¡Bienvenido a Planeta Consciente! 🌱</h2>
+            <p>Gracias por iniciar sesión, disfruta navegando.</p>
+
+        </div>
+    </div>
+
+</div>
+
                 
                 <!-- Contenido principal con animación -->
                 <div class="welcome-content">

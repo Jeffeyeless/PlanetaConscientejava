@@ -42,7 +42,8 @@ public class SecurityConfig {
                     "/reset-password",      // Reset de contraseña
                     "/reset-password/**",   // Reset de contraseña con token
                     "/access-denied",       // Página de acceso denegado
-                    "/error"                // Página de error
+                    "/error",              // Página de error
+                     "/inicio"            // Página de inicio
                 ).permitAll()
                 
                 // 3. RUTAS ADMINISTRATIVAS (solo para ADMIN)
@@ -59,7 +60,6 @@ public class SecurityConfig {
                 // 4. TODAS LAS DEMÁS RUTAS requieren usuario AUTENTICADO y VERIFICADO
                 .requestMatchers(
                     "/",                // Home principal
-                    "/inicio",              // Página de inicio
                     "/calculadora/**",      // Calculadora ecológica
                     "/medio_ambiente",      // Información medio ambiente
                     "/eventos",             // Lista de eventos
