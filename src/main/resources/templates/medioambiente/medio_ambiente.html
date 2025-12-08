@@ -11,19 +11,19 @@
     
     <style>
     :root {
-        --primary-color: #1a7431;
-        --primary-dark: #0d5a20;
-        --primary-light: #2e8b57;
-        --secondary-color: #ffc107;
-        --accent-color: #4cc9f0;
-        --dark-color: #2d3748;
-        --light-color: #f8f9fa;
-        --gradient-green: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        --gradient-accent: linear-gradient(135deg, var(--accent-color), #4361ee);
-        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-        --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-        --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+        --primary-color: #2e7d32;          /* Verde principal del segundo código */
+        --primary-dark: #1b5e20;           /* Verde oscuro del segundo código */
+        --primary-light: #81c784;          /* Verde claro brillante del segundo código */
+        --secondary-color: #e8f5e9;        /* Fondo verde muy claro del segundo código */
+        --accent-color: #66bb6a;           /* Verde para destacar del segundo código */
+        --dark-color: #1b5e20;             /* Cambiado a verde oscuro */
+        --light-color: #f9fbe7;            /* Fondo crema verdoso del segundo código */
+        --gradient-green: linear-gradient(135deg, #2e7d32, #1b5e20);
+        --gradient-accent: linear-gradient(135deg, #66bb6a, #4caf50);
+        --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.12);
+        --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.1);
+        --shadow-lg: 0 10px 25px rgba(46, 125, 50, 0.1);
+        --shadow-xl: 0 20px 40px rgba(46, 125, 50, 0.15);
         --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -36,8 +36,8 @@
     
     body {
         font-family: 'Poppins', sans-serif;
-        background-color: #f5f7fa;
-        color: #4a5568;
+        background-color: #f1f8e9;  /* Similar al segundo código */
+        color: #33691e;            /* Texto verde del segundo código */
         line-height: 1.6;
         overflow-x: hidden;
     }
@@ -45,6 +45,7 @@
     h1, h2, h3, h4, h5 {
         font-family: 'Montserrat', sans-serif;
         margin-bottom: 1rem;
+        color: #1b5e20;            /* Verde oscuro para títulos */
     }
     
     a {
@@ -61,7 +62,7 @@
     
     /* Hero Section */
     .hero-container {
-        background: linear-gradient(135deg, rgba(26, 116, 49, 0.9), rgba(13, 90, 32, 0.9)), 
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.9), rgba(27, 94, 32, 0.9)), 
                     url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
         background-size: cover;
         background-position: center;
@@ -76,6 +77,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        border-bottom: 4px solid #81c784;
     }
     
     .hero-content {
@@ -91,7 +93,7 @@
         margin-bottom: 1.5rem;
         text-shadow: 0 4px 6px rgba(0,0,0,0.3);
         line-height: 1.2;
-        background: linear-gradient(to right, #fff, #e0f7e0);
+        background: linear-gradient(to right, #ffffff, #e8f5e9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -104,6 +106,7 @@
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
+        color: rgba(255, 255, 255, 0.95);
     }
     
     .btn-container {
@@ -116,43 +119,46 @@
     
     .btn-hero {
         background: white;
-        color: var(--primary-color);
+        color: #2e7d32;
         border: none;
         padding: 1rem 2.5rem;
         border-radius: 50px;
         font-weight: 700;
         transition: var(--transition);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 15px 30px rgba(27, 94, 32, 0.2);
         display: inline-flex;
         align-items: center;
         font-size: 1.1rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
+        border: 2px solid #81c784;
     }
     
     .btn-hero:hover {
         transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-        color: var(--primary-dark);
+        box-shadow: 0 20px 40px rgba(27, 94, 32, 0.3);
+        color: #1b5e20;
+        background: #e8f5e9;
     }
     
     .btn-hero i {
         margin-right: 12px;
         transition: transform 0.3s;
         font-size: 1.2rem;
+        color: #66bb6a;
     }
     
     /* Features Section */
     .features-section {
         position: relative;
         padding: 6rem 0;
-        background: url('https://www.transparenttextures.com/patterns/soft-circle-scales.png');
+        background: linear-gradient(to right, #e8f5e9, #f1f8e9); /* Fondo del segundo código */
     }
     
     .feature-card {
         background: white;
-        border: none;
+        border: 1px solid #c8e6c9;  /* Borde verde claro del segundo código */
         border-radius: 20px;
         overflow: hidden;
         transition: var(--transition-slow);
@@ -160,11 +166,13 @@
         box-shadow: var(--shadow-lg);
         height: 100%;
         position: relative;
+        border-left: 8px solid #81c784;  /* Border-left del segundo código */
     }
     
     .feature-card:hover {
         transform: translateY(-15px) scale(1.03);
         box-shadow: var(--shadow-xl);
+        border-color: #66bb6a;
     }
     
     .feature-card .card-body {
@@ -177,17 +185,24 @@
     .feature-icon {
         font-size: 4.5rem;
         margin-bottom: 2.5rem;
-        color: var(--primary-color);
+        color: #2e7d32;
     }
     
     .feature-card h3 {
         font-weight: 800;
         margin-bottom: 1.5rem;
-        color: var(--dark-color);
+        color: #1b5e20;
+        font-size: 1.8rem;
+    }
+    
+    .feature-card p {
+        color: #33691e;  /* Texto verde del segundo código */
+        font-size: 1.1rem;
+        line-height: 1.7;
     }
     
     .btn-feature {
-        background: var(--gradient-green);
+        background: linear-gradient(to right, #2e7d32, #1b5e20);
         color: white;
         border: none;
         padding: 0.8rem 2rem;
@@ -195,18 +210,37 @@
         font-weight: 600;
         display: inline-flex;
         align-items: center;
-        box-shadow: 0 8px 20px rgba(26, 116, 49, 0.3);
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
         margin-top: 1.5rem;
         cursor: pointer;
+        border: 1px solid #1b5e20;
+        transition: var(--transition);
+    }
+    
+    .btn-feature:hover {
+        background: linear-gradient(to right, #1b5e20, #2e7d32);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(46, 125, 50, 0.4);
+    }
+    
+    .btn-feature i {
+        margin-right: 10px;
+        transition: transform 0.3s;
+    }
+    
+    .btn-feature:hover i {
+        transform: translateX(5px);
     }
     
     /* Stats Section */
     .stats-section {
         padding: 6rem 0;
-        background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        background: linear-gradient(135deg, #1b5e20, #2e7d32);
         color: white;
         position: relative;
         overflow: hidden;
+        border-top: 4px solid #81c784;
+        border-bottom: 4px solid #81c784;
     }
     
     .stat-item {
@@ -219,23 +253,30 @@
         font-weight: 800;
         margin-bottom: 1rem;
         font-family: 'Montserrat', sans-serif;
-        background: linear-gradient(to right, #fff, #e0f7e0);
+        background: linear-gradient(to right, #fff, #e8f5e9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-label {
+        font-size: 1.2rem;
+        color: #c8e6c9;  /* Color similar al borde del segundo código */
+        font-weight: 500;
     }
     
     /* Mission Section */
     .mission-section {
         padding: 6rem 0;
-        background: linear-gradient(135deg, #f8f9fa, #e9f5ec);
+        background: #f9fbe7;  /* Fondo crema verdoso del segundo código */
     }
     
     .mission-card {
         background: white;
         border-radius: 30px;
         box-shadow: var(--shadow-xl);
-        border: none;
+        border: 1px solid #c8e6c9;
         overflow: hidden;
+        border-left: 8px solid #81c784;
     }
     
     .section-title {
@@ -243,8 +284,21 @@
         margin-bottom: 50px;
         font-weight: 800;
         font-size: 2.5rem;
-        color: var(--dark-color);
+        color: #1b5e20;
         text-align: center;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, #2e7d32, #66bb6a);
+        border-radius: 2px;
     }
     
     .mission-item {
@@ -252,8 +306,89 @@
         transition: var(--transition);
         border-radius: 20px;
         text-align: center;
-        background: white;
+        background: #f9fbe7;
         height: 100%;
+        border: 1px dashed #c5e1a5;  /* Borde punteado del segundo código */
+    }
+    
+    .mission-item:hover {
+        transform: translateY(-10px);
+        background: white;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid #81c784;
+    }
+    
+    .mission-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        color: #2e7d32;
+    }
+    
+    .mission-item h5 {
+        font-weight: 700;
+        color: #1b5e20;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    .mission-item p {
+        color: #33691e;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-container {
+            padding: 6rem 1rem;
+            min-height: 80vh;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .btn-hero {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .feature-card .card-body {
+            padding: 2rem;
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+        }
+        
+        .mission-item {
+            padding: 2rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .hero-container {
+            padding: 4rem 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .btn-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-hero {
+            width: 100%;
+            justify-content: center;
+        }
     }
     </style>
 </head>
@@ -277,6 +412,7 @@
 <!-- Features Section -->
 <div class="features-section">
     <div class="container">
+        <h2 class="section-title">Nuestras Herramientas</h2>
         <div class="row">
             <div class="col-md-12">
                 <div class="card feature-card">
@@ -285,7 +421,7 @@
                             <i class="fas fa-comments"></i>
                         </div>
                         <h3>Foro de Sostenibilidad</h3>
-                        <p>Conéctate con una comunidad global de activistas, expertos y entusiastas.</p>
+                        <p>Conéctate con una comunidad global de activistas, expertos y entusiastas para compartir ideas, soluciones y experiencias sobre ecología y sostenibilidad.</p>
                         <a th:href="@{/foro}" class="btn-feature">
                             <i class="fas fa-arrow-right"></i> Únete a la Conversación
                         </a>
@@ -299,6 +435,7 @@
 <!-- Stats Section -->
 <div class="stats-section">
     <div class="container">
+        <h2 class="section-title" style="color: white;">Nuestro Impacto</h2>
         <div class="row text-center">
             <div class="col-md-4 col-sm-6">
                 <div class="stat-item">
@@ -328,7 +465,7 @@
         <div class="mission-card">
             <div class="card-body">
                 <h3 class="section-title">Nuestra Misión</h3>
-                <p class="text-center mb-5">Empoderamos a individuos y organizaciones para que lideren el cambio hacia un futuro sostenible.</p>
+                <p class="text-center mb-5" style="font-size: 1.2rem; color: #33691e;">Empoderamos a individuos y organizaciones para que lideren el cambio hacia un futuro sostenible a través de educación, comunidad y acción concreta.</p>
                 
                 <div class="row">
                     <div class="col-md-4">
@@ -337,7 +474,7 @@
                                 <i class="fas fa-leaf"></i>
                             </div>
                             <h5>Acción Sostenible</h5>
-                            <p>Convertimos conceptos abstractos en acciones concretas con impacto real.</p>
+                            <p>Convertimos conceptos abstractos en acciones concretas con impacto real medible en nuestras comunidades y ecosistemas.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -346,7 +483,7 @@
                                 <i class="fas fa-globe-americas"></i>
                             </div>
                             <h5>Red Global</h5>
-                            <p>Conectamos personas de más de 100 países para compartir soluciones.</p>
+                            <p>Conectamos personas de más de 100 países para compartir soluciones innovadoras y aprender de experiencias diversas.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -355,7 +492,7 @@
                                 <i class="fas fa-lightbulb"></i>
                             </div>
                             <h5>Innovación Verde</h5>
-                            <p>Impulsamos la próxima generación de tecnologías sostenibles.</p>
+                            <p>Impulsamos la próxima generación de tecnologías sostenibles y prácticas ecológicas accesibles para todos.</p>
                         </div>
                     </div>
                 </div>
@@ -368,11 +505,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     function animateValue(id, start, end, duration) {
         const obj = document.getElementById(id);
+        if (!obj) return;
+        
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             }
@@ -383,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // Animar los números con valores más realistas
                 animateValue("members-count", 0, 12543, 2000);
                 animateValue("projects-count", 0, 892, 2000);
                 animateValue("countries-count", 0, 124, 2000);
@@ -391,7 +531,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, {threshold: 0.5});
 
-    observer.observe(document.querySelector('.stats-section'));
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+    
+    // Efecto hover para botones
+    const buttons = document.querySelectorAll('.btn-hero, .btn-feature');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'translateX(5px)';
+            }
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'translateX(0)';
+            }
+        });
+    });
 });
 </script>
 
