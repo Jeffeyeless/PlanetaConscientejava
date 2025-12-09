@@ -23,7 +23,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             )
-            
             .headers(headers -> headers
                 .frameOptions().sameOrigin()
             )
