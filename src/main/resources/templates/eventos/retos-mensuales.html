@@ -109,11 +109,6 @@
                 border: 2px solid var(--accent-green);
                 position: relative;
                 overflow: hidden;
-                display: none;
-            }
-            
-            .admin-panel.visible {
-                display: block;
             }
             
             .admin-panel::before {
@@ -506,11 +501,6 @@
                 border: none;
                 cursor: pointer;
                 animation: float 3s ease-in-out infinite;
-                display: none;
-            }
-            
-            .floating-add-btn.visible {
-                display: flex;
             }
             
             @keyframes float {
@@ -761,7 +751,7 @@
             </div>
 
             <!-- Admin Panel - Solo visible para ADMIN -->
-            <div class="admin-panel" id="adminPanel">
+            <div class="admin-panel" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                 <h3 class="admin-title">
                     <i class="fas fa-tools"></i> Panel de Administración
                 </h3>
@@ -791,14 +781,14 @@
                 <a th:href="@{/eventos}" class="btn btn-outline">
                     <i class="fas fa-arrow-left"></i> Volver a Eventos
                 </a>
-                <button class="btn btn-primary" id="addRetoBtn" onclick="openModal('add')" style="display: none;">
+                <button class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" onclick="openModal('add')">
                     <i class="fas fa-plus"></i> Agregar Más Retos
                 </button>
             </div>
         </div>
 
         <!-- Floating Add Button - Solo visible para ADMIN -->
-        <button class="floating-add-btn" id="floatingAddBtn" onclick="openModal('add')">
+        <button class="floating-add-btn" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" onclick="openModal('add')">
             <i class="fas fa-plus"></i>
         </button>
 
@@ -892,7 +882,7 @@
         </div>
 
         <!-- Import Modal -->
-        <div id="importModal" class="modal-overlay" style="display: none;" onclick="closeImportModal()">
+        <div id="importModal" class="modal-overlay" onclick="closeImportModal()">
             <div class="modal-content" style="max-width: 500px;" onclick="event.stopPropagation()">
                 <div class="modal-header">
                     <h3 class="modal-title">
@@ -935,10 +925,6 @@
     
     <th:block layout:fragment="scripts">
         <script>
-            // Simulación de autenticación - En producción esto vendría del backend
-            // Cambia esta variable para probar como ADMIN o USER
-            let currentUserRole = 'ADMIN'; // Cambiar a 'USER' para ver como usuario normal
-            
             // Retos almacenados en localStorage
             let retos = JSON.parse(localStorage.getItem('retos')) || [
                 {
@@ -973,23 +959,9 @@
 
             // Inicializar la página
             document.addEventListener('DOMContentLoaded', function() {
-                checkUserRole();
                 renderRetos();
                 updateStats();
             });
-
-            // Verificar rol del usuario
-            function checkUserRole() {
-                const adminPanel = document.getElementById('adminPanel');
-                const floatingAddBtn = document.getElementById('floatingAddBtn');
-                const addRetoBtn = document.getElementById('addRetoBtn');
-                
-                if (currentUserRole === 'ADMIN') {
-                    adminPanel.classList.add('visible');
-                    floatingAddBtn.classList.add('visible');
-                    addRetoBtn.style.display = 'inline-flex';
-                }
-            }
 
             // Renderizar todos los retos
             function renderRetos() {
@@ -1005,8 +977,11 @@
                     const monthCard = document.createElement('div');
                     monthCard.className = 'month-card';
                     
+                    // Verificar si el usuario es ADMIN (usando Thymeleaf en el HTML)
+                    const isAdmin = document.querySelector('.admin-panel') !== null;
+                    
                     let actionsHTML = '';
-                    if (currentUserRole === 'ADMIN') {
+                    if (isAdmin) {
                         actionsHTML = `
                             <div class="month-actions">
                                 <button class="action-btn" onclick="addRetoToMonth('${mes}')" title="Agregar reto">
@@ -1042,7 +1017,7 @@
                                                 <i class="fas fa-star" style="color: #FFD700;"></i>
                                                 ${reto.puntos} Puntos
                                             </span>
-                                            ${currentUserRole === 'ADMIN' ? `
+                                            ${isAdmin ? `
                                                 <button class="action-btn" onclick="deleteReto('${reto.id}')" 
                                                         style="background: #ef5350; color: white; margin-left: auto;" 
                                                         title="Eliminar reto">
@@ -1055,9 +1030,9 @@
                                 `<div class="challenge-item" style="background: #f5f5f5; border-left-color: #9E9E9E;">
                                     <p class="challenge-description" style="color: #666;">
                                         <i class="fas fa-plus-circle" style="color: #9E9E9E; margin-right: 8px;"></i>
-                                        No hay retos para este mes. ${currentUserRole === 'ADMIN' ? '¡Agrega uno nuevo!' : '¡Vuelve pronto!'}
+                                        No hay retos para este mes. ${isAdmin ? '¡Agrega uno nuevo!' : '¡Vuelve pronto!'}
                                     </p>
-                                    ${currentUserRole === 'ADMIN' ? `
+                                    ${isAdmin ? `
                                         <button class="btn btn-outline" onclick="addRetoToMonth('${mes}')" 
                                                 style="margin-top: 10px; padding: 0.5rem 1rem;">
                                             <i class="fas fa-plus"></i> Agregar Reto
@@ -1077,7 +1052,9 @@
 
             // Abrir modal
             function openModal(type, mes = '') {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden agregar retos', 'error');
                     return;
                 }
@@ -1138,7 +1115,9 @@
 
             // Agregar reto a un mes específico
             function addRetoToMonth(mes) {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden agregar retos', 'error');
                     return;
                 }
@@ -1148,7 +1127,9 @@
 
             // Eliminar un reto
             function deleteReto(id) {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden eliminar retos', 'error');
                     return;
                 }
@@ -1166,7 +1147,9 @@
 
             // Eliminar todos los retos
             function clearAllRetos() {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden eliminar retos', 'error');
                     return;
                 }
@@ -1181,7 +1164,9 @@
 
             // Exportar retos
             function exportRetos() {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden exportar retos', 'error');
                     return;
                 }
@@ -1201,7 +1186,9 @@
 
             // Importar retos
             function importRetos() {
-                if (currentUserRole !== 'ADMIN') {
+                // Verificar si el usuario es ADMIN
+                const isAdmin = document.querySelector('.admin-panel') !== null;
+                if (!isAdmin) {
                     showToast('Solo los administradores pueden importar retos', 'error');
                     return;
                 }
@@ -1423,15 +1410,6 @@
                     closeImportModal();
                 }
             });
-            
-            // Para probar: Cambiar rol del usuario
-            // En producción, esto vendría del backend
-            window.changeRole = function(role) {
-                currentUserRole = role;
-                checkUserRole();
-                renderRetos();
-                showToast(Cambiado a rol: ${role}, 'info');
-            };
         </script>
     </th:block>
 </body>
