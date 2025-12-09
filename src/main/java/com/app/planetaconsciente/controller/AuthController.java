@@ -2,7 +2,6 @@ package com.app.planetaconsciente.controller;
 
 import com.app.planetaconsciente.model.User;
 import com.app.planetaconsciente.model.UserRole;
-import com.app.planetaconsciente.service.EmailService;
 import com.app.planetaconsciente.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,9 +18,6 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -49,31 +45,26 @@ public class AuthController {
         return "register";
     }
 
-    // Procesa el registro de nuevos usuarios - CORREGIDO
+    // Procesa el registro de nuevos usuarios - MODIFICADO SIN EMAIL
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {
-
             // Crear objeto UserRole (porque ya no usamos String)
             UserRole role = new UserRole(user, "USER");
 
             // Asignar rol al usuario
             user.setRoles(List.of(role));
 
-            // Generar token de verificación
+            // Generar token de verificación (pero no lo usaremos para email)
             String verificationToken = UUID.randomUUID().toString();
             user.setVerificationToken(verificationToken);
             user.setTokenExpirationDate(userService.calculateExpiryDate(24)); // 24 horas
 
-            // Registrar usuario en la base de datos
+            // Registrar usuario en la base de datos (ya habilitado automáticamente)
             userService.registerNewUser(user);
 
-            // Enviar correo de verificación
-            emailService.sendConfirmationEmail(
-                    user.getEmail(),
-                    user.getNombre(),
-                    verificationToken
-            );
+            // NO enviar correo de verificación
+            // Usuario ya está habilitado automáticamente
 
             return "redirect:/login?success";
 
@@ -88,12 +79,13 @@ public class AuthController {
         }
     }
 
-    // Confirmación de cuenta mediante token
+    // Confirmación de cuenta mediante token - MODIFICADO
     @GetMapping("/confirm-account")
     public String confirmAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
         User user = userService.findByVerificationToken(token).orElse(null);
         
         if (user != null && !user.isTokenExpired()) {
+            // Ya debería estar habilitado, pero por si acaso
             user.setEnabled(true);
             user.setVerificationToken(null);
             userService.updateUser(user);
@@ -108,13 +100,13 @@ public class AuthController {
         }
     }
 
-    // Muestra formulario para recuperar contraseña
+    // Muestra formulario para recuperar contraseña - MODIFICADO
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {
         return "forgot-password";
     }
 
-    // Procesa solicitud de recuperación de contraseña
+    // Procesa solicitud de recuperación de contraseña - MODIFICADO
     @PostMapping("/forgot-password")
     public String processForgotPassword(@RequestParam("email") String email, 
                                       RedirectAttributes redirectAttributes) {
@@ -128,11 +120,16 @@ public class AuthController {
                 user.setTokenExpirationDate(userService.calculateExpiryDate(24)); // 24 horas
                 userService.updateUser(user);
                 
-                // Enviar email de recuperación
-                emailService.sendPasswordResetEmail(user.getEmail(), user.getNombre(), resetToken);
+                // NO enviar email de recuperación
+                // En modo desarrollo, mostrar token en consola
+                System.out.println("=== TOKEN DE RECUPERACIÓN (DESARROLLO) ===");
+                System.out.println("Email: " + email);
+                System.out.println("Token: " + resetToken);
+                System.out.println("URL: http://localhost:8070/reset-password?token=" + resetToken);
+                System.out.println("==========================================");
             }
             
-            // Usar parámetro en URL para éxito
+            // Usar parámetro en URL para éxito (siempre mostrar mensaje por seguridad)
             return "redirect:/login?resetSent";
             
         } catch (Exception e) {

@@ -40,61 +40,56 @@
             </a>
             
             <div class="nav-buttons">
+                <!-- Botones de navegación -->
                 <button class="nav-button" onclick="location.href='/'">
-                    <i class="fas fa-home"></i> INICIO
+                    <i class="fas fa-home"></i> <span>INICIO</span>
                 </button>
                 <button class="nav-button" onclick="location.href='/calculadora'">
-                    <i class="fas fa-calculator"></i> CALCULADORA
+                    <i class="fas fa-calculator"></i> <span>CALCULADORA</span>
                 </button>
                 <button class="nav-button" onclick="location.href='/medio_ambiente'">
-                    <i class="fas fa-leaf"></i> MEDIO AMBIENTE
+                    <i class="fas fa-leaf"></i> <span>MEDIO AMBIENTE</span>
                 </button>
                 <button class="nav-button" onclick="location.href='/eventos'">
-                    <i class="fas fa-calendar-alt"></i> EVENTOS
+                    <i class="fas fa-calendar-alt"></i> <span>EVENTOS</span>
                 </button>
                 <button class="nav-button" onclick="location.href='/noticias'">
-                    <i class="fas fa-newspaper"></i> NOTICIAS
+                    <i class="fas fa-newspaper"></i> <span>NOTICIAS</span>
                 </button>
                 
-                <!-- Authentication Links -->
-                <div class="auth-buttons" th:if="${#authentication == null || !#authentication.isAuthenticated()}">
+                <!-- PARA USUARIOS NO AUTENTICADOS -->
+                <div th:if="${#authentication == null || #authentication.principal == 'anonymousUser'}" 
+                    class="auth-section auth-buttons">
                     <button class="nav-button" onclick="location.href='/login'">
-                        <i class="fas fa-sign-in-alt"></i> INICIAR SESIÓN
+                        <i class="fas fa-sign-in-alt"></i> <span>INICIAR SESIÓN</span>
                     </button>
                     <button class="nav-button" onclick="location.href='/register'">
-                        <i class="fas fa-user-plus"></i> REGISTRARSE
+                        <i class="fas fa-user-plus"></i> <span>REGISTRARSE</span>
                     </button>
                 </div>
-                <div class="user-section" th:if="${#authentication != null && #authentication.isAuthenticated()}">
+                
+                <!-- PARA USUARIOS AUTENTICADOS -->
+                <div th:unless="${#authentication == null || #authentication.principal == 'anonymousUser'}" 
+                    class="user-section">
                     <div class="user-dropdown">
                         <button class="dropdown-toggle nav-button" type="button" aria-expanded="false">
-                            <!-- Mostrar inicial del usuario -->
-                            <div class="user-avatar" 
-                                th:if="${#authorization.expression('isAuthenticated()')}"
-                                th:text="${#strings.toUpperCase(#strings.substring(#authentication.principal.username, 0, 1))}">
+                            <div class="user-avatar">
+                                <span th:text="${#strings.toUpperCase(#strings.substring(#authentication.principal.username, 0, 1))}">
+                                    U
+                                </span>
                             </div>
-                            <div class="user-avatar" 
-                                th:unless="${#authorization.expression('isAuthenticated()')}">
-                                U
-                            </div>
-                            
-                            <span class="user-name" 
-                                th:if="${#authorization.expression('isAuthenticated()')}"
-                                th:text="${#authentication.principal.username}">
-                            </span>
-                            <span class="user-name" 
-                                th:unless="${#authorization.expression('isAuthenticated()')}">
+                            <span class="user-name" th:text="${#authentication.principal.username}">
                                 Usuario
                             </span>
-                            
                             <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
-
                         <div class="dropdown-menu">                          
-                            <!-- Botón de cerrar sesión -->
-                            <a class="dropdown-item" href="/login">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                            </a>
+                            <!-- Formulario POST para logout -->
+                            <form th:action="@{/logout}" method="POST" style="display: inline; margin: 0; padding: 0;">
+                                <button type="submit" class="dropdown-item" style="all: unset; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 20px;">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -125,7 +120,7 @@
             <div class="footer-col">
                 <h3 class="footer-title">Enlaces rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="/inicio" class="footer-link"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+                    <li><a href="/" class="footer-link"><i class="fas fa-chevron-right"></i> Inicio</a></li>
                     <li><a href="/medio_ambiente" class="footer-link"><i class="fas fa-chevron-right"></i> Medio Ambiente</a></li>
                     <li><a href="/eventos" class="footer-link"><i class="fas fa-chevron-right"></i> Próximos Eventos</a></li>
                     <li><a href="/noticias" class="footer-link"><i class="fas fa-chevron-right"></i> Noticias</a></li>
@@ -200,25 +195,48 @@
                 
                 particlesContainer.appendChild(particle);
             }
+
+            // Inicializar dropdowns
+            initDropdowns();
         });
 
-        // User dropdown toggle
-        document.querySelector('.dropdown-toggle')?.addEventListener('click', function() {
-            const dropdownMenu = this.nextElementSibling;
-            dropdownMenu.classList.toggle('show');
-        });
-
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(e) {
-            if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-toggle')) {
-                const dropdowns = document.querySelectorAll('.dropdown-menu');
-                dropdowns.forEach(dropdown => {
-                    if (dropdown.classList.contains('show')) {
-                        dropdown.classList.remove('show');
-                    }
+        // Función para inicializar dropdowns
+        function initDropdowns() {
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evita que el evento se propague
+                    const dropdownMenu = this.nextElementSibling;
+                    
+                    // Cerrar otros dropdowns abiertos
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        if (menu !== dropdownMenu) {
+                            menu.classList.remove('show');
+                        }
+                    });
+                    
+                    // Alternar el dropdown actual
+                    dropdownMenu.classList.toggle('show');
                 });
-            }
-        });
+            });
+
+            // Cerrar dropdowns al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.user-dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+            
+            // Cerrar dropdown al hacer clic en un elemento del menú
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    this.closest('.dropdown-menu').classList.remove('show');
+                });
+            });
+        }
     </script>
     <!-- Espacio para scripts específicos -->
     <th:block layout:fragment="scripts"></th:block>

@@ -20,19 +20,19 @@
             Has cerrado sesión correctamente
         </div>
         
-        <!-- Mensaje de registro exitoso (CORREGIDO) -->
+        <!-- Mensaje de registro exitoso - MODIFICADO -->
         <div th:if="${param.success}" class="message success">
-            ¡Registro completado! Por favor revisa tu email para confirmar tu cuenta.
+            ¡Registro completado exitosamente! Ya puedes iniciar sesión.
         </div>
         
-        <!-- Mensaje de cuenta verificada -->
+        <!-- Mensaje de cuenta verificada - MODIFICADO -->
         <div th:if="${param.verified}" class="message success">
             ¡Cuenta verificada exitosamente! Ya puedes iniciar sesión.
         </div>
         
-        <!-- Mensaje de recuperación enviada -->
+        <!-- Mensaje de recuperación enviada - MODIFICADO -->
         <div th:if="${param.resetSent}" class="message info">
-            Si el correo existe en nuestro sistema, le enviaremos un enlace de recuperación a dicho correo.
+            Si el correo existe en nuestro sistema, se procesará tu solicitud.
         </div>
         
         <!-- Mensaje de contraseña cambiada -->
@@ -40,32 +40,30 @@
             Contraseña cambiada exitosamente. Ya puedes iniciar sesión.
         </div>
 
-        <!-- Mensaje de error desde flash attributes (para errores en registro) -->
+        <!-- Mensaje de error desde flash attributes -->
         <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}">
         </div>
 
+        <!-- IMPORTANTE: El formulario debe enviar a la URL correcta -->
         <form th:action="@{/login}" method="post">
             <div class="form-group">
                 <label for="username">Correo Electrónico</label>
-                <input type="email" id="username" name="username" placeholder="Ingresa tu correo electrónico" required>
+                <input type="email" id="username" name="username" 
+                       placeholder="Ingresa tu correo electrónico" required>
             </div>
             
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="password" name="password" 
+                       placeholder="Ingresa tu contraseña" required>
             </div>
             
             <button type="submit">Iniciar Sesión</button>
         </form>
-
-        <div style="text-align: center; margin: 1rem 0;">
-            <a th:href="@{/forgot-password}" 
-            style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">
-                ¿Olvidaste tu contraseña?
-            </a>
-        </div>
         
-        <a th:href="@{/register}" class="register-link">¿No tienes cuenta? Regístrate</a>
+        <div style="text-align: center; margin-top: 1rem;">
+            <a th:href="@{/register}" class="register-link">¿No tienes cuenta? Regístrate</a>
+        </div>
     </div>
     
     <!-- Decoración ambiental -->

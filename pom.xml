@@ -52,12 +52,6 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- ✅ SPRING BOOT MAIL (NUEVA DEPENDENCIA) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
         <!-- Extras para Thymeleaf + Spring Security 6 -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
