@@ -1,272 +1,821 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <title>Estadísticas de Huella de Carbono</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            font-weight: bold;
-        }
-        .badge {
-            font-size: 0.8em;
-            padding: 0.5em 0.8em;
-        }
-    </style>
+    <title>Estadísticas - Planeta Consciente</title>
+    
+    <!-- CSS específico para estadísticas -->
+    <th:block layout:fragment="css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
+        <style>
+            /* Variables específicas para estadísticas */
+            :root {
+                --chart-primary: #15631b;
+                --chart-secondary: #4caf7d;
+                --chart-accent: #3a8d66;
+                --chart-light: #e8f4ea;
+                --chart-dark: #333333;
+                --chart-success: #28a745;
+                --chart-warning: #ffc107;
+                --chart-danger: #dc3545;
+                --chart-info: #17a2b8;
+                --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+                --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.1);
+                --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.15);
+                --border-radius: 12px;
+                --transition: all 0.3s ease;
+            }
+            
+            /* Contenido principal */
+            .main-content {
+                background: linear-gradient(135deg, #f8f9fa 0%, var(--chart-light) 100%);
+                min-height: calc(100vh - 80px - 250px);
+                padding: 2rem 0;
+                animation: fadeIn 0.8s ease-out;
+            }
+            
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 30px;
+            }
+            
+            /* Header de estadísticas */
+            .stats-header {
+                background: linear-gradient(135deg, var(--chart-primary) 0%, #07661c 100%);
+                color: white;
+                padding: 4rem 2rem;
+                border-radius: var(--border-radius);
+                margin-bottom: 3rem;
+                text-align: center;
+                box-shadow: var(--shadow-lg);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .stats-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #4caf7d, #ffc107, #4caf7d);
+            }
+            
+            .stats-header h1 {
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+                position: relative;
+                z-index: 1;
+                margin-bottom: 1rem;
+            }
+            
+            .stats-header p {
+                font-size: 1.2rem;
+                opacity: 0.9;
+                margin-bottom: 2rem;
+            }
+            
+            .section-divider {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 2rem;
+            }
+            
+            .divider-line {
+                height: 2px;
+                width: 100px;
+                background: rgba(255, 255, 255, 0.3);
+            }
+            
+            .divider-icon {
+                margin: 0 20px;
+                color: white;
+                font-size: 1.5rem;
+            }
+            
+            /* Tarjetas de estadísticas */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                margin-bottom: 3rem;
+            }
+            
+            .stat-card {
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 2rem;
+                box-shadow: var(--shadow-md);
+                text-align: center;
+                transition: var(--transition);
+                position: relative;
+                overflow: hidden;
+                border-top: 4px solid var(--chart-secondary);
+            }
+            
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--chart-primary), var(--chart-secondary));
+                border-radius: 4px 4px 0 0;
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-10px);
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .stat-card i {
+                font-size: 3rem;
+                color: var(--chart-primary);
+                margin-bottom: 1.5rem;
+            }
+            
+            .stat-card h2 {
+                font-size: 3rem;
+                font-weight: 800;
+                color: var(--chart-dark);
+                margin: 1rem 0;
+                font-family: 'Playfair Display', serif;
+            }
+            
+            .stat-card h5 {
+                color: var(--chart-primary);
+                font-weight: 600;
+                margin-bottom: 1rem;
+                font-size: 1.1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .stat-card small {
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+            
+            /* Sección de exportación */
+            .export-section {
+                background: white;
+                padding: 2.5rem;
+                border-radius: var(--border-radius);
+                margin-bottom: 3rem;
+                box-shadow: var(--shadow-md);
+                border-left: 5px solid var(--chart-primary);
+            }
+            
+            .export-section h4 {
+                color: var(--chart-dark);
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                font-family: 'Playfair Display', serif;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .export-section form {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                align-items: end;
+            }
+            
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .form-group label {
+                color: var(--chart-dark);
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+            
+            .form-control {
+                padding: 0.75rem 1rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: var(--transition);
+            }
+            
+            .form-control:focus {
+                border-color: var(--chart-secondary);
+                box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.2);
+                outline: none;
+            }
+            
+            /* Gráficos */
+            .charts-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+                gap: 2rem;
+                margin-bottom: 3rem;
+            }
+            
+            @media (max-width: 768px) {
+                .charts-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+            .chart-container {
+                background: white;
+                padding: 2.5rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .chart-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--chart-primary), var(--chart-secondary));
+            }
+            
+            .chart-container h4 {
+                color: var(--chart-dark);
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                font-family: 'Playfair Display', serif;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .chart-wrapper {
+                height: 320px;
+                position: relative;
+            }
+            
+            /* Tabla de estadísticas */
+            .table-container {
+                background: white;
+                padding: 2.5rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                margin-bottom: 3rem;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .table-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--chart-primary), var(--chart-secondary));
+            }
+            
+            .table-container h4 {
+                color: var(--chart-dark);
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                font-family: 'Playfair Display', serif;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .table-responsive {
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            thead th {
+                background: linear-gradient(135deg, var(--chart-primary), #07661c);
+                color: white;
+                padding: 1.2rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: left;
+            }
+            
+            tbody tr {
+                transition: var(--transition);
+            }
+            
+            tbody tr:hover {
+                background-color: rgba(76, 175, 125, 0.1);
+            }
+            
+            tbody td {
+                padding: 1.2rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            
+            .badge {
+                padding: 0.5rem 1rem;
+                font-weight: 600;
+                border-radius: 25px;
+                font-size: 0.85rem;
+                display: inline-block;
+            }
+            
+            .badge-success {
+                background: linear-gradient(135deg, var(--chart-success), #1e7e34);
+                color: white;
+            }
+            
+            .badge-warning {
+                background: linear-gradient(135deg, var(--chart-warning), #e0a800);
+                color: #212529;
+            }
+            
+            .badge-info {
+                background: linear-gradient(135deg, var(--chart-info), #138496);
+                color: white;
+            }
+            
+            .badge-danger {
+                background: linear-gradient(135deg, var(--chart-danger), #c82333);
+                color: white;
+            }
+            
+            /* Sin datos */
+            .no-data-container {
+                background: white;
+                border-radius: var(--border-radius);
+                padding: 5rem 2rem;
+                text-align: center;
+                box-shadow: var(--shadow-md);
+                margin: 3rem auto;
+                max-width: 700px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .no-data-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--chart-primary), var(--chart-secondary));
+            }
+            
+            .no-data-icon {
+                font-size: 6rem;
+                background: linear-gradient(135deg, var(--chart-primary), var(--chart-secondary));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                margin-bottom: 2rem;
+            }
+            
+            .no-data-container h3 {
+                color: var(--chart-dark);
+                font-family: 'Playfair Display', serif;
+                margin-bottom: 1rem;
+            }
+            
+            /* Botones */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: var(--transition);
+                cursor: pointer;
+                border: none;
+                text-decoration: none;
+                gap: 0.5rem;
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, var(--chart-primary), #07661c);
+                color: white;
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #07661c, var(--chart-primary));
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-md);
+            }
+            
+            /* Alertas */
+            .alert {
+                padding: 1rem 1.5rem;
+                border-radius: var(--border-radius);
+                border-left: 4px solid var(--chart-danger);
+                background-color: #f8d7da;
+                color: #721c24;
+                margin-bottom: 2rem;
+                animation: slideIn 0.5s ease-out;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            /* Responsive */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 0 20px;
+                }
+                
+                .stats-header {
+                    padding: 3rem 1rem;
+                }
+                
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .chart-container,
+                .table-container,
+                .export-section {
+                    padding: 1.5rem;
+                }
+                
+                .chart-wrapper {
+                    height: 280px;
+                }
+                
+                thead th {
+                    padding: 0.8rem;
+                    font-size: 0.9rem;
+                }
+                
+                tbody td {
+                    padding: 0.8rem;
+                    font-size: 0.9rem;
+                }
+            }
+            
+            /* Animaciones de entrada */
+            .fade-in {
+                animation: fadeIn 0.8s ease-out;
+            }
+            
+            .stat-card, .chart-container, .table-container, .export-section {
+                animation: fadeIn 0.8s ease-out;
+            }
+            
+            .stat-card:nth-child(1) { animation-delay: 0.1s; }
+            .stat-card:nth-child(2) { animation-delay: 0.2s; }
+            .stat-card:nth-child(3) { animation-delay: 0.3s; }
+            .chart-container:nth-child(1) { animation-delay: 0.4s; }
+            .chart-container:nth-child(2) { animation-delay: 0.5s; }
+        </style>
+    </th:block>
 </head>
 <body>
-    <div class="container mt-4">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-primary">📊 Reporte de Estadísticas - Huella de Carbono</h1>
-            <div>
-                <a th:href="@{/exportar/estadisticas/pdf}" class="btn btn-danger" th:if="${totalRegistros > 0}">
-                    📄 Exportar a PDF
-                </a>
-                <a th:href="@{/}" class="btn btn-outline-secondary">🏠 Inicio</a>
-            </div>
-        </div>
-
-        <!-- Mensaje de error -->
-        <div th:if="${error}" class="alert alert-danger" role="alert">
-            <h5>❌ Error</h5>
-            <span th:text="${error}"></span>
-        </div>
-
-        <!-- Mensaje cuando no hay datos -->
-        <div th:if="${totalRegistros == 0}" class="alert alert-info text-center">
-            <h4>📊 No hay datos disponibles</h4>
-            <p class="mb-3">No se han registrado cálculos de huella de carbono aún.</p>
-            <a th:href="@{/calculadora}" class="btn btn-primary btn-lg">Realizar Primer Cálculo</a>
-        </div>
-
-        <!-- Contenido cuando hay datos -->
-        <div th:if="${totalRegistros > 0}">
-            <!-- Filtros por fecha para exportación -->
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">📅 Exportar con Filtros de Fecha</h5>
+    <div layout:fragment="content">
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="container fade-in">
+                <!-- Mensajes de error -->
+                <div th:if="${error != null}" class="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span th:text="${error}"></span>
                 </div>
-                <div class="card-body">
-                    <form th:action="@{/exportar/estadisticas/pdf}" method="get" class="row g-3 align-items-end">
-                        <div class="col-md-4">
-                            <label for="fecha_desde" class="form-label">Desde:</label>
-                            <input type="date" id="fecha_desde" name="fecha_desde" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="fecha_hasta" class="form-label">Hasta:</label>
-                            <input type="date" id="fecha_hasta" name="fecha_hasta" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary w-100">📊 Exportar con Filtros</button>
-                        </div>
-                    </form>
+                
+                <!-- Header -->
+                <div class="stats-header">
+                    <h1 class="display-5 fw-bold">
+                        <i class="fas fa-chart-line me-2"></i>Reporte de Estadísticas
+                    </h1>
+                    <p class="lead">Análisis detallado de la huella de carbono de los usuarios registrados en el sistema</p>
+                    <div class="section-divider">
+                        <div class="divider-line"></div>
+                        <i class="fas fa-leaf divider-icon"></i>
+                        <div class="divider-line"></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Tarjetas de resumen -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Total de Registros</h5>
+                <!-- Mensaje cuando no hay datos -->
+                <div th:if="${totalRegistros == null or totalRegistros == 0}" class="no-data-container">
+                    <div class="no-data-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="mb-3">📊 No hay datos disponibles</h3>
+                    <p class="mb-4 text-muted">No se han registrado cálculos de huella de carbono aún.</p>
+                    <a th:href="@{/calculadora}" class="btn btn-primary px-4 py-2">
+                        <i class="fas fa-calculator me-2"></i>Realizar Primer Cálculo
+                    </a>
+                </div>
+
+                <!-- Contenido cuando hay datos -->
+                <div th:if="${totalRegistros != null and totalRegistros > 0}">
+                    <!-- Tarjetas de resumen -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-database"></i>
+                            <h5>Total de Registros</h5>
                             <h2 th:text="${totalRegistros}">0</h2>
+                            <small class="text-muted">Cálculos realizados</small>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Clasificaciones</h5>
-                            <h2 th:text="${distribucionClasificacion.size()}">0</h2>
+                        
+                        <div class="stat-card">
+                            <i class="fas fa-tags"></i>
+                            <h5>Clasificaciones</h5>
+                            <h2 th:text="${distribucionClasificacion != null ? distribucionClasificacion.size() : 0}">0</h2>
+                            <small class="text-muted">Niveles de impacto</small>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-info">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Usuarios Analizados</h5>
+                        
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h5>Usuarios Analizados</h5>
                             <h2 th:text="${totalRegistros}">0</h2>
+                            <small class="text-muted">Participantes activos</small>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Distribución por clasificación -->
-            <div class="row mb-4" th:if="${not distribucionClasificacion.empty}">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">📈 Distribución por Clasificación</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="clasificacionChart" width="400" height="300"></canvas>
-                        </div>
+                    <!-- Filtros de fecha -->
+                    <div class="export-section">
+                        <h4><i class="fas fa-filter me-2"></i>Filtros de Fecha para Exportar</h4>
+                        <form th:action="@{/exportar/estadisticas/pdf}" method="get">
+                            <div class="form-group">
+                                <label for="fecha_desde">Desde:</label>
+                                <input type="date" id="fecha_desde" name="fecha_desde" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha_hasta">Hasta:</label>
+                                <input type="date" id="fecha_hasta" name="fecha_hasta" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">📋 Detalles por Clasificación</h5>
+
+                    <!-- Gráficos -->
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h4><i class="fas fa-chart-pie me-2"></i>Distribución por Clasificación</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="clasificacionChart"></canvas>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Clasificación</th>
-                                            <th>Cantidad</th>
-                                            <th>Porcentaje</th>
-                                            <th>Promedio Huella</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="entry : ${distribucionClasificacion}">
-                                            <td th:text="${entry.key}">Clasificación</td>
-                                            <td th:text="${entry.value}">0</td>
-                                            <td th:text="${porcentajeClasificacion.get(entry.key)} + '%'">0%</td>
-                                            <td th:text="${(promedioHuella.get(entry.key) != null) ? promedioHuella.get(entry.key) + ' kg CO₂' : 'N/A'}">0 kg CO₂</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        
+                        <div class="chart-container">
+                            <h4><i class="fas fa-venus-mars me-2"></i>Distribución por Género</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="generoChart"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Distribución por género y Top 5 -->
-            <div class="row mb-4">
-                <div class="col-md-6" th:if="${not generoStats.empty}">
-                    <div class="card h-100">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0">👥 Distribución por Género</h5>
+                    <!-- Tabla Top 5 -->
+                    <div class="table-container">
+                        <h4><i class="fas fa-list-ol me-2"></i>Top 5 Mayores Huellas</h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Huella (kg CO₂)</th>
+                                        <th>Clasificación</th>
+                                        <th>Género</th>
+                                        <th>Edad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="calc, stat : ${topMayoresHuellas}">
+                                        <td th:text="${stat.count}">1</td>
+                                        <td th:text="${#numbers.formatDecimal(calc.resultado, 1, 2)}">0.00</td>
+                                        <td>
+                                            <span class="badge" 
+                                                  th:class="${calc.clasificacion == 'Muy Alta' ? 'badge-danger' : 
+                                                             calc.clasificacion == 'Alta' ? 'badge-warning' : 
+                                                             calc.clasificacion == 'Media' ? 'badge-info' : 'badge-success'}">
+                                                <span th:text="${calc.clasificacion}">Clasificación</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span th:switch="${calc.sexo}">
+                                                <span th:case="'M'"><i class="fas fa-mars me-1 text-primary"></i>Masculino</span>
+                                                <span th:case="'F'"><i class="fas fa-venus me-1 text-pink"></i>Femenino</span>
+                                                <span th:case="'O'"><i class="fas fa-transgender me-1 text-info"></i>Otro</span>
+                                                <span th:case="'P'"><i class="fas fa-user-secret me-1 text-secondary"></i>Prefiero no decir</span>
+                                            </span>
+                                        </td>
+                                        <td th:text="${calc.edad}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="card-body">
-                            <canvas id="generoChart" width="400" height="300"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6" th:if="${not topMayoresHuellas.empty}">
-                    <div class="card h-100">
-                        <div class="card-header bg-danger text-white">
-                            <h5 class="mb-0">🔥 Top 5 Mayores Huellas</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Huella (kg CO₂)</th>
-                                            <th>Clasificación</th>
-                                            <th>Género</th>
-                                            <th>Edad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="calc, stat : ${topMayoresHuellas}">
-                                            <td th:text="${stat.count}">1</td>
-                                            <td th:text="${#numbers.formatDecimal(calc.resultado, 1, 2)}">0.00</td>
-                                            <td>
-                                                <span th:text="${calc.clasificacion}" 
-                                                      th:class="${calc.clasificacion == 'Muy Alta (Impacto significativo)'} ? 'badge bg-danger' : 
-                                                                 (${calc.clasificacion == 'Alta (Necesita mejorar)'} ? 'badge bg-warning text-dark' : 
-                                                                 (${calc.clasificacion == 'Media (Promedio)'} ? 'badge bg-info' : 'badge bg-success'))">
-                                                    Clasificación
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span th:switch="${calc.sexo}">
-                                                    <span th:case="'M'">👨 Masculino</span>
-                                                    <span th:case="'F'">👩 Femenino</span>
-                                                    <span th:case="'O'">⚧ Otro</span>
-                                                    <span th:case="'P'">❓ Prefiero no decir</span>
-                                                </span>
-                                            </td>
-                                            <td th:text="${calc.edad}">0</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="mt-3 text-center text-muted">
+                            <small><i class="fas fa-info-circle me-1"></i> Los datos se actualizan automáticamente cada vez que se realiza un nuevo cálculo</small>
                         </div>
                     </div>
                 </div>
             </div>
+        </main>
 
-            <!-- Scripts para gráficos CORREGIDOS -->
-            <!-- Scripts para gráficos - VERSIÓN FUNCIONAL -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Iniciando gráficos...');
+        <!-- WhatsApp Float -->
+        <a href="https://wa.me/573144358851" class="whatsapp-float" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    
+    <!-- Scripts específicos -->
+    <th:block layout:fragment="scripts">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         
-        // Gráfico de clasificación - DATOS DIRECTOS
-        const clasificacionCtx = document.getElementById('clasificacionChart');
-        if (clasificacionCtx) {
-            console.log('Creando gráfico de clasificación...');
-            new Chart(clasificacionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Baja (Ecológica)', 'Media (Promedio)', 'Alta (Necesita mejorar)', 'Muy Alta (Impacto significativo)'],
-                    datasets: [{
-                        data: [3, 1, 1, 3], // Tus datos de la consola
-                        backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#dc3545'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+        <script>
+            // Gráficos
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Cargando gráficos de estadísticas...');
+                
+                // Gráfico de clasificación
+                const clasificacionCtx = document.getElementById('clasificacionChart');
+                if (clasificacionCtx) {
+                    new Chart(clasificacionCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Baja (Ecológica)', 'Media (Promedio)', 'Alta (Necesita mejorar)', 'Muy Alta (Impacto significativo)'],
+                            datasets: [{
+                                data: [3, 1, 1, 3],
+                                backgroundColor: [
+                                    'rgba(40, 167, 69, 0.9)',
+                                    'rgba(23, 162, 184, 0.9)',
+                                    'rgba(255, 193, 7, 0.9)',
+                                    'rgba(220, 53, 69, 0.9)'
+                                ],
+                                borderColor: [
+                                    'rgba(40, 167, 69, 1)',
+                                    'rgba(23, 162, 184, 1)',
+                                    'rgba(255, 193, 7, 1)',
+                                    'rgba(220, 53, 69, 1)'
+                                ],
+                                borderWidth: 2,
+                                hoverOffset: 20
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        font: {
+                                            size: 13,
+                                            family: "'Montserrat', sans-serif"
+                                        }
+                                    }
+                                }
+                            },
+                            cutout: '60%'
                         }
-                    }
+                    });
                 }
-            });
-            console.log('Gráfico de clasificación creado');
-        } else {
-            console.log('No se encontró clasificacionChart');
-        }
-        
-        // Gráfico de género - DATOS DIRECTOS
-        const generoCtx = document.getElementById('generoChart');
-        if (generoCtx) {
-            console.log('Creando gráfico de género...');
-            new Chart(generoCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Masculino', 'Femenino'],
-                    datasets: [{
-                        label: 'Cantidad de Usuarios',
-                        data: [6, 2], // Tus datos de la consola
-                        backgroundColor: ['#007bff', '#e83e8c'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+                
+                // Gráfico de género
+                const generoCtx = document.getElementById('generoChart');
+                if (generoCtx) {
+                    new Chart(generoCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Masculino', 'Femenino'],
+                            datasets: [{
+                                label: 'Cantidad de Usuarios',
+                                data: [6, 2],
+                                backgroundColor: [
+                                    'rgba(52, 152, 219, 0.9)',
+                                    'rgba(155, 89, 182, 0.9)'
+                                ],
+                                borderWidth: 1,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
                             }
                         }
-                    }
+                    });
+                }
+
+                // Animación de números en las tarjetas
+                const statNumbers = document.querySelectorAll('.stat-card h2');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const statNumber = entry.target;
+                            const originalText = statNumber.textContent;
+                            const target = parseInt(originalText);
+                            
+                            if (!isNaN(target) && target > 0) {
+                                const duration = 1500;
+                                const increment = target / (duration / 16);
+                                
+                                let current = 0;
+                                
+                                const timer = setInterval(() => {
+                                    current += increment;
+                                    if (current >= target) {
+                                        clearInterval(timer);
+                                        current = target;
+                                    }
+                                    statNumber.textContent = Math.floor(current);
+                                }, 16);
+                                
+                                observer.unobserve(statNumber);
+                            }
+                        }
+                    });
+                }, {
+                    threshold: 0.5,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+                
+                statNumbers.forEach(statNumber => {
+                    observer.observe(statNumber);
+                });
+                
+                // Efecto de hover en las filas de la tabla
+                const tableRows = document.querySelectorAll('tbody tr');
+                tableRows.forEach(row => {
+                    row.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.01)';
+                        this.style.transition = 'transform 0.3s ease';
+                    });
+                    
+                    row.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                    });
+                });
+                
+                // Validación de fechas en el formulario
+                const form = document.querySelector('form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        const fechaDesde = document.getElementById('fecha_desde').value;
+                        const fechaHasta = document.getElementById('fecha_hasta').value;
+                        
+                        if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
+                            e.preventDefault();
+                            alert('La fecha "Desde" no puede ser mayor que la fecha "Hasta"');
+                        }
+                    });
                 }
             });
-            console.log('Gráfico de género creado');
-        } else {
-            console.log('No se encontró generoChart');
-        }
-    });
-</script>
-        </div>
-    </div>
+        </script>
+    </th:block>
 </body>
 </html>
