@@ -4,69 +4,229 @@
       layout:decorate="~{layout/base}">
 
 <head>
-    <title th:text="${evento.titulo}">Detalle del Evento</title>
+    <title>Detalle del Evento | Planeta Consciente</title>
 
     <th:block layout:fragment="css">
         <style>
-            .detalle-contenedor {
+            :root {
+                --primary-green: #15631b;
+                --primary-light: #07661c;
+                --secondary-green: #e8f5e9;
+                --accent-green: #4caf7d;
+                --accent-dark: #3a8d66;
+                --text-dark: #1A3C34;
+                --shadow-sm: 0 4px 12px rgba(21, 99, 27, 0.1);
+                --shadow-md: 0 8px 25px rgba(21, 99, 27, 0.15);
+                --transition: all 0.3s ease;
+                --border-radius: 12px;
+            }
+            
+            .event-detail-container {
+                background: #f8f9fa;
+                min-height: calc(100vh - 80px - 250px);
+                padding: 2rem 0;
+            }
+            
+            .detail-card {
                 max-width: 800px;
                 margin: 0 auto;
                 background: white;
-                border-radius: 0.75rem;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
                 padding: 2rem;
-                margin-top: 2rem;
+                border: 1px solid #e0e0e0;
             }
-
-            .detalle-titulo {
+            
+            .event-header {
+                text-align: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 2px solid var(--secondary-green);
+            }
+            
+            .event-title {
                 font-family: 'Playfair Display', serif;
                 font-size: 2rem;
-                font-weight: bold;
-                color: var(--primary);
-                text-align: center;
-                margin-bottom: 1.5rem;
+                font-weight: 700;
+                color: var(--primary-green);
+                margin-bottom: 0.5rem;
             }
-
-            .detalle-linea {
-                margin-bottom: 1rem;
+            
+            .event-subtitle {
+                color: #666;
                 font-size: 1rem;
-                color: var(--text);
             }
-
-            .detalle-linea i {
-                color: var(--accent);
-                margin-right: 0.5rem;
-            }
-
-            .detalle-descripcion {
-                background-color: var(--secondary);
-                border-left: 4px solid var(--accent);
-                padding: 1rem;
-                border-radius: 0.5rem;
-                line-height: 1.6;
+            
+            .info-section {
                 margin-bottom: 2rem;
             }
-
-            .btn-volver {
-                display: inline-block;
-                background-color: transparent;
-                border: 1px solid var(--accent-dark);
-                color: var(--accent-dark);
-                padding: 0.5rem 1.25rem;
-                border-radius: 9999px;
+            
+            .info-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: #f9f9f9;
+                border-radius: 8px;
+                border-left: 4px solid var(--accent-green);
+            }
+            
+            .info-icon {
+                width: 40px;
+                height: 40px;
+                background: var(--accent-green);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                margin-right: 1rem;
+                flex-shrink: 0;
+            }
+            
+            .info-content {
+                flex: 1;
+            }
+            
+            .info-label {
+                font-weight: 600;
+                color: var(--primary-green);
+                margin-bottom: 0.25rem;
+                font-size: 0.9rem;
+            }
+            
+            .info-value {
+                color: var(--text-dark);
+                font-size: 1rem;
+            }
+            
+            .description-section {
+                background: #f8fdfa;
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                border: 1px solid #e8f5e9;
+            }
+            
+            .section-title {
+                font-weight: 600;
+                color: var(--primary-green);
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1.2rem;
+            }
+            
+            .description-text {
+                color: #333;
+                line-height: 1.6;
+                white-space: pre-line;
+            }
+            
+            .action-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-top: 2rem;
+                flex-wrap: wrap;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.5rem;
+                border-radius: 6px;
                 font-weight: 600;
                 text-decoration: none;
-                transition: background-color 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                border: none;
+                cursor: pointer;
+                font-size: 0.95rem;
+                transition: var(--transition);
             }
-
-            .btn-volver:hover {
-                background-color: var(--accent-light);
+            
+            .btn-primary {
+                background: var(--accent-green);
+                color: white;
+                border: 2px solid var(--accent-green);
             }
-
+            
+            .btn-primary:hover {
+                background: var(--accent-dark);
+                border-color: var(--accent-dark);
+            }
+            
+            .btn-outline {
+                background: transparent;
+                border: 2px solid var(--accent-green);
+                color: var(--accent-green);
+            }
+            
+            .btn-outline:hover {
+                background: var(--accent-green);
+                color: white;
+            }
+            
+            .btn-secondary {
+                background: #f0f0f0;
+                color: #333;
+                border: 2px solid #ddd;
+            }
+            
+            .btn-secondary:hover {
+                background: #e0e0e0;
+                border-color: #ccc;
+            }
+            
+            .admin-section {
+                background: #fff8e1;
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                border: 2px solid #ffd54f;
+            }
+            
+            .admin-title {
+                font-weight: 600;
+                color: #e65100;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .admin-actions {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
             @media (max-width: 768px) {
-                .detalle-contenedor {
+                .event-detail-container {
                     padding: 1rem;
-                    margin: 1rem;
+                }
+                
+                .detail-card {
+                    padding: 1.5rem;
+                    margin: 0;
+                }
+                
+                .event-title {
+                    font-size: 1.5rem;
+                }
+                
+                .action-buttons {
+                    flex-direction: column;
+                }
+                
+                .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+                
+                .admin-actions {
+                    flex-direction: column;
                 }
             }
         </style>
@@ -74,32 +234,96 @@
 </head>
 
 <body>
-<div layout:fragment="content" class="detalle-contenedor">
-    <h2 class="detalle-titulo" th:text="${evento.titulo}">Título del Evento</h2>
-
-    <div class="detalle-linea">
-        <i class="fas fa-calendar-alt"></i>
-        <strong>Fecha:</strong>
-        <span th:text="${#temporals.format(evento.fechaHora, 'dd MMM yyyy HH:mm')}">01 Ene 2025 10:00</span>
-    </div>
-
-    <div class="detalle-linea" th:if="${evento.ubicacion}">
-        <i class="fas fa-map-marker-alt"></i>
-        <strong>Ubicación:</strong>
-        <span th:text="${evento.ubicacion}">Bogotá</span>
-    </div>
-
-    <div class="detalle-linea">
-        <i class="fas fa-align-left"></i>
-        <strong>Descripción:</strong>
-        <div class="detalle-descripcion" th:text="${evento.descripcion}">Descripción del evento...</div>
-    </div>
-
-    <div class="text-center">
-        <a th:href="@{/eventos}" class="btn-volver">
-            ← Volver a la lista
-        </a>
+<div layout:fragment="content" class="event-detail-container">
+    <div class="detail-card">
+        <!-- Encabezado del Evento -->
+        <div class="event-header">
+            <h1 class="event-title" th:text="${evento.titulo}">Título del Evento</h1>
+            <p class="event-subtitle">
+                <i class="fas fa-leaf" style="color: var(--accent-green);"></i>
+                Evento ambiental de Planeta Consciente
+            </p>
+        </div>
+        
+        <!-- Información del Evento -->
+        <div class="info-section">
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Fecha y Hora</div>
+                    <div class="info-value" th:text="${#temporals.format(evento.fechaHora, 'dd/MM/yyyy HH:mm')}">
+                        15/03/2025 10:00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-item" th:if="${evento.ubicacion}">
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Ubicación</div>
+                    <div class="info-value" th:text="${evento.ubicacion}">
+                        Parque Nacional, Bogotá
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Descripción -->
+        <div class="description-section">
+            <h2 class="section-title">
+                <i class="fas fa-align-left"></i>
+                Descripción
+            </h2>
+            <div class="description-text" th:text="${evento.descripcion}">
+                Descripción del evento ambiental. Este es un espacio para describir los objetivos, 
+                actividades planificadas y cualquier información relevante para los participantes.
+            </div>
+        </div>
+        
+        <!-- Acciones para Administradores -->
+        <div class="admin-section" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <h3 class="admin-title">
+                <i class="fas fa-tools"></i>
+                Acciones de Administración
+            </h3>
+            <div class="admin-actions">
+                <a th:href="@{'/eventos/editar/' + ${evento.id}}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <form th:action="@{'/eventos/eliminar/' + ${evento.id}}"
+                      method="post"
+                      style="display: inline;">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn-secondary" 
+                            onclick="return confirm('¿Eliminar este evento?')">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Botones de Acción -->
+        <div class="action-buttons">
+            <a th:href="@{/eventos}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Volver a Eventos
+            </a>
+            <a th:href="@{/eventos/nuevo}" class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <i class="fas fa-plus"></i> Nuevo Evento
+            </a>
+        </div>
     </div>
 </div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Vista de detalle de evento cargada');
+        });
+    </script>
+</th:block>
 </body>
 </html>
