@@ -4,1413 +4,156 @@
       layout:decorate="~{layout/base}">
 <head>
     <title>🌱 Retos por Mes | Planeta Consciente</title>
-    
-    <th:block layout:fragment="css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        
-        <style>
-            :root {
-                --primary-green: #15631b;
-                --primary-light: #07661c;
-                --secondary-green: #e8f5e9;
-                --accent-green: #4caf7d;
-                --accent-dark: #3a8d66;
-                --earth-brown: #8B4513;
-                --warm-yellow: #FFD700;
-                --text-dark: #1A3C34;
-                --text-light: #F8FDFA;
-                --easy-color: #66bb6a;
-                --medium-color: #ffb74d;
-                --hard-color: #ef5350;
-                --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-                --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.1);
-                --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.15);
-                --transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-            }
-            
-            .retos-content {
-                background: linear-gradient(135deg, #f8f9fa 0%, var(--secondary-green) 100%);
-                min-height: calc(100vh - 80px - 250px);
-                padding: 3rem 0;
-                animation: fadeIn 0.8s ease-out;
-            }
-            
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 30px;
-            }
-            
-            /* Header Section */
-            .page-header {
-                text-align: center;
-                margin-bottom: 4rem;
-                position: relative;
-            }
-            
-            .page-header::after {
-                content: '';
-                position: absolute;
-                bottom: -20px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 200px;
-                height: 3px;
-                background: linear-gradient(90deg, var(--accent-green), var(--warm-yellow), var(--accent-green));
-                border-radius: 3px;
-            }
-            
-            .page-title {
-                font-family: 'Playfair Display', serif;
-                font-size: 3.5rem;
-                font-weight: 800;
-                color: var(--primary-green);
-                margin-bottom: 1rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 15px;
-            }
-            
-            .page-title i {
-                color: var(--accent-green);
-                font-size: 2.5rem;
-                animation: pulse 2s infinite;
-            }
-            
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-            
-            .page-subtitle {
-                font-size: 1.2rem;
-                color: var(--text-dark);
-                opacity: 0.8;
-                max-width: 600px;
-                margin: 0 auto;
-                line-height: 1.6;
-            }
-            
-            /* Admin Panel */
-            .admin-panel {
-                background: linear-gradient(135deg, #ffffff, #f8fdfa);
-                border-radius: 16px;
-                padding: 2rem;
-                margin-bottom: 3rem;
-                box-shadow: var(--shadow-md);
-                border: 2px solid var(--accent-green);
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .admin-panel::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(90deg, var(--warm-yellow), var(--accent-green), var(--warm-yellow));
-            }
-            
-            .admin-title {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.8rem;
-                color: var(--primary-green);
-                margin-bottom: 1.5rem;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .admin-buttons {
-                display: flex;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-            
-            /* Modal Styles */
-            .modal-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: 9999;
-                backdrop-filter: blur(5px);
-                animation: fadeInOverlay 0.3s ease;
-            }
-            
-            @keyframes fadeInOverlay {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            
-            .modal-content {
-                background: white;
-                border-radius: 20px;
-                padding: 2.5rem;
-                max-width: 600px;
-                width: 90%;
-                max-height: 90vh;
-                overflow-y: auto;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                box-shadow: var(--shadow-lg);
-                animation: slideInModal 0.4s ease;
-                border-top: 5px solid var(--accent-green);
-            }
-            
-            @keyframes slideInModal {
-                from { 
-                    opacity: 0; 
-                    transform: translate(-50%, -60%);
-                }
-                to { 
-                    opacity: 1; 
-                    transform: translate(-50%, -50%);
-                }
-            }
-            
-            .modal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 2rem;
-                padding-bottom: 1rem;
-                border-bottom: 2px solid var(--secondary-green);
-            }
-            
-            .modal-title {
-                font-family: 'Playfair Display', serif;
-                font-size: 2rem;
-                color: var(--primary-green);
-                margin: 0;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .close-modal {
-                background: none;
-                border: none;
-                font-size: 2rem;
-                color: var(--text-dark);
-                cursor: pointer;
-                transition: var(--transition);
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .close-modal:hover {
-                background: var(--secondary-green);
-                color: var(--primary-green);
-            }
-            
-            /* Form Styles */
-            .form-group {
-                margin-bottom: 1.5rem;
-            }
-            
-            .form-label {
-                display: block;
-                margin-bottom: 0.5rem;
-                color: var(--text-dark);
-                font-weight: 600;
-                font-size: 0.95rem;
-            }
-            
-            .form-control {
-                width: 100%;
-                padding: 0.8rem 1rem;
-                border: 2px solid #e2e8f0;
-                border-radius: 8px;
-                font-size: 1rem;
-                font-family: 'Poppins', sans-serif;
-                transition: var(--transition);
-            }
-            
-            .form-control:focus {
-                outline: none;
-                border-color: var(--accent-green);
-                box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.2);
-            }
-            
-            textarea.form-control {
-                min-height: 120px;
-                resize: vertical;
-            }
-            
-            .select-group {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1rem;
-            }
-            
-            select.form-control {
-                cursor: pointer;
-                background: white;
-            }
-            
-            .form-actions {
-                display: flex;
-                justify-content: flex-end;
-                gap: 1rem;
-                margin-top: 2rem;
-                padding-top: 1.5rem;
-                border-top: 2px solid var(--secondary-green);
-            }
-            
-            /* Cards Grid */
-            .months-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-                gap: 2rem;
-                margin-bottom: 4rem;
-            }
-            
-            .month-card {
-                background: white;
-                border-radius: 16px;
-                overflow: hidden;
-                box-shadow: var(--shadow-md);
-                transition: var(--transition);
-                position: relative;
-                border: 1px solid rgba(76, 175, 125, 0.1);
-            }
-            
-            .month-card:hover {
-                transform: translateY(-10px);
-                box-shadow: var(--shadow-lg);
-            }
-            
-            .month-header {
-                background: linear-gradient(135deg, var(--primary-green), var(--primary-light));
-                color: white;
-                padding: 1.5rem;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .month-header::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(90deg, var(--accent-green), var(--warm-yellow), var(--accent-green));
-            }
-            
-            .month-title {
-                font-family: 'Playfair Display', serif;
-                font-size: 2rem;
-                font-weight: 700;
-                margin: 0;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-            
-            .month-actions {
-                display: flex;
-                gap: 0.5rem;
-            }
-            
-            .action-btn {
-                background: rgba(255, 255, 255, 0.2);
-                border: none;
-                color: white;
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: var(--transition);
-                font-size: 0.9rem;
-            }
-            
-            .action-btn:hover {
-                background: white;
-                color: var(--primary-green);
-                transform: scale(1.1);
-            }
-            
-            .month-content {
-                padding: 2rem;
-            }
-            
-            .challenge-item {
-                background: linear-gradient(135deg, var(--secondary-green), #f8fdfa);
-                padding: 1.5rem;
-                border-radius: 12px;
-                margin-bottom: 1.5rem;
-                border-left: 4px solid var(--accent-green);
-                transition: var(--transition);
-            }
-            
-            .challenge-item:hover {
-                transform: translateX(5px);
-                background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
-            }
-            
-            .challenge-description {
-                color: var(--text-dark);
-                line-height: 1.6;
-                margin-bottom: 1.2rem;
-                font-size: 1.05rem;
-            }
-            
-            .challenge-meta {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-            
-            /* Badges */
-            .badge-difficulty {
-                padding: 0.5rem 1.2rem;
-                border-radius: 25px;
-                font-weight: 700;
-                font-size: 0.85rem;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            
-            .badge-easy {
-                background: linear-gradient(135deg, var(--easy-color), #4caf50);
-                color: white;
-                box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
-            }
-            
-            .badge-medium {
-                background: linear-gradient(135deg, var(--medium-color), #ff9800);
-                color: #3e2723;
-                box-shadow: 0 4px 12px rgba(255, 183, 77, 0.3);
-            }
-            
-            .badge-hard {
-                background: linear-gradient(135deg, var(--hard-color), #d32f2f);
-                color: white;
-                box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
-            }
-            
-            /* Buttons */
-            .btn {
-                padding: 0.8rem 2rem;
-                border-radius: 8px;
-                font-weight: 600;
-                text-decoration: none;
-                transition: var(--transition);
-                display: inline-flex;
-                align-items: center;
-                gap: 0.8rem;
-                border: none;
-                cursor: pointer;
-                font-size: 1rem;
-                font-family: 'Poppins', sans-serif;
-            }
-            
-            .btn-primary {
-                background: linear-gradient(135deg, var(--primary-green), var(--primary-light));
-                color: white;
-                box-shadow: 0 4px 15px rgba(21, 99, 27, 0.3);
-            }
-            
-            .btn-primary:hover {
-                background: linear-gradient(135deg, var(--primary-light), var(--primary-green));
-                transform: translateY(-3px);
-                box-shadow: 0 8px 25px rgba(21, 99, 27, 0.4);
-            }
-            
-            .btn-success {
-                background: linear-gradient(135deg, var(--accent-green), var(--accent-dark));
-                color: white;
-                box-shadow: 0 4px 15px rgba(76, 175, 125, 0.3);
-            }
-            
-            .btn-success:hover {
-                background: linear-gradient(135deg, var(--accent-dark), var(--accent-green));
-                transform: translateY(-3px);
-                box-shadow: 0 8px 25px rgba(76, 175, 125, 0.4);
-            }
-            
-            .btn-outline {
-                background: transparent;
-                border: 2px solid var(--accent-green);
-                color: var(--accent-green);
-            }
-            
-            .btn-outline:hover {
-                background: var(--accent-green);
-                color: white;
-                transform: translateY(-3px);
-            }
-            
-            .btn-danger {
-                background: linear-gradient(135deg, #ef5350, #d32f2f);
-                color: white;
-                border: none;
-            }
-            
-            .btn-danger:hover {
-                background: linear-gradient(135deg, #d32f2f, #ef5350);
-                transform: translateY(-3px);
-            }
-            
-            /* Floating Add Button */
-            .floating-add-btn {
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                width: 70px;
-                height: 70px;
-                background: linear-gradient(135deg, var(--accent-green), var(--primary-green));
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.8rem;
-                box-shadow: 0 6px 20px rgba(76, 175, 125, 0.4);
-                z-index: 100;
-                transition: var(--transition);
-                border: none;
-                cursor: pointer;
-                animation: float 3s ease-in-out infinite;
-            }
-            
-            @keyframes float {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-10px); }
-                100% { transform: translateY(0px); }
-            }
-            
-            .floating-add-btn:hover {
-                transform: scale(1.1) rotate(90deg);
-                box-shadow: 0 10px 30px rgba(76, 175, 125, 0.6);
-            }
-            
-            /* Toast Notification */
-            .toast {
-                position: fixed;
-                bottom: 120px;
-                right: 30px;
-                background: white;
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                box-shadow: var(--shadow-lg);
-                border-left: 4px solid var(--accent-green);
-                z-index: 1000;
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                transform: translateX(150%);
-                transition: transform 0.4s ease;
-                max-width: 350px;
-            }
-            
-            .toast.show {
-                transform: translateX(0);
-            }
-            
-            .toast-icon {
-                font-size: 1.5rem;
-                color: var(--accent-green);
-            }
-            
-            .toast-message {
-                color: var(--text-dark);
-                font-weight: 500;
-            }
-            
-            .close-toast {
-                background: none;
-                border: none;
-                color: var(--text-dark);
-                cursor: pointer;
-                font-size: 1.2rem;
-                padding: 0;
-            }
-            
-            /* Statistics Panel */
-            .stats-panel {
-                background: white;
-                border-radius: 16px;
-                padding: 2rem;
-                margin-bottom: 2rem;
-                box-shadow: var(--shadow-md);
-                border: 1px solid rgba(76, 175, 125, 0.2);
-            }
-            
-            .stats-title {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.5rem;
-                color: var(--primary-green);
-                margin-bottom: 1.5rem;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 1.5rem;
-            }
-            
-            .stat-card {
-                background: linear-gradient(135deg, #f8fdfa, #e8f5e9);
-                padding: 1.5rem;
-                border-radius: 12px;
-                text-align: center;
-                border: 1px solid rgba(76, 175, 125, 0.3);
-            }
-            
-            .stat-value {
-                font-size: 2.5rem;
-                font-weight: 700;
-                color: var(--primary-green);
-                margin: 0.5rem 0;
-            }
-            
-            .stat-label {
-                color: var(--text-dark);
-                font-size: 0.9rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                opacity: 0.8;
-            }
-            
-            /* Difficulty Distribution */
-            .difficulty-chart {
-                display: flex;
-                height: 10px;
-                border-radius: 5px;
-                overflow: hidden;
-                margin: 1rem 0;
-            }
-            
-            .chart-easy {
-                background: var(--easy-color);
-                height: 100%;
-            }
-            
-            .chart-medium {
-                background: var(--medium-color);
-                height: 100%;
-            }
-            
-            .chart-hard {
-                background: var(--hard-color);
-                height: 100%;
-            }
-            
-            /* Responsive */
-            @media (max-width: 768px) {
-                .container {
-                    padding: 0 20px;
-                }
-                
-                .page-title {
-                    font-size: 2.5rem;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-                
-                .months-grid {
-                    grid-template-columns: 1fr;
-                }
-                
-                .modal-content {
-                    width: 95%;
-                    padding: 1.5rem;
-                }
-                
-                .admin-buttons {
-                    flex-direction: column;
-                }
-                
-                .floating-add-btn {
-                    width: 60px;
-                    height: 60px;
-                    font-size: 1.5rem;
-                    bottom: 20px;
-                    right: 20px;
-                }
-                
-                .stats-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-            
-            /* WhatsApp Float */
-            .whatsapp-float {
-                position: fixed;
-                bottom: 100px;
-                right: 30px;
-                width: 60px;
-                height: 60px;
-                background: linear-gradient(135deg, #25D366, #128C7E);
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.8rem;
-                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-                z-index: 100;
-                transition: var(--transition);
-                text-decoration: none;
-                animation: float 3s ease-in-out infinite;
-            }
-            
-            .whatsapp-float:hover {
-                transform: scale(1.1);
-                box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
-            }
-        </style>
-    </th:block>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            color: #2e7d32;
+        }
+
+        .titulo-principal {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: #1b5e20;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .mes-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            border-left: 8px solid #81c784;
+            transition: transform 0.2s ease;
+        }
+
+        .mes-card:hover {
+            transform: scale(1.01);
+        }
+
+        .mes-titulo {
+            font-size: 1.9rem;
+            color: #388e3c;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        .reto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9fbe7;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px dashed #c5e1a5;
+        }
+
+        .reto-descripcion {
+            margin: 0;
+            flex-grow: 1;
+            font-size: 1.05rem;
+            color: #33691e;
+        }
+
+        .badge-dificultad {
+            padding: 8px 16px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .badge-dificultad.facil {
+            background-color: #66bb6a; /* Verde claro */
+        }
+
+        .badge-dificultad.media {
+            background-color: #ffee58; /* Amarillo */
+            color: #3e2723;
+        }
+
+        .badge-dificultad.alta {
+            background-color: #ef5350; /* Rojo claro */
+        }
+
+        .alert-info {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            color: #388e3c;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .btn-outline-secondary {
+            border-color: #2e7d32;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .volver {
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
-    <div layout:fragment="content" class="retos-content">
-        <div class="container">
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">
-                    <i class="fas fa-seedling"></i>
-                    Retos Ambientales Mensuales
-                    <i class="fas fa-leaf"></i>
-                </h1>
-                <p class="page-subtitle">
-                    Desafíos ecológicos organizados por mes. ¡Participa y contribuye al cuidado del planeta!
-                </p>
-            </div>
+<div layout:fragment="content" class="container py-4">
+    <h1 class="titulo-principal text-center">🌿 Retos Ambientales por Mes</h1>
 
-            <!-- Statistics Panel -->
-            <div class="stats-panel">
-                <h3 class="stats-title">
-                    <i class="fas fa-chart-bar"></i> Estadísticas de Retos
-                </h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalRetos">0</div>
-                        <div class="stat-label">Total de Retos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalPuntos">0</div>
-                        <div class="stat-label">Puntos Totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="mesesConRetos">0</div>
-                        <div class="stat-label">Meses con Retos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="retosFaciles">0</div>
-                        <div class="stat-label">Retos Fáciles</div>
-                    </div>
-                </div>
-                
-                <!-- Difficulty Distribution -->
-                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(76, 175, 125, 0.2);">
-                    <h4 style="color: var(--text-dark); margin-bottom: 1rem;">Distribución por Dificultad</h4>
-                    <div class="difficulty-chart" id="difficultyChart">
-                        <div class="chart-easy" id="chartEasy" style="width: 0%"></div>
-                        <div class="chart-medium" id="chartMedium" style="width: 0%"></div>
-                        <div class="chart-hard" id="chartHard" style="width: 0%"></div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem;">
-                        <span style="color: var(--easy-color);"><i class="fas fa-circle"></i> Fácil</span>
-                        <span style="color: var(--medium-color);"><i class="fas fa-circle"></i> Media</span>
-                        <span style="color: var(--hard-color);"><i class="fas fa-circle"></i> Difícil</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Admin Panel - Solo visible para ADMIN -->
-            <div class="admin-panel" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                <h3 class="admin-title">
-                    <i class="fas fa-tools"></i> Panel de Administración
-                </h3>
-                <div class="admin-buttons">
-                    <button class="btn btn-success" onclick="openModal('add')">
-                        <i class="fas fa-plus"></i> Agregar Nuevo Reto
-                    </button>
-                    <button class="btn btn-primary" onclick="exportRetos()">
-                        <i class="fas fa-download"></i> Exportar Retos
-                    </button>
-                    <button class="btn btn-danger" onclick="clearAllRetos()">
-                        <i class="fas fa-trash"></i> Eliminar Todos los Retos
-                    </button>
-                    <button class="btn btn-outline" onclick="importRetos()">
-                        <i class="fas fa-upload"></i> Importar Retos
-                    </button>
-                </div>
-            </div>
-
-            <!-- Months Grid -->
-            <div id="monthsGrid" class="months-grid">
-                <!-- Los retos se agregarán dinámicamente aquí -->
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons" style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 3rem; flex-wrap: wrap;">
-                <a th:href="@{/eventos}" class="btn btn-outline">
-                    <i class="fas fa-arrow-left"></i> Volver a Eventos
-                </a>
-                <button class="btn btn-primary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" onclick="openModal('add')">
-                    <i class="fas fa-plus"></i> Agregar Más Retos
-                </button>
-            </div>
-        </div>
-
-        <!-- Floating Add Button - Solo visible para ADMIN -->
-        <button class="floating-add-btn" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" onclick="openModal('add')">
-            <i class="fas fa-plus"></i>
-        </button>
-
-        <!-- Toast Notification -->
-        <div id="toast" class="toast">
-            <i class="fas fa-check-circle toast-icon"></i>
-            <span class="toast-message">Operación exitosa!</span>
-            <button class="close-toast" onclick="hideToast()">&times;</button>
-        </div>
-
-        <!-- Modal for Adding/Editing Retos -->
-        <div id="modalOverlay" class="modal-overlay" onclick="closeModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalTitle">
-                        <i class="fas fa-plus-circle"></i> Agregar Nuevo Reto
-                    </h3>
-                    <button class="close-modal" onclick="closeModal()">&times;</button>
-                </div>
-                
-                <form id="retoForm" onsubmit="handleSubmit(event)">
-                    <div class="form-group">
-                        <label class="form-label">Mes del Reto:</label>
-                        <select id="mesSelect" class="form-control" required>
-                            <option value="">Seleccionar mes...</option>
-                            <option value="Enero">Enero</option>
-                            <option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option>
-                            <option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option>
-                            <option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option>
-                            <option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Descripción del Reto:</label>
-                        <textarea id="descripcionInput" class="form-control" 
-                                  placeholder="Ej: Evitar el uso de plásticos de un solo uso durante todo el mes..." 
-                                  required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Nivel de Dificultad:</label>
-                        <div class="select-group">
-                            <div>
-                                <input type="radio" id="facil" name="dificultad" value="facil" checked>
-                                <label for="facil" class="badge-difficulty badge-easy" style="cursor: pointer;">
-                                    <i class="fas fa-smile"></i> Fácil
-                                </label>
-                            </div>
-                            <div>
-                                <input type="radio" id="media" name="dificultad" value="media">
-                                <label for="media" class="badge-difficulty badge-medium" style="cursor: pointer;">
-                                    <i class="fas fa-balance-scale"></i> Media
-                                </label>
-                            </div>
-                            <div>
-                                <input type="radio" id="alta" name="dificultad" value="alta">
-                                <label for="alta" class="badge-difficulty badge-hard" style="cursor: pointer;">
-                                    <i class="fas fa-fire"></i> Alta
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Puntos por Completar:</label>
-                        <input type="number" id="puntosInput" class="form-control" 
-                               min="50" max="500" value="100" required>
-                        <small style="color: #666; margin-top: 0.3rem; display: block;">
-                            Los puntos deben estar entre 50 y 500
-                        </small>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-outline" onclick="closeModal()">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save"></i> Guardar Reto
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Import Modal -->
-        <div id="importModal" class="modal-overlay" onclick="closeImportModal()">
-            <div class="modal-content" style="max-width: 500px;" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-upload"></i> Importar Retos
-                    </h3>
-                    <button class="close-modal" onclick="closeImportModal()">&times;</button>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Seleccionar archivo JSON:</label>
-                    <input type="file" id="fileInput" class="form-control" accept=".json">
-                    <small style="color: #666; margin-top: 0.3rem; display: block;">
-                        Selecciona un archivo JSON válido con la estructura de retos
-                    </small>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" style="margin-bottom: 1rem;">O pega el contenido JSON:</label>
-                    <textarea id="jsonInput" class="form-control" 
-                              placeholder='[{"mes": "Enero", "descripcion": "...", "dificultad": "facil", "puntos": 100}]'
-                              rows="6"></textarea>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeImportModal()">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-success" onclick="handleImport()">
-                        <i class="fas fa-upload"></i> Importar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- WhatsApp Float -->
-        <a href="https://wa.me/573144358851" class="whatsapp-float" target="_blank">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+    <div th:if="${#maps.isEmpty(retosPorMes)}" class="alert alert-info text-center">
+        No hay retos disponibles por el momento.
     </div>
-    
-    <th:block layout:fragment="scripts">
-        <script>
-            // Retos almacenados en localStorage
-            let retos = JSON.parse(localStorage.getItem('retos')) || [
-                {
-                    id: Date.now(),
-                    mes: 'Enero',
-                    descripcion: 'Evitar el uso de plásticos de un solo uso durante todo el mes. Incluye llevar bolsas reutilizables, usar botellas de agua recargables y evitar productos empaquetados en plástico.',
-                    dificultad: 'media',
-                    puntos: 150
-                },
-                {
-                    id: Date.now() + 1,
-                    mes: 'Febrero',
-                    descripcion: 'Utilizar transporte público, bicicleta o caminar en lugar del coche privado al menos 3 días a la semana.',
-                    dificultad: 'facil',
-                    puntos: 100
-                },
-                {
-                    id: Date.now() + 2,
-                    mes: 'Abril',
-                    descripcion: 'Consumir solo productos locales y de temporada durante el mes, evitando alimentos importados o procesados.',
-                    dificultad: 'alta',
-                    puntos: 250
-                },
-                {
-                    id: Date.now() + 3,
-                    mes: 'Junio',
-                    descripcion: 'Generar menos de 1 kg de basura no reciclable durante todo el mes, aplicando técnicas de compostaje y reutilización.',
-                    dificultad: 'alta',
-                    puntos: 300
-                }
-            ];
 
-            // Inicializar la página
-            document.addEventListener('DOMContentLoaded', function() {
-                renderRetos();
-                updateStats();
-            });
+    <!-- Reto Abril -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Abril</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Consumir solo productos locales y de temporada durante el mes, evitando alimentos importados o procesados.</p>
+            <span class="badge-dificultad alta">Alta</span>
+        </div>
+    </div>
 
-            // Renderizar todos los retos
-            function renderRetos() {
-                const monthsGrid = document.getElementById('monthsGrid');
-                const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-                
-                monthsGrid.innerHTML = '';
-                
-                meses.forEach(mes => {
-                    const retosDelMes = retos.filter(r => r.mes === mes);
-                    
-                    const monthCard = document.createElement('div');
-                    monthCard.className = 'month-card';
-                    
-                    // Verificar si el usuario es ADMIN (usando Thymeleaf en el HTML)
-                    const isAdmin = document.querySelector('.admin-panel') !== null;
-                    
-                    let actionsHTML = '';
-                    if (isAdmin) {
-                        actionsHTML = `
-                            <div class="month-actions">
-                                <button class="action-btn" onclick="addRetoToMonth('${mes}')" title="Agregar reto">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        `;
-                    }
-                    
-                    monthCard.innerHTML = `
-                        <div class="month-header" style="background: ${getMonthColor(mes)}">
-                            <h3 class="month-title">
-                                ${mes}
-                                <i class="fas ${getMonthIcon(mes)} month-icon"></i>
-                                ${actionsHTML}
-                            </h3>
-                        </div>
-                        <div class="month-content">
-                            ${retosDelMes.length > 0 ? 
-                                retosDelMes.map((reto, index) => `
-                                    <div class="challenge-item">
-                                        <p class="challenge-description">
-                                            <i class="fas ${getChallengeIcon(reto.dificultad)}" 
-                                               style="color: ${getDifficultyColor(reto.dificultad)}; margin-right: 8px;"></i>
-                                            ${reto.descripcion}
-                                        </p>
-                                        <div class="challenge-meta">
-                                            <span class="badge-difficulty ${getBadgeClass(reto.dificultad)}">
-                                                <i class="${getDifficultyIcon(reto.dificultad)}"></i>
-                                                ${getDifficultyText(reto.dificultad)}
-                                            </span>
-                                            <span class="challenge-points">
-                                                <i class="fas fa-star" style="color: #FFD700;"></i>
-                                                ${reto.puntos} Puntos
-                                            </span>
-                                            ${isAdmin ? `
-                                                <button class="action-btn" onclick="deleteReto('${reto.id}')" 
-                                                        style="background: #ef5350; color: white; margin-left: auto;" 
-                                                        title="Eliminar reto">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                `).join('') :
-                                `<div class="challenge-item" style="background: #f5f5f5; border-left-color: #9E9E9E;">
-                                    <p class="challenge-description" style="color: #666;">
-                                        <i class="fas fa-plus-circle" style="color: #9E9E9E; margin-right: 8px;"></i>
-                                        No hay retos para este mes. ${isAdmin ? '¡Agrega uno nuevo!' : '¡Vuelve pronto!'}
-                                    </p>
-                                    ${isAdmin ? `
-                                        <button class="btn btn-outline" onclick="addRetoToMonth('${mes}')" 
-                                                style="margin-top: 10px; padding: 0.5rem 1rem;">
-                                            <i class="fas fa-plus"></i> Agregar Reto
-                                        </button>
-                                    ` : ''}
-                                </div>`
-                            }
-                        </div>
-                    `;
-                    
-                    monthsGrid.appendChild(monthCard);
-                });
-                
-                // Guardar en localStorage
-                localStorage.setItem('retos', JSON.stringify(retos));
-            }
+    <!-- Reto Enero -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Enero</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Evitar el uso de plásticos de un solo uso durante todo el mes. Incluye llevar bolsas reutilizables, usar botellas de agua recargables y evitar productos empaquetados en plástico.</p>
+            <span class="badge-dificultad media">Media</span>
+        </div>
+    </div>
 
-            // Abrir modal
-            function openModal(type, mes = '') {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden agregar retos', 'error');
-                    return;
-                }
-                
-                const modal = document.getElementById('modalOverlay');
-                const title = document.getElementById('modalTitle');
-                
-                if (type === 'add') {
-                    title.innerHTML = '<i class="fas fa-plus-circle"></i> Agregar Nuevo Reto';
-                    resetForm();
-                    if (mes) {
-                        document.getElementById('mesSelect').value = mes;
-                    }
-                }
-                
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
+    <!-- Reto Febrero -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Febrero</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Utilizar transporte público, bicicleta o caminar en lugar del coche privado al menos 3 días a la semana.</p>
+            <span class="badge-dificultad facil">Fácil</span>
+        </div>
+    </div>
 
-            // Cerrar modal
-            function closeModal() {
-                const modal = document.getElementById('modalOverlay');
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
+    <!-- Reto Junio -->
+    <div class="mes-card">
+        <h3 class="mes-titulo">Junio</h3>
+        <div class="reto-item">
+            <p class="reto-descripcion">Generar menos de 1 kg de basura no reciclable durante todo el mes, aplicando técnicas de compostaje y reutilización.</p>
+            <span class="badge-dificultad alta">Alta</span>
+        </div>
+    </div>
 
-            // Manejar envío del formulario
-            function handleSubmit(event) {
-                event.preventDefault();
-                
-                const mes = document.getElementById('mesSelect').value;
-                const descripcion = document.getElementById('descripcionInput').value;
-                const dificultad = document.querySelector('input[name="dificultad"]:checked').value;
-                const puntos = parseInt(document.getElementById('puntosInput').value);
-                
-                // Validar puntos
-                if (puntos < 50 || puntos > 500) {
-                    showToast('Los puntos deben estar entre 50 y 500', 'error');
-                    return;
-                }
-                
-                // Agregar nuevo reto con ID único
-                retos.push({
-                    id: Date.now(),
-                    mes: mes,
-                    descripcion: descripcion,
-                    dificultad: dificultad,
-                    puntos: puntos
-                });
-                
-                // Renderizar y mostrar notificación
-                renderRetos();
-                updateStats();
-                showToast('Reto agregado exitosamente!', 'success');
-                closeModal();
-                resetForm();
-            }
-
-            // Agregar reto a un mes específico
-            function addRetoToMonth(mes) {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden agregar retos', 'error');
-                    return;
-                }
-                document.getElementById('mesSelect').value = mes;
-                openModal('add');
-            }
-
-            // Eliminar un reto
-            function deleteReto(id) {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden eliminar retos', 'error');
-                    return;
-                }
-                
-                if (confirm('¿Estás seguro de eliminar este reto?')) {
-                    const index = retos.findIndex(r => r.id === id);
-                    if (index !== -1) {
-                        retos.splice(index, 1);
-                        renderRetos();
-                        updateStats();
-                        showToast('Reto eliminado exitosamente!', 'success');
-                    }
-                }
-            }
-
-            // Eliminar todos los retos
-            function clearAllRetos() {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden eliminar retos', 'error');
-                    return;
-                }
-                
-                if (confirm('¿Estás seguro de eliminar TODOS los retos? Esta acción no se puede deshacer.')) {
-                    retos = [];
-                    renderRetos();
-                    updateStats();
-                    showToast('Todos los retos han sido eliminados!', 'success');
-                }
-            }
-
-            // Exportar retos
-            function exportRetos() {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden exportar retos', 'error');
-                    return;
-                }
-                
-                const dataStr = JSON.stringify(retos, null, 2);
-                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
-                const exportFileDefaultName = retos_ambientales_${new Date().toISOString().split('T')[0]}.json;
-                
-                const linkElement = document.createElement('a');
-                linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
-                linkElement.click();
-                
-                showToast('Retos exportados exitosamente!', 'success');
-            }
-
-            // Importar retos
-            function importRetos() {
-                // Verificar si el usuario es ADMIN
-                const isAdmin = document.querySelector('.admin-panel') !== null;
-                if (!isAdmin) {
-                    showToast('Solo los administradores pueden importar retos', 'error');
-                    return;
-                }
-                
-                document.getElementById('importModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-
-            // Cerrar modal de importación
-            function closeImportModal() {
-                document.getElementById('importModal').style.display = 'none';
-                document.body.style.overflow = 'auto';
-                document.getElementById('fileInput').value = '';
-                document.getElementById('jsonInput').value = '';
-            }
-
-            // Manejar importación
-            function handleImport() {
-                const fileInput = document.getElementById('fileInput');
-                const jsonInput = document.getElementById('jsonInput').value;
-                
-                try {
-                    let nuevosRetos;
-                    
-                    if (fileInput.files.length > 0) {
-                        const file = fileInput.files[0];
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            try {
-                                nuevosRetos = JSON.parse(e.target.result);
-                                processImport(nuevosRetos);
-                            } catch (error) {
-                                showToast('Error al parsear el archivo JSON', 'error');
-                            }
-                        };
-                        
-                        reader.readAsText(file);
-                    } else if (jsonInput) {
-                        nuevosRetos = JSON.parse(jsonInput);
-                        processImport(nuevosRetos);
-                    } else {
-                        showToast('Por favor, selecciona un archivo o ingresa JSON', 'error');
-                        return;
-                    }
-                } catch (error) {
-                    showToast('Formato JSON inválido', 'error');
-                }
-            }
-
-            // Procesar importación
-            function processImport(nuevosRetos) {
-                if (!Array.isArray(nuevosRetos)) {
-                    showToast('El archivo debe contener un array de retos', 'error');
-                    return;
-                }
-                
-                // Validar estructura de cada reto
-                const validRetos = nuevosRetos.filter(reto => 
-                    reto.mes && reto.descripcion && reto.dificultad && reto.puntos
-                );
-                
-                if (validRetos.length === 0) {
-                    showToast('No se encontraron retos válidos en el archivo', 'error');
-                    return;
-                }
-                
-                // Asignar nuevos IDs
-                validRetos.forEach(reto => {
-                    reto.id = Date.now() + Math.random();
-                });
-                
-                // Agregar o reemplazar retos (según preferencia)
-                // Aquí decidimos reemplazar todos los retos existentes
-                retos = validRetos;
-                
-                renderRetos();
-                updateStats();
-                closeImportModal();
-                showToast(${validRetos.length} retos importados exitosamente!, 'success');
-            }
-
-            // Resetear formulario
-            function resetForm() {
-                document.getElementById('retoForm').reset();
-                document.getElementById('puntosInput').value = 100;
-                document.getElementById('facil').checked = true;
-            }
-
-            // Mostrar notificación
-            function showToast(message, type = 'success') {
-                const toast = document.getElementById('toast');
-                const icon = toast.querySelector('.toast-icon');
-                const messageSpan = toast.querySelector('.toast-message');
-                
-                // Configurar color según tipo
-                let borderColor = 'var(--accent-green)';
-                let iconClass = 'fa-check-circle';
-                
-                if (type === 'error') {
-                    borderColor = '#ef5350';
-                    iconClass = 'fa-exclamation-circle';
-                } else if (type === 'warning') {
-                    borderColor = '#ffb74d';
-                    iconClass = 'fa-exclamation-triangle';
-                }
-                
-                toast.style.borderLeftColor = borderColor;
-                icon.className = fas ${iconClass} toast-icon;
-                icon.style.color = borderColor;
-                messageSpan.textContent = message;
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    hideToast();
-                }, 5000);
-            }
-
-            // Ocultar notificación
-            function hideToast() {
-                const toast = document.getElementById('toast');
-                toast.classList.remove('show');
-            }
-
-            // Actualizar estadísticas
-            function updateStats() {
-                const totalRetos = retos.length;
-                const totalPuntos = retos.reduce((sum, reto) => sum + reto.puntos, 0);
-                const mesesUnicos = [...new Set(retos.map(r => r.mes))].length;
-                const retosFaciles = retos.filter(r => r.dificultad === 'facil').length;
-                
-                // Actualizar valores
-                document.getElementById('totalRetos').textContent = totalRetos;
-                document.getElementById('totalPuntos').textContent = totalPuntos;
-                document.getElementById('mesesConRetos').textContent = mesesUnicos;
-                document.getElementById('retosFaciles').textContent = retosFaciles;
-                
-                // Actualizar gráfico de dificultad
-                const retosMedios = retos.filter(r => r.dificultad === 'media').length;
-                const retosDificiles = retos.filter(r => r.dificultad === 'alta').length;
-                
-                if (totalRetos > 0) {
-                    const easyPercent = (retosFaciles / totalRetos) * 100;
-                    const mediumPercent = (retosMedios / totalRetos) * 100;
-                    const hardPercent = (retosDificiles / totalRetos) * 100;
-                    
-                    document.getElementById('chartEasy').style.width = ${easyPercent}%;
-                    document.getElementById('chartMedium').style.width = ${mediumPercent}%;
-                    document.getElementById('chartHard').style.width = ${hardPercent}%;
-                }
-            }
-
-            // Funciones auxiliares
-            function getMonthColor(mes) {
-                const colors = {
-                    'Enero': 'linear-gradient(135deg, #15631b, #1b5e20)',
-                    'Febrero': 'linear-gradient(135deg, #2196F3, #1976D2)',
-                    'Marzo': 'linear-gradient(135deg, #4CAF50, #388E3C)',
-                    'Abril': 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
-                    'Mayo': 'linear-gradient(135deg, #FF9800, #F57C00)',
-                    'Junio': 'linear-gradient(135deg, #00BCD4, #0097A7)',
-                    'Julio': 'linear-gradient(135deg, #F44336, #D32F2F)',
-                    'Agosto': 'linear-gradient(135deg, #795548, #5D4037)',
-                    'Septiembre': 'linear-gradient(135deg, #607D8B, #455A64)',
-                    'Octubre': 'linear-gradient(135deg, #3F51B5, #303F9F)',
-                    'Noviembre': 'linear-gradient(135deg, #FF5722, #E64A19)',
-                    'Diciembre': 'linear-gradient(135deg, #009688, #00796B)'
-                };
-                return colors[mes] || 'linear-gradient(135deg, #15631b, #07661c)';
-            }
-
-            function getMonthIcon(mes) {
-                const icons = {
-                    'Enero': 'fa-snowflake',
-                    'Febrero': 'fa-heart',
-                    'Marzo': 'fa-leaf',
-                    'Abril': 'fa-umbrella',
-                    'Mayo': 'fa-sun',
-                    'Junio': 'fa-water',
-                    'Julio': 'fa-fire',
-                    'Agosto': 'fa-mountain',
-                    'Septiembre': 'fa-wind',
-                    'Octubre': 'fa-cloud',
-                    'Noviembre': 'fa-cloud-rain',
-                    'Diciembre': 'fa-star'
-                };
-                return icons[mes] || 'fa-calendar';
-            }
-
-            function getChallengeIcon(dificultad) {
-                return dificultad === 'facil' ? 'fa-seedling' : 
-                       dificultad === 'media' ? 'fa-tree' : 'fa-mountain';
-            }
-
-            function getDifficultyColor(dificultad) {
-                return dificultad === 'facil' ? '#66bb6a' : 
-                       dificultad === 'media' ? '#ffb74d' : '#ef5350';
-            }
-
-            function getBadgeClass(dificultad) {
-                return dificultad === 'facil' ? 'badge-easy' : 
-                       dificultad === 'media' ? 'badge-medium' : 'badge-hard';
-            }
-
-            function getDifficultyIcon(dificultad) {
-                return dificultad === 'facil' ? 'fas fa-smile' : 
-                       dificultad === 'media' ? 'fas fa-balance-scale' : 'fas fa-fire';
-            }
-
-            function getDifficultyText(dificultad) {
-                return dificultad === 'facil' ? 'Fácil' : 
-                       dificultad === 'media' ? 'Media' : 'Alta Dificultad';
-            }
-
-            // Cerrar modal con Escape key
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    closeModal();
-                    closeImportModal();
-                }
-            });
-        </script>
-    </th:block>
+    <div class="volver">
+        <a th:href="@{/eventos}" class="btn btn-outline-secondary btn-lg">← Volver a Eventos</a>
+    </div>
+</div>
 </body>
 </html>
